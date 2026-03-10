@@ -3,48 +3,49 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WorkOS Fibra Inn</title>
+  <title>WorkOS Fibra Inn | Enterprise</title>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
-      --bg: #FFFFFF; --text: #1E293B; --monday-blue: #0073EA; --border: #E2E8F0;
+      --bg: #F1F5F9; --text: #1E293B; --monday-blue: #0073EA; --border: #E2E8F0;
       --stat-listo: #00C875; --stat-curso: #FDAB3D; --stat-estancado: #E2445C; --stat-gris: #94A3B8;
       --prio-alta: #EF4444; --prio-media: #F59E0B; --prio-baja: #3B82F6;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-    body { display: flex; height: 100vh; background: #F1F5F9; overflow: hidden; color: var(--text); }
+    body { display: flex; height: 100vh; background: var(--bg); overflow: hidden; color: var(--text); }
     
+    /* Panel Lateral */
     .sidebar { width: 260px; background: #0F172A; padding: 2rem 1.2rem; display: flex; flex-direction: column; color: white; }
     .nav-item { padding: 0.9rem 1rem; border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; font-weight: 600; color: #94A3B8; transition: 0.3s; }
     .nav-item.active { background: var(--monday-blue); color: white; }
 
+    /* Área Principal */
     .main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; background: white; padding: 2rem 3rem; }
     .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
     
     .toolbar { display: flex; justify-content: space-between; margin-bottom: 1.5rem; position: sticky; top: 0; background: white; z-index: 10; padding: 10px 0; }
-    .btn-create { background: var(--monday-blue); color: white; border: none; padding: 0.8rem 1.8rem; border-radius: 8px; font-weight: 800; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0, 115, 234, 0.2); }
+    .btn-create { background: var(--monday-blue); color: white; border: none; padding: 0.8rem 1.8rem; border-radius: 8px; font-weight: 800; cursor: pointer; box-shadow: 0 4px 6px rgba(0, 115, 234, 0.2); transition: 0.2s; }
     .btn-create:hover { transform: translateY(-2px); }
     .select-filtro { padding: 0.7rem 1rem; border: 2px solid var(--border); border-radius: 8px; min-width: 250px; font-weight: 700; outline: none; }
 
-    /* TABLA PROFESIONAL */
+    /* Tabla */
     .table-container { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
     .monday-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
     .monday-table th { padding: 1rem; background: #F8FAFC; font-size: 0.75rem; color: #64748B; text-transform: uppercase; font-weight: 800; border-bottom: 1px solid var(--border); text-align: center; }
     .monday-table td { height: 75px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); text-align: center; font-size: 0.9rem; padding: 0; }
-    .monday-table tr:hover td { background: #F8FAFC; }
     
     .cell-task { text-align: left !important; padding: 0.5rem 1.5rem !important; border-left: 6px solid var(--monday-blue); width: 350px; }
     .task-title { font-weight: 800; font-size: 0.95rem; color: #0F172A; }
     .task-desc { font-size: 0.8rem; color: #64748B; margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     
     .monday-select { appearance: none; width: 100%; height: 100%; border: none; color: white; font-weight: 800; text-align: center; cursor: pointer; outline: none; }
-    
-    /* DASHBOARD */
+
+    /* Gráficas */
     .dashboard-view { display: none; grid-template-columns: 1fr 1fr; gap: 2rem; }
     .chart-card { background: white; padding: 2rem; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 10px 25px -5px rgba(0,0,0,0.05); }
     
-    /* MODAL */
+    /* Modal */
     .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.8); display: none; place-items: center; z-index: 100; backdrop-filter: blur(4px); }
     .modal-overlay.active { display: grid; }
     .modal { background: white; width: 650px; border-radius: 16px; padding: 2.5rem; box-shadow: 0 25px 50px rgba(0,0,0,0.25); }
@@ -67,24 +68,25 @@
     <div class="nav-item" id="nav-chart" onclick="toggleView('graficas')">📊 Business Intelligence</div>
   </aside>
 
-  <div class="loader" id="loader"><div class="spinner"></div><span id="loader-text">SINCRONIZANDO</span></div>
+  <div class="loader" id="loader"><div class="spinner"></div><span id="loader-text">SINCRONIZANDO...</span></div>
 
   <main class="main">
     <div class="header">
-      <h1 style="font-weight: 800; font-size: 2rem;">Gestión de Requerimientos</h1>
-      <div style="background: #1E293B; color: white; padding: 8px 20px; border-radius: 50px; font-size: 0.8rem; font-weight: 800;">PERFIL: ADMINISTRADOR</div>
+      <h1 style="font-weight: 800; font-size: 2rem;">Gestión de Proyectos</h1>
+      <div style="background: #1E293B; color: white; padding: 8px 20px; border-radius: 50px; font-size: 0.8rem; font-weight: 800;">SESIÓN: CORPORATIVO</div>
     </div>
 
     <div class="toolbar">
       <button class="btn-create" onclick="abrirModal()">+ NUEVA ACTIVIDAD</button>
       <select id="filtroDepto" class="select-filtro" onchange="aplicarFiltro()">
-        <option value="Todos">Visualizar Todas las Áreas</option>
+        <option value="Todos">Todas las Áreas</option>
         <option value="Mantenimiento">Mantenimiento</option>
         <option value="Jurídico">Jurídico</option>
         <option value="Ama de llaves">Ama de llaves</option>
         <option value="Sistemas">Sistemas</option>
-        <option value="Compras">Compras</option>
         <option value="Operaciones">Operaciones</option>
+        <option value="Finanzas">Finanzas</option>
+        <option value="Compras">Compras</option>
       </select>
     </div>
 
@@ -94,12 +96,12 @@
           <thead>
             <tr>
               <th style="width:40px;"></th>
-              <th>Requerimiento Técnico</th>
-              <th style="width:160px;">Responsable</th>
+              <th>Requerimiento y Detalles</th>
+              <th style="width:150px;">Asignado A</th>
               <th style="width:140px;">Estatus</th>
               <th style="width:130px;">Prioridad</th>
-              <th style="width:110px;">F. Inicio</th>
-              <th style="width:110px;">F. Vence</th>
+              <th style="width:110px;">Inicio</th>
+              <th style="width:110px;">Vencimiento</th>
             </tr>
           </thead>
           <tbody id="tabla-body"></tbody>
@@ -108,8 +110,8 @@
     </div>
 
     <div class="dashboard-view" id="view-graficas">
-      <div class="chart-card"><h3 style="margin-bottom:1.5rem; font-weight:800;">Avance de Operaciones</h3><div style="height:350px;"><canvas id="statusChart"></canvas></div></div>
-      <div class="chart-card"><h3 style="margin-bottom:1.5rem; font-weight:800;">Volumen por Departamento</h3><div style="height:350px;"><canvas id="deptChart"></canvas></div></div>
+      <div class="chart-card"><h3 style="margin-bottom:1.5rem; font-weight:800;">Avance Global</h3><div style="height:350px;"><canvas id="statusChart"></canvas></div></div>
+      <div class="chart-card"><h3 style="margin-bottom:1.5rem; font-weight:800;">Demanda por Área</h3><div style="height:350px;"><canvas id="deptChart"></canvas></div></div>
     </div>
   </main>
 
@@ -117,30 +119,32 @@
     <div class="modal">
       <h2 style="margin-bottom: 2rem; font-weight: 800; font-size: 1.5rem;">Alta de Actividad</h2>
       <form id="taskForm" onsubmit="guardarDatos(event)">
-        <div class="form-group"><label>Nombre del Requerimiento</label><input type="text" id="vTarea" required placeholder="Ej. Cambio de transformadores"></div>
-        <div class="form-group"><label>Descripción / Notas</label><textarea id="vDesc" required placeholder="Escribe los detalles técnicos, ubicaciones o notas importantes..."></textarea></div>
+        <div class="form-group"><label>Tarea</label><input type="text" id="f_tarea" required placeholder="Ej. Cambio de transformadores"></div>
+        <div class="form-group"><label>Descripción / Notas</label><textarea id="f_desc" required placeholder="Escribe los detalles técnicos o ubicaciones..."></textarea></div>
         
         <div style="display: flex; gap: 1rem;">
           <div class="form-group" style="flex: 1;"><label>Departamento</label>
-            <select id="vDepto">
+            <select id="f_depto">
               <option value="Mantenimiento">Mantenimiento</option>
               <option value="Jurídico">Jurídico</option>
               <option value="Ama de llaves">Ama de llaves</option>
               <option value="Sistemas">Sistemas</option>
+              <option value="Operaciones">Operaciones</option>
+              <option value="Finanzas">Finanzas</option>
               <option value="Compras">Compras</option>
             </select>
           </div>
           <div class="form-group" style="flex: 1;"><label>Prioridad</label>
-            <select id="vPrio"><option value="Baja">Baja</option><option value="Media">Media</option><option value="Alta">Alta</option><option value="Crítica">Crítica</option></select>
+            <select id="f_prio"><option value="Baja">Baja</option><option value="Media">Media</option><option value="Alta">Alta</option><option value="Crítica">Crítica</option></select>
           </div>
         </div>
 
         <div style="display: flex; gap: 1rem;">
-          <div class="form-group" style="flex: 1;"><label>Fecha de Inicio</label><input type="date" id="vInicio" required></div>
-          <div class="form-group" style="flex: 1;"><label>Fecha Límite</label><input type="date" id="vFin" required></div>
+          <div class="form-group" style="flex: 1;"><label>Fecha de Inicio</label><input type="date" id="f_inicio" required></div>
+          <div class="form-group" style="flex: 1;"><label>Fecha Límite</label><input type="date" id="f_fin" required></div>
         </div>
 
-        <div class="form-group"><label>Persona Asignada</label><input type="text" id="vResp" required placeholder="Nombre completo o Puesto"></div>
+        <div class="form-group"><label>Persona Asignada</label><input type="text" id="f_resp" required placeholder="Ej. Nombre completo o puesto"></div>
         
         <div style="display: flex; gap: 1rem; margin-top: 1.5rem;">
           <button type="button" style="flex: 1; padding: 1rem; border-radius:8px; border:2px solid #E2E8F0; background:white; font-weight:800; cursor:pointer;" onclick="cerrarModal()">CANCELAR</button>
@@ -151,8 +155,8 @@
   </div>
 
   <script>
-    // 🚨 PON AQUÍ TU URL NUEVA 🚨
-    const API_URL = "https://script.google.com/macros/s/AKfycbzDOlrGBX2SwWISncNGzsQ8BKcLpIkXYM9Ytdk51ecJg7R9HxJvoYeebKB6mIeOLuSb/exec";
+    // TU NUEVA URL YA ESTÁ AQUÍ INTEGRADA PERFECTAMENTE
+    const API_URL = "https://script.google.com/macros/s/AKfycbz6ZsrQM-kjuFHcPkrO5TkrAo2U54WX8csFyRvZG62vAlM8G8c5M800zMU2gs-X8VYiiA/exec";
     
     let baseDatos = [];
     let ch1, ch2;
@@ -195,7 +199,7 @@
             <td style="background: #F8FAFC;"></td>
             <td class="cell-task">
               <div class="task-title">${d.tarea}</div>
-              <div class="task-desc">${d.descripcion || 'Sin descripción'}</div>
+              <div class="task-desc">${d.descripcion}</div>
             </td>
             <td><span style="font-weight:800; font-size:0.85rem;">${d.responsable}</span></td>
             <td style="background:${cStat};">
@@ -220,21 +224,22 @@
       });
     }
 
-    // EL ENVÍO DE DATOS BLINDADO
     async function guardarDatos(e) {
       e.preventDefault();
+      
+      // Captura de datos super segura
+      const payload = {
+        tarea: document.getElementById('f_tarea').value,
+        descripcion: document.getElementById('f_desc').value,
+        departamento: document.getElementById('f_depto').value,
+        prioridad: document.getElementById('f_prio').value,
+        fechaInicio: document.getElementById('f_inicio').value,
+        fechaFin: document.getElementById('f_fin').value,
+        responsable: document.getElementById('f_resp').value
+      };
+
       cerrarModal();
       mostrarCarga(true, "GUARDANDO EN LA NUBE...");
-      
-      const payload = {
-        tarea: document.getElementById('vTarea').value,
-        descripcion: document.getElementById('vDesc').value,
-        departamento: document.getElementById('vDepto').value,
-        prioridad: document.getElementById('vPrio').value,
-        fechaInicio: document.getElementById('vInicio').value,
-        fechaFin: document.getElementById('vFin').value,
-        responsable: document.getElementById('vResp').value
-      };
 
       try {
         await fetch(API_URL, { 
@@ -244,7 +249,7 @@
         });
         setTimeout(iniciarCarga, 1000);
       } catch(error) {
-        alert("Fallo de red. Intenta nuevamente.");
+        alert("Fallo de red.");
         mostrarCarga(false);
       }
     }
