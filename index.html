@@ -12,7 +12,7 @@
       --bg-board: #FFFFFF; --text-main: #323338; --text-gray: #676879;
       --border-color: #D0D4E4; --border-light: #E6E9EF;
       --monday-blue: #0073EA; --monday-hover: #0060B9;
-      --sidebar-bg: #292F4C;
+      --sidebar-bg: #1A1F36;
       
       --stat-listo: #00C875; --stat-curso: #FDAB3D; --stat-estancado: #E2445C; --stat-gris: #C4C4C4;
       --prio-critica: #333333; --prio-alta: #E2445C; --prio-media: #A25DDC; --prio-baja: #579BFC;
@@ -21,75 +21,79 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
     body { display: flex; height: 100vh; background-color: var(--bg-board); color: var(--text-main); overflow: hidden; }
     
-    /* Panel Lateral Totalmente Funcional */
-    .panel-secundario { width: 240px; background: #F5F6F8; border-right: 1px solid var(--border-color); padding: 1.5rem 1rem; display: flex; flex-direction: column; }
-    .panel-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
-    .panel-subtitle { font-size: 0.8rem; color: var(--text-gray); margin-bottom: 2rem; }
+    /* Panel Lateral */
+    .panel-secundario { width: 260px; background: #F7F8FA; border-right: 1px solid var(--border-color); padding: 2rem 1rem; display: flex; flex-direction: column; }
+    .panel-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.2rem; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
+    .panel-subtitle { font-size: 0.85rem; color: var(--text-gray); margin-bottom: 2.5rem; letter-spacing: 0.5px; }
     
-    .nav-item { padding: 0.8rem 1rem; border-radius: 6px; font-size: 0.95rem; font-weight: 500; cursor: pointer; color: var(--text-main); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 10px; transition: 0.2s; }
-    .nav-item.active { background: #E4F1FF; color: var(--monday-blue); }
-    .nav-item:hover:not(.active) { background: #E6E9EF; }
+    .nav-item { padding: 0.8rem 1rem; border-radius: 8px; font-size: 0.95rem; font-weight: 500; cursor: pointer; color: var(--text-main); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 10px; transition: all 0.2s; }
+    .nav-item.active { background: #E4F1FF; color: var(--monday-blue); font-weight: 700; }
+    .nav-item:hover:not(.active) { background: #EAECEF; }
 
-    /* Main Area */
+    /* Área Principal */
     .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow-y: auto; background: var(--bg-board); padding: 2rem 3rem; }
     
-    .header-top { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-light); padding-bottom: 1rem; }
+    /* Header y Perfil de Usuario Premium */
+    .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-light); padding-bottom: 1rem; }
     .board-title { font-size: 1.8rem; font-weight: 500; }
     
-    /* Simulador de Usuario Activo */
-    .user-session { display: flex; align-items: center; gap: 10px; background: white; border: 1px solid var(--border-color); padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.85rem; }
-    .user-avatar { width: 24px; height: 24px; background: var(--sidebar-bg); color: white; border-radius: 50%; display: grid; place-items: center; font-weight: bold; font-size: 0.7rem; }
+    .profile-switcher { display: flex; align-items: center; gap: 12px; background: #FFFFFF; border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
+    .profile-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #0073EA, #00C875); color: white; display: grid; place-items: center; font-weight: bold; font-size: 0.8rem; }
+    .profile-info { display: flex; flex-direction: column; }
+    .profile-info span { font-size: 0.7rem; color: var(--text-gray); text-transform: uppercase; font-weight: 700; }
+    .profile-select { border: none; background: transparent; font-weight: 700; font-size: 0.9rem; color: var(--text-main); outline: none; cursor: pointer; }
     
-    /* Barra de Herramientas Funcional */
+    /* Barra de Herramientas */
     .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
     .tools-left { display: flex; gap: 1rem; align-items: center; }
-    .btn-monday { background: var(--monday-blue); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 4px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: 0.2s; }
-    .btn-monday:hover { background: var(--monday-hover); }
+    .btn-monday { background: var(--monday-blue); color: white; border: none; padding: 0.7rem 1.2rem; border-radius: 6px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0, 115, 234, 0.2); }
+    .btn-monday:hover { background: var(--monday-hover); transform: translateY(-1px); }
     
-    .btn-outline { background: white; color: var(--text-main); border: 1px solid var(--border-color); padding: 0.6rem 1.2rem; border-radius: 4px; font-size: 0.9rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
+    .btn-outline { background: white; color: var(--text-main); border: 1px solid var(--border-color); padding: 0.6rem 1.2rem; border-radius: 6px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
     .btn-outline:hover { background: #F5F6F8; }
 
-    .select-filtro { padding: 0.5rem 1rem; border: 1px solid var(--border-color); border-radius: 4px; outline: none; font-size: 0.9rem; min-width: 200px; }
+    .select-filtro { padding: 0.6rem 1rem; border: 1px solid var(--border-color); border-radius: 6px; outline: none; font-size: 0.9rem; min-width: 220px; font-weight: 500; }
 
-    /* TABLA CLON MONDAY CON GRUPOS COLAPSABLES */
-    .monday-group { margin-bottom: 2rem; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
-    .group-header { padding: 0.8rem 1rem; font-size: 1.1rem; font-weight: 500; display: flex; align-items: center; gap: 8px; color: var(--monday-blue); background: white; cursor: pointer; user-select: none; border-bottom: 1px solid var(--border-color); transition: background 0.2s; }
+    /* TABLA CLON MONDAY */
+    .monday-group { margin-bottom: 2rem; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
+    .group-header { padding: 0.8rem 1.2rem; font-size: 1.1rem; font-weight: 500; display: flex; align-items: center; gap: 10px; color: var(--monday-blue); background: white; cursor: pointer; border-bottom: 1px solid var(--border-color); transition: background 0.2s; }
     .group-header:hover { background: #F8F9FA; }
-    .group-icon { transition: transform 0.3s; font-size: 0.8rem; }
-    .group-icon.collapsed { transform: rotate(-90deg); }
     
-    .table-responsive { transition: max-height 0.3s ease-out; overflow: hidden; }
-    .table-responsive.collapsed { max-height: 0; }
-
     .monday-table { width: 100%; border-collapse: collapse; table-layout: fixed; background: white; }
-    .col-check { width: 40px; } .col-tarea { width: auto; } .col-resp { width: 140px; } .col-depto { width: 150px; } .col-stat { width: 140px; } .col-prio { width: 140px; } .col-fecha { width: 100px; }
+    .col-check { width: 40px; } .col-tarea { width: auto; } .col-resp { width: 140px; } .col-depto { width: 160px; } .col-stat { width: 140px; } .col-prio { width: 140px; } .col-fecha { width: 100px; }
 
-    .monday-table th { padding: 0.6rem; border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-light); font-weight: 500; color: var(--text-gray); font-size: 0.85rem; text-align: center; background: #FAFBFC; }
+    .monday-table th { padding: 0.8rem; border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-light); font-weight: 500; color: var(--text-gray); font-size: 0.85rem; text-align: center; background: #FAFBFC; }
     .monday-table th.col-tarea { text-align: left; padding-left: 1rem; }
-    .monday-table td { border-bottom: 1px solid var(--border-light); border-right: 1px solid var(--border-light); text-align: center; font-size: 0.9rem; height: 38px; padding: 0; }
+    .monday-table td { border-bottom: 1px solid var(--border-light); border-right: 1px solid var(--border-light); text-align: center; font-size: 0.9rem; height: 45px; padding: 0; }
     .monday-table tr:hover td { background: #F8F9FA; }
-    .cell-tarea { text-align: left !important; padding-left: 1rem !important; border-left: 6px solid var(--monday-blue); font-weight: 500; }
+    
+    /* Mejora visual: Título y descripción en la misma celda */
+    .cell-tarea { text-align: left !important; padding: 0.5rem 1rem !important; border-left: 6px solid var(--monday-blue); }
+    .tarea-titulo { font-weight: 500; color: var(--text-main); font-size: 0.95rem; }
+    .tarea-desc { font-size: 0.75rem; color: var(--text-gray); margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
     
     /* Selectores Sólidos tipo Monday */
-    .monday-select { appearance: none; -webkit-appearance: none; width: 100%; height: 38px; border: none; outline: none; color: white; font-size: 0.85rem; font-weight: 500; text-align: center; text-align-last: center; cursor: pointer; transition: filter 0.2s; }
+    .monday-select { appearance: none; -webkit-appearance: none; width: 100%; height: 100%; min-height: 45px; border: none; outline: none; color: white; font-size: 0.85rem; font-weight: 500; text-align: center; text-align-last: center; cursor: pointer; transition: filter 0.2s; }
     .monday-select:hover { filter: brightness(0.9); }
     
     /* VISTA DE GRÁFICAS */
     .dashboard-view { display: none; grid-template-columns: 1fr 2fr; gap: 1.5rem; height: 450px; }
-    .chart-box { background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; }
+    .chart-box { background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
     .canvas-container { flex: 1; position: relative; width: 100%; }
 
-    /* Modal */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; place-items: center; z-index: 100; }
+    /* Modal Mejorado */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(2px); display: none; place-items: center; z-index: 100; }
     .modal-overlay.active { display: grid; }
-    .modal { background: white; width: 100%; max-width: 500px; border-radius: 8px; padding: 1.5rem; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
-    .form-group { margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
-    label { font-size: 0.85rem; color: var(--text-main); font-weight: 500; }
-    input, select, textarea { padding: 0.6rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.9rem; outline: none; }
-    input:focus, select:focus { border-color: var(--monday-blue); }
+    .modal { background: white; width: 100%; max-width: 550px; border-radius: 12px; padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
+    .form-group { margin-bottom: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem; }
+    label { font-size: 0.85rem; color: var(--text-main); font-weight: 600; }
+    input, select, textarea { padding: 0.8rem; border: 1px solid var(--border-color); border-radius: 6px; font-size: 0.95rem; outline: none; transition: 0.2s; background: #F9FAFB; }
+    input:focus, select:focus, textarea:focus { border-color: var(--monday-blue); background: white; box-shadow: 0 0 0 3px rgba(0, 115, 234, 0.1); }
+    textarea { resize: vertical; min-height: 80px; }
 
-    .loader-wrap { position: fixed; inset: 0; background: rgba(255,255,255,0.8); display: none; justify-content: center; align-items: center; z-index: 200; flex-direction: column; gap: 10px; }
-    .spinner { width: 40px; height: 40px; border: 4px solid var(--border-light); border-top-color: var(--monday-blue); border-radius: 50%; animation: spin 1s linear infinite; }
+    /* Loader */
+    .loader-wrap { position: fixed; inset: 0; background: rgba(255,255,255,0.8); display: none; justify-content: center; align-items: center; z-index: 200; flex-direction: column; gap: 15px; }
+    .spinner { width: 50px; height: 50px; border: 4px solid var(--border-light); border-top-color: var(--monday-blue); border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
@@ -97,10 +101,10 @@
 
   <div class="panel-secundario">
     <div class="panel-title">
-      <div style="background: var(--sidebar-bg); width: 20px; height: 20px; border-radius: 4px; display: grid; place-items: center; color: white; font-size: 0.6rem;">FI</div>
+      <div style="background: var(--sidebar-bg); width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; color: white; font-size: 0.7rem;">FI</div>
       Fibra Inn
     </div>
-    <div class="panel-subtitle">Plataforma Corporativa</div>
+    <div class="panel-subtitle">Corporate WorkOS System</div>
     
     <div class="nav-item active" id="nav-tablero" onclick="cambiarVista('tabla')">📋 Tablero de Ejecución</div>
     <div class="nav-item" id="nav-graficas" onclick="cambiarVista('graficas')">📈 Analíticas y Reportes</div>
@@ -108,30 +112,34 @@
 
   <div class="loader-wrap" id="loader">
     <div class="spinner"></div>
-    <div style="color: var(--text-main); font-weight: 500;" id="loader-text">Sincronizando...</div>
+    <div style="color: var(--text-main); font-weight: 500; font-size: 1.1rem;" id="loader-text">Sincronizando...</div>
   </div>
 
   <main class="main-wrapper">
     
     <div class="header-top">
-      <h1 class="board-title">Requerimientos Generales</h1>
+      <h1 class="board-title">Requerimientos Centrales</h1>
       
-      <div class="user-session">
-        <span style="color: var(--text-gray);">Sesión activa:</span>
-        <select style="border: none; background: transparent; font-weight: 600; outline: none; cursor: pointer; color: var(--text-main);">
-          <option>Dirección General</option>
-          <option>Gerencia de Operaciones</option>
-          <option>Jefatura de Mantenimiento</option>
-        </select>
-        <div class="user-avatar">AD</div>
+      <div class="profile-switcher">
+        <div class="profile-avatar">👤</div>
+        <div class="profile-info">
+          <span>Sesión iniciada como:</span>
+          <select class="profile-select" onchange="actualizarAvatar(this.value)">
+            <option value="Dirección General">Dirección General</option>
+            <option value="Abogado Corporativo">Abogado Corporativo (Jurídico)</option>
+            <option value="Gerencia de Compras">Gerencia de Compras</option>
+            <option value="Jefatura de Mantenimiento">Jefatura de Mantenimiento</option>
+            <option value="Ama de Llaves">Ama de Llaves</option>
+          </select>
+        </div>
       </div>
     </div>
 
     <div class="toolbar">
       <div class="tools-left">
-        <button class="btn-monday" onclick="abrirModal()">+ Nuevo Elemento</button>
+        <button class="btn-monday" onclick="abrirModal()">+ Nuevo Requerimiento</button>
         <select id="filtroDepto" class="select-filtro" onchange="aplicarFiltro()">
-          <option value="Todos">Filtrar por Departamento: Todos</option>
+          <option value="Todos">Filtrar por Área: Todas</option>
           <option value="Mantenimiento">Mantenimiento</option>
           <option value="Jurídico">Jurídico</option>
           <option value="Ama de llaves">Ama de llaves</option>
@@ -143,21 +151,17 @@
         </select>
       </div>
       
-      <button class="btn-outline" onclick="exportarCSV()">
-        📥 Exportar a CSV
-      </button>
+      <button class="btn-outline" onclick="exportarCSV()">📥 Exportar a CSV</button>
     </div>
 
     <div id="vista-tabla">
       
       <div class="monday-group">
-        <div class="group-header" onclick="toggleGroup('tabla-activos', 'icon-activos')">
-          <span class="group-icon" id="icon-activos">▼</span> Tareas Activas / Pendientes
-        </div>
-        <div class="table-responsive" id="tabla-activos">
+        <div class="group-header">▼ Tareas Activas / Pendientes</div>
+        <div class="table-responsive">
           <table class="monday-table">
             <thead>
-              <tr><th class="col-check"></th><th class="col-tarea">Tarea</th><th class="col-resp">Asignado a</th><th class="col-depto">Departamento</th><th class="col-stat">Estatus</th><th class="col-prio">Prioridad</th><th class="col-fecha">Fecha</th></tr>
+              <tr><th class="col-check"></th><th class="col-tarea">Requerimiento / Descripción</th><th class="col-resp">Responsable</th><th class="col-depto">Departamento</th><th class="col-stat">Estatus</th><th class="col-prio">Prioridad</th><th class="col-fecha">Fecha</th></tr>
             </thead>
             <tbody id="body-activos"></tbody>
           </table>
@@ -165,13 +169,11 @@
       </div>
 
       <div class="monday-group">
-        <div class="group-header" style="color: var(--stat-listo);" onclick="toggleGroup('tabla-resueltos', 'icon-resueltos')">
-          <span class="group-icon" id="icon-resueltos">▼</span> Tareas Completadas
-        </div>
-        <div class="table-responsive" id="tabla-resueltos">
+        <div class="group-header" style="color: var(--stat-listo);">▼ Tareas Completadas</div>
+        <div class="table-responsive">
           <table class="monday-table" style="border-left: 6px solid var(--stat-listo);">
             <thead>
-              <tr><th class="col-check"></th><th class="col-tarea">Tarea</th><th class="col-resp">Asignado a</th><th class="col-depto">Departamento</th><th class="col-stat">Estatus</th><th class="col-prio">Prioridad</th><th class="col-fecha">Fecha</th></tr>
+              <tr><th class="col-check"></th><th class="col-tarea">Requerimiento / Descripción</th><th class="col-resp">Responsable</th><th class="col-depto">Departamento</th><th class="col-stat">Estatus</th><th class="col-prio">Prioridad</th><th class="col-fecha">Fecha</th></tr>
             </thead>
             <tbody id="body-resueltos"></tbody>
           </table>
@@ -186,7 +188,7 @@
         <div class="canvas-container"><canvas id="statusChart"></canvas></div>
       </div>
       <div class="chart-box">
-        <h3 style="color: var(--text-main); margin-bottom: 1rem; font-weight: 500;">Distribución por Departamento</h3>
+        <h3 style="color: var(--text-main); margin-bottom: 1rem; font-weight: 500;">Distribución de Carga por Área</h3>
         <div class="canvas-container"><canvas id="deptChart"></canvas></div>
       </div>
     </div>
@@ -196,19 +198,24 @@
   <div class="modal-overlay" id="modal">
     <div class="modal">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <h2 style="font-size: 1.2rem; font-weight: 500;">Crear nuevo elemento</h2>
-        <button onclick="cerrarModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-gray);">&times;</button>
+        <h2 style="font-size: 1.4rem; font-weight: 700; color: var(--text-main);">Nuevo Requerimiento</h2>
+        <button onclick="cerrarModal()" style="background: none; border: none; font-size: 1.8rem; cursor: pointer; color: var(--text-gray);">&times;</button>
       </div>
       
       <form id="formTicket" onsubmit="guardarTicket(event)">
         <div class="form-group">
-          <label>Nombre de la tarea / Asunto</label>
-          <input type="text" id="inpAsunto" required>
+          <label>Título del requerimiento</label>
+          <input type="text" id="inpAsunto" required placeholder="Ej. Revisión de contratos a proveedores">
+        </div>
+
+        <div class="form-group">
+          <label>Descripción detallada</label>
+          <textarea id="inpDesc" required placeholder="Agrega contexto, notas, o el problema específico a resolver..."></textarea>
         </div>
         
         <div style="display: flex; gap: 1rem;">
           <div class="form-group" style="flex: 1;">
-            <label>Departamento</label>
+            <label>Departamento Implicado</label>
             <select id="inpDepto" required>
               <option value="Mantenimiento" selected>Mantenimiento</option>
               <option value="Jurídico">Jurídico</option>
@@ -221,7 +228,7 @@
             </select>
           </div>
           <div class="form-group" style="flex: 1;">
-            <label>Prioridad Inicial</label>
+            <label>Nivel de Prioridad</label>
             <select id="inpPrio" required>
               <option value="Baja">Baja</option>
               <option value="Media">Media</option>
@@ -234,21 +241,25 @@
         <div class="form-group">
           <label>Asignar a (Rol/Persona)</label>
           <select id="inpResp" required>
-            <option value="Gerencia General">Gerencia General</option>
-            <option value="Jefe de Área" selected>Jefe de Área</option>
-            <option value="Supervisor en Turno">Supervisor en Turno</option>
+            <option value="Dirección">Dirección General</option>
+            <option value="Abogado / Legal" selected>Abogado / Legal</option>
+            <option value="Gerencia">Gerencia</option>
+            <option value="Jefatura">Jefatura</option>
             <option value="Staff Operativo">Staff Operativo</option>
-            <option value="Proveedor Externo">Proveedor Externo</option>
+            <option value="Proveedor">Proveedor Externo</option>
           </select>
         </div>
         
-        <button type="submit" class="btn-monday" style="width: 100%; margin-top: 1rem;" id="btnSubmit">Guardar Tarea</button>
+        <div style="display: flex; gap: 10px; margin-top: 1.5rem;">
+          <button type="button" class="btn-outline" style="flex: 1; justify-content: center;" onclick="cerrarModal()">Cancelar</button>
+          <button type="submit" class="btn-monday" style="flex: 2;" id="btnSubmit">Registrar Tarea</button>
+        </div>
       </form>
     </div>
   </div>
 
   <script>
-    // 🚨 PON AQUÍ TU NUEVA URL DESPUÉS DE HACER "NUEVA IMPLEMENTACIÓN" 🚨
+    // 🚨 REEMPLAZA ESTA URL DESPUÉS DE HACER "NUEVA IMPLEMENTACIÓN" EN APPS SCRIPT 🚨
     const API_URL = "https://script.google.com/macros/s/AKfycbzDOlrGBX2SwWISncNGzsQ8BKcLpIkXYM9Ytdk51ecJg7R9HxJvoYeebKB6mIeOLuSb/exec";
 
     let datosGlobales = [];
@@ -256,7 +267,11 @@
 
     document.addEventListener('DOMContentLoaded', cargarDatos);
 
-    // FUNCIÓN PARA EL MENÚ LATERAL (BOTONES FUNCIONALES)
+    // Cambiar Letra del Avatar
+    function actualizarAvatar(valor) {
+      document.querySelector('.profile-avatar').innerText = valor.charAt(0);
+    }
+
     function cambiarVista(vista) {
       document.getElementById('nav-tablero').classList.remove('active');
       document.getElementById('nav-graficas').classList.remove('active');
@@ -265,51 +280,30 @@
         document.getElementById('nav-tablero').classList.add('active');
         document.getElementById('vista-tabla').style.display = 'block';
         document.getElementById('vista-graficas').style.display = 'none';
-        document.querySelector('.toolbar').style.display = 'flex'; // Mostrar barra en tabla
+        document.querySelector('.toolbar').style.display = 'flex'; 
       } else {
         document.getElementById('nav-graficas').classList.add('active');
         document.getElementById('vista-tabla').style.display = 'none';
         document.getElementById('vista-graficas').style.display = 'grid';
-        document.querySelector('.toolbar').style.display = 'none'; // Ocultar barra en gráficas
+        document.querySelector('.toolbar').style.display = 'none'; 
       }
     }
 
-    // FUNCIÓN PARA COLAPSAR GRUPOS
-    function toggleGroup(tableId, iconId) {
-      const table = document.getElementById(tableId);
-      const icon = document.getElementById(iconId);
-      if (table.classList.contains('collapsed')) {
-        table.classList.remove('collapsed');
-        icon.classList.remove('collapsed');
-        table.style.maxHeight = table.scrollHeight + "px";
-      } else {
-        table.style.maxHeight = table.scrollHeight + "px"; // Fijar altura antes de colapsar
-        setTimeout(() => table.classList.add('collapsed'), 10);
-        icon.classList.add('collapsed');
-      }
-    }
-
-    // FUNCIÓN PARA EXPORTAR A EXCEL (CSV)
     function exportarCSV() {
-      if (datosGlobales.length === 0) {
-        alert("No hay datos para exportar.");
-        return;
-      }
-      let csvContent = "data:text/csv;charset=utf-8,";
-      csvContent += "ID,Asunto,Responsable,Departamento,Estatus,Prioridad,Fecha\n"; // Encabezados
-      
+      if (datosGlobales.length === 0) { alert("No hay datos."); return; }
+      let csvContent = "data:text/csv;charset=utf-8,ID,Asunto,Descripción,Responsable,Departamento,Estatus,Prioridad,Fecha\n";
       const depto = document.getElementById('filtroDepto').value;
       const datosAExportar = depto === 'Todos' ? datosGlobales : datosGlobales.filter(d => d.departamento === depto);
 
       datosAExportar.forEach(d => {
-        let fila = `${d.id},"${d.tarea}","${d.responsable}","${d.departamento}",${d.estatus},${d.prioridad},${d.fecha}`;
+        let descLimpia = d.descripcion ? d.descripcion.replace(/"/g, '""') : "";
+        let fila = `${d.id},"${d.tarea}","${descLimpia}","${d.responsable}","${d.departamento}",${d.estatus},${d.prioridad},${d.fecha}`;
         csvContent += fila + "\n";
       });
-
       const encodedUri = encodeURI(csvContent);
       const link = document.createElement("a");
       link.setAttribute("href", encodedUri);
-      link.setAttribute("download", "Reporte_Operaciones_FibraInn.csv");
+      link.setAttribute("download", "Reporte_FibraInn.csv");
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -317,13 +311,13 @@
 
     function abrirModal() { document.getElementById('modal').classList.add('active'); }
     function cerrarModal() { document.getElementById('modal').classList.remove('active'); document.getElementById('formTicket').reset(); }
-    function mostrarCarga(mostrar, texto="Sincronizando base de datos...") { 
+    function mostrarCarga(mostrar, texto="Sincronizando...") { 
       document.getElementById('loader-text').innerText = texto;
       document.getElementById('loader').style.display = mostrar ? 'flex' : 'none'; 
     }
 
     async function cargarDatos() {
-      mostrarCarga(true, "Conectando con el servidor...");
+      mostrarCarga(true, "Descargando base de datos...");
       try {
         const res = await fetch(API_URL);
         const json = await res.json();
@@ -340,10 +334,6 @@
       const filtrados = depto === 'Todos' ? datosGlobales : datosGlobales.filter(d => d.departamento === depto);
       dibujarTabla(filtrados);
       actualizarGraficas(filtrados);
-      
-      // Asegurar que las tablas estén expandidas y calculadas al cargar
-      document.getElementById('tabla-activos').style.maxHeight = "none";
-      document.getElementById('tabla-resueltos').style.maxHeight = "none";
     }
 
     function getColorStatus(s) {
@@ -370,17 +360,21 @@
         const bgPrio = getColorPrio(d.prioridad);
         const inicial = d.responsable.charAt(0).toUpperCase();
         
+        // Aquí es donde se inyecta la DESCRIPCIÓN debajo del título
         const filaHtml = `
           <tr>
             <td style="background: #F5F6F8;"><input type="checkbox" disabled></td>
-            <td class="cell-tarea" style="border-left-color: ${d.estatus === 'Listo' ? 'var(--stat-listo)' : 'var(--monday-blue)'}; ${d.estatus === 'Listo' ? 'text-decoration: line-through; color: var(--text-gray);' : ''}">${d.tarea}</td>
+            <td class="cell-tarea" style="border-left-color: ${d.estatus === 'Listo' ? 'var(--stat-listo)' : 'var(--monday-blue)'};">
+              <div class="tarea-titulo" style="${d.estatus === 'Listo' ? 'text-decoration: line-through; color: var(--text-gray);' : ''}">${d.tarea}</div>
+              <div class="tarea-desc" title="${d.descripcion}">${d.descripcion || 'Sin descripción adicional'}</div>
+            </td>
             <td>
               <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
-                <div style="width:24px; height:24px; background:#E6E9EF; color:var(--text-main); border-radius:50%; display:grid; place-items:center; font-size:0.7rem; font-weight:bold;">${inicial}</div>
-                <span style="font-size:0.85rem;">${d.responsable}</span>
+                <div style="width:26px; height:26px; background:#E6E9EF; color:var(--text-main); border-radius:50%; display:grid; place-items:center; font-size:0.75rem; font-weight:bold;">${inicial}</div>
+                <span style="font-size:0.85rem; font-weight: 500;">${d.responsable}</span>
               </div>
             </td>
-            <td>${d.departamento}</td>
+            <td style="font-weight: 500; color: var(--text-gray);">${d.departamento}</td>
             
             <td style="background-color: ${bgStat};">
               <select class="monday-select" style="background: transparent; color: ${bgStat === 'var(--stat-gris)' ? '#333' : '#fff'};" onchange="actualizarDato('${d.id}', 'Estatus', this.value)">
@@ -391,94 +385,4 @@
               </select>
             </td>
             
-            <td style="background-color: ${bgPrio};">
-              <select class="monday-select" style="background: transparent;" onchange="actualizarDato('${d.id}', 'Prioridad', this.value)">
-                <option value="Baja" style="color:black;" ${d.prioridad === 'Baja' ? 'selected' : ''}>Baja</option>
-                <option value="Media" style="color:black;" ${d.prioridad === 'Media' ? 'selected' : ''}>Media</option>
-                <option value="Alta" style="color:black;" ${d.prioridad === 'Alta' ? 'selected' : ''}>Alta</option>
-                <option value="Crítica" style="color:black;" ${d.prioridad === 'Crítica' ? 'selected' : ''}>Crítica</option>
-              </select>
-            </td>
-            
-            <td style="font-size: 0.8rem; color: var(--text-gray);">${d.fecha}</td>
-          </tr>
-        `;
-
-        if(d.estatus === 'Listo') {
-          bodyResueltos.innerHTML += filaHtml;
-        } else {
-          bodyActivos.innerHTML += filaHtml;
-        }
-      });
-    }
-
-    async function guardarTicket(e) {
-      e.preventDefault();
-      cerrarModal();
-      mostrarCarga(true, "Guardando nueva tarea...");
-      
-      const payload = {
-        accion: "crear",
-        item: {
-          tarea: document.getElementById('inpAsunto').value,
-          departamento: document.getElementById('inpDepto').value,
-          prioridad: document.getElementById('inpPrio').value,
-          responsable: document.getElementById('inpResp').value
-        }
-      };
-
-      try {
-        await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
-        document.getElementById('filtroDepto').value = 'Todos';
-        setTimeout(cargarDatos, 1000);
-      } catch(e) { 
-        alert("Error al guardar.");
-        mostrarCarga(false);
-      }
-    }
-
-    async function actualizarDato(id, campo, valor) {
-      mostrarCarga(true, "Actualizando sistema...");
-      const payload = { accion: "actualizar", id: id, campo: campo, valor: valor };
-      try {
-        await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
-        setTimeout(cargarDatos, 1000);
-      } catch(e) {
-        alert("Error al actualizar la tabla.");
-        mostrarCarga(false);
-      }
-    }
-
-    function actualizarGraficas(datos) {
-      let hacer = 0, curso = 0, estancado = 0, listo = 0;
-      let deptos = { "Mantenimiento":0, "Jurídico":0, "Ama de llaves":0, "Operaciones":0, "Finanzas":0, "Sistemas":0, "Recursos Humanos":0, "Compras":0 };
-
-      datos.forEach(d => {
-        if(d.estatus === 'Listo') listo++;
-        else if(d.estatus === 'En curso') curso++;
-        else if(d.estatus === 'Estancado') estancado++;
-        else hacer++;
-        if(deptos[d.departamento] !== undefined) deptos[d.departamento]++;
-      });
-
-      Chart.defaults.font.family = "'Roboto', sans-serif";
-      
-      const ctxStat = document.getElementById('statusChart').getContext('2d');
-      if(chartEstatus) chartEstatus.destroy();
-      chartEstatus = new Chart(ctxStat, {
-        type: 'doughnut',
-        data: { labels: ['Por hacer', 'En curso', 'Estancado', 'Listo'], datasets: [{ data: [hacer, curso, estancado, listo], backgroundColor: ['#C4C4C4', '#FDAB3D', '#E2445C', '#00C875'], borderWidth: 0 }] },
-        options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'right' } } }
-      });
-
-      const ctxDept = document.getElementById('deptChart').getContext('2d');
-      if(chartDepto) chartDepto.destroy();
-      chartDepto = new Chart(ctxDept, {
-        type: 'bar',
-        data: { labels: Object.keys(deptos), datasets: [{ label: 'Tareas Activas', data: Object.values(deptos), backgroundColor: '#0073EA', borderRadius: 4 }] },
-        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: {stepSize: 1} } }, plugins: { legend: {display: false} } }
-      });
-    }
-  </script>
-</body>
-</html>
+            <td style="background-color:
