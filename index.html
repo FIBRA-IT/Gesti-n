@@ -4,106 +4,108 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Fibra Inn | Corporate WorkOS</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <style>
     :root {
-      --sidebar-bg: #0B1120;
-      --sidebar-hover: #1E293B;
-      --bg-main: #F4F7FE;
-      --surface: #FFFFFF;
-      --text-dark: #1E293B;
-      --text-gray: #64748B;
-      --brand-gradient: linear-gradient(135deg, #4318FF 0%, #868CFF 100%);
-      --border: #E2E8F0;
+      --bg-main: #FFFFFF;
+      --bg-board: #F5F6F8;
+      --text-main: #323338;
+      --text-gray: #676879;
+      --border-color: #D0D4E4;
+      --border-light: #E6E9EF;
+      --monday-blue: #0073EA;
+      --monday-hover: #0060B9;
       
-      --status-open: #FFB547;
-      --status-process: #3965FF;
-      --status-closed: #05CD99;
+      --group-blue: #579BFC;
+      --group-yellow: #FDAB3D;
+      --group-green: #00C875;
+      
+      --prio-alta: #E2445C;
+      --prio-media: #A25DDC;
+      --prio-baja: #579BFC;
     }
     
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-    body { display: flex; height: 100vh; background-color: var(--bg-main); color: var(--text-dark); overflow: hidden; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
+    body { display: flex; height: 100vh; background-color: var(--bg-board); color: var(--text-main); overflow: hidden; }
     
-    /* Panel Lateral (Sidebar) */
-    .sidebar { width: 280px; background: var(--sidebar-bg); color: white; display: flex; flex-direction: column; padding: 2rem 1.5rem; }
-    .logo-container { margin-bottom: 3rem; display: flex; flex-direction: column; gap: 5px; }
-    .logo-title { font-size: 1.8rem; font-weight: 800; background: var(--brand-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; letter-spacing: -1px; }
-    .logo-subtitle { font-size: 0.8rem; color: #94A3B8; font-weight: 500; letter-spacing: 2px; text-transform: uppercase; }
+    /* Panel Lateral */
+    .sidebar { width: 260px; background: var(--bg-main); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 1.5rem 1rem; }
+    .logo-container { margin-bottom: 2rem; display: flex; align-items: center; gap: 10px; padding-left: 0.5rem; }
+    .logo-title { font-size: 1.2rem; font-weight: 700; color: var(--text-main); }
     
-    .nav-item { padding: 1rem 1.2rem; margin-bottom: 0.5rem; border-radius: 12px; color: #94A3B8; font-weight: 600; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 12px; }
-    .nav-item.active { background: var(--brand-gradient); color: white; box-shadow: 0 10px 20px rgba(67, 24, 255, 0.2); }
-    .nav-item:hover:not(.active) { background: var(--sidebar-hover); color: white; }
+    .workspace-section { font-size: 0.75rem; color: var(--text-gray); margin-bottom: 0.5rem; padding-left: 0.5rem; }
+    .nav-item { padding: 0.6rem 0.8rem; margin-bottom: 0.2rem; border-radius: 4px; color: var(--text-main); font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: background 0.2s; }
+    .nav-item.active { background: #cce5ff; color: var(--monday-blue); font-weight: 500; }
+    .nav-item:hover:not(.active) { background: #F5F6F8; }
 
     /* Área Principal */
-    .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 2rem 3rem; }
+    .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow-y: auto; background: var(--bg-main); border-top-left-radius: 8px; margin-top: 10px; border: 1px solid var(--border-color); }
     
-    /* Header Superior */
-    .top-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; }
-    .page-title { font-size: 1.8rem; font-weight: 700; color: var(--text-dark); }
-    .btn-create { background: var(--brand-gradient); color: white; border: none; padding: 0.8rem 1.8rem; border-radius: 30px; font-weight: 700; font-size: 1rem; cursor: pointer; transition: all 0.3s ease; box-shadow: 0 10px 20px rgba(67, 24, 255, 0.2); }
-    .btn-create:hover { transform: translateY(-2px); box-shadow: 0 15px 25px rgba(67, 24, 255, 0.3); }
+    /* Header del Tablero */
+    .board-header { padding: 1.5rem 2.5rem 1rem 2.5rem; border-bottom: 1px solid var(--border-light); }
+    .board-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
+    .page-title { font-size: 1.8rem; font-weight: 500; color: var(--text-main); }
+    
+    .toolbar { display: flex; align-items: center; justify-content: space-between; }
+    
+    /* Selector de Vistas (Tabla / Gráficas) */
+    .view-toggle { display: flex; background: var(--border-light); padding: 4px; border-radius: 6px; }
+    .btn-view { background: transparent; border: none; padding: 6px 16px; border-radius: 4px; cursor: pointer; color: var(--text-gray); font-weight: 500; font-size: 0.9rem; transition: all 0.2s; }
+    .btn-view.active { background: white; color: var(--monday-blue); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    
+    .right-tools { display: flex; align-items: center; gap: 1rem; }
+    .btn-monday { background: var(--monday-blue); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; font-weight: 400; font-size: 0.9rem; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 6px; }
+    .btn-monday:hover { background: var(--monday-hover); }
+    
+    .filter-select { padding: 0.4rem 0.8rem; border: 1px solid var(--border-color); border-radius: 4px; background: white; color: var(--text-main); font-size: 0.9rem; cursor: pointer; outline: none; }
+    
+    /* VISTA DE TABLA */
+    .board-content { padding: 2rem 2.5rem; display: flex; flex-direction: column; gap: 2.5rem; }
+    .group-container { display: flex; flex-direction: column; gap: 0.5rem; }
+    .group-header { display: flex; align-items: center; gap: 8px; font-size: 1.1rem; font-weight: 500; margin-bottom: 0.5rem; }
+    
+    .monday-table { width: 100%; border-collapse: collapse; border: 1px solid var(--border-color); border-radius: 4px; background: white; }
+    .monday-table th { padding: 0.6rem; text-align: center; font-weight: 400; color: var(--text-gray); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); font-size: 0.85rem; }
+    .monday-table th:nth-child(2) { text-align: left; }
+    .monday-table td { padding: 0; border-right: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); text-align: center; font-size: 0.9rem; color: var(--text-main); height: 36px; }
+    
+    .cell-checkbox { width: 40px; background: #F5F6F8; border-right: 1px solid var(--border-color) !important; }
+    .cell-tarea { text-align: left !important; padding-left: 1rem !important; }
+    .cell-prioridad { color: white; font-weight: 400; width: 140px; }
+    .cell-depto { width: 160px; }
+    .cell-fecha { width: 120px; font-size: 0.8rem; }
+    
+    .group-abiertos .group-header { color: var(--group-blue); }
+    .group-abiertos .monday-table { border-left: 6px solid var(--group-blue); }
+    .group-proceso .group-header { color: var(--group-yellow); }
+    .group-proceso .monday-table { border-left: 6px solid var(--group-yellow); }
+    .group-resueltos .group-header { color: var(--group-green); }
+    .group-resueltos .monday-table { border-left: 6px solid var(--group-green); }
 
-    /* Tarjetas de Métricas Rápidas */
-    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
-    .stat-card { background: var(--surface); padding: 1.5rem; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; justify-content: space-between; align-items: center; border: 1px solid rgba(255,255,255,0.5); }
-    .stat-info h4 { font-size: 0.9rem; color: var(--text-gray); font-weight: 600; text-transform: uppercase; margin-bottom: 5px; }
-    .stat-info h2 { font-size: 2.5rem; font-weight: 800; color: var(--text-dark); }
-    .stat-icon { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 1.5rem; }
-    
-    /* Sección de Gráficas */
-    .dashboard-grid { display: grid; grid-template-columns: 1fr 2fr; gap: 1.5rem; margin-bottom: 2rem; height: 320px; }
-    .chart-box { background: var(--surface); padding: 1.5rem; border-radius: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.02); display: flex; flex-direction: column; }
-    .chart-box h3 { font-size: 1.1rem; font-weight: 700; margin-bottom: 1rem; color: var(--text-dark); }
+    /* VISTA DE GRÁFICAS */
+    .dashboard-view { display: none; padding: 2rem 2.5rem; grid-template-columns: 1fr 2fr; gap: 1.5rem; height: 400px; }
+    .chart-box { background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
+    .chart-box h3 { font-size: 1.1rem; font-weight: 500; margin-bottom: 1.5rem; color: var(--text-main); }
     .canvas-container { flex: 1; position: relative; width: 100%; }
 
-    /* Tablero Kanban */
-    .kanban-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1.5rem; }
-    .kanban-col { background: transparent; display: flex; flex-direction: column; gap: 1rem; }
-    .col-header { display: flex; justify-content: space-between; align-items: center; padding: 0 0.5rem 1rem 0.5rem; }
-    .col-title { font-size: 1.1rem; font-weight: 700; display: flex; align-items: center; gap: 8px; }
-    .dot { width: 10px; height: 10px; border-radius: 50%; }
-
-    /* Diseño de Tarjetas Impactante */
-    .ticket-card { background: var(--surface); padding: 1.5rem; border-radius: 16px; box-shadow: 0 4px 15px rgba(0,0,0,0.03); border: 1px solid var(--border); transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; position: relative; overflow: hidden; }
-    .ticket-card::before { content: ''; position: absolute; top: 0; left: 0; width: 4px; height: 100%; border-radius: 16px 0 0 16px; }
-    .ticket-card.priority-Alta::before { background: #FF5B5B; }
-    .ticket-card.priority-Media::before { background: #FFB547; }
-    .ticket-card.priority-Baja::before { background: #05CD99; }
-    .ticket-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 15px 30px rgba(0,0,0,0.08); border-color: transparent; }
-    
-    .t-header { display: flex; justify-content: space-between; margin-bottom: 1rem; }
-    .t-id { font-size: 0.8rem; font-weight: 700; color: var(--brand-gradient); background: rgba(67, 24, 255, 0.05); padding: 4px 10px; border-radius: 8px; color: #4318FF; }
-    .t-date { font-size: 0.8rem; color: var(--text-gray); font-weight: 500; }
-    .t-title { font-size: 1.1rem; font-weight: 700; line-height: 1.4; margin-bottom: 0.5rem; }
-    .t-desc { font-size: 0.85rem; color: var(--text-gray); margin-bottom: 1.2rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-    .t-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 1rem; border-top: 1px dashed var(--border); }
-    .t-dept { background: var(--bg-main); padding: 6px 12px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; color: var(--text-dark); }
-    .t-user { display: flex; align-items: center; justify-content: center; width: 32px; height: 32px; border-radius: 50%; background: var(--brand-gradient); color: white; font-size: 0.8rem; font-weight: bold; }
-
-    /* Modal Rediseñado */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(11, 17, 32, 0.8); backdrop-filter: blur(8px); display: none; place-items: center; z-index: 100; opacity: 0; transition: opacity 0.3s ease; }
-    .modal-overlay.active { display: grid; opacity: 1; }
-    .modal { background: var(--surface); width: 100%; max-width: 650px; border-radius: 24px; display: flex; flex-direction: column; overflow: hidden; transform: scale(0.95); transition: transform 0.3s ease; }
-    .modal-overlay.active .modal { transform: scale(1); }
-    .modal-header { padding: 2rem 2.5rem 1rem; display: flex; justify-content: space-between; align-items: center; }
-    .modal-header h2 { font-size: 1.8rem; font-weight: 800; }
-    .modal-body { padding: 1rem 2.5rem 2.5rem; }
-    
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem; }
-    .form-group { display: flex; flex-direction: column; gap: 0.5rem; }
+    /* Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); display: none; place-items: center; z-index: 100; }
+    .modal-overlay.active { display: grid; }
+    .modal { background: white; width: 100%; max-width: 600px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); display: flex; flex-direction: column; overflow: hidden; }
+    .modal-header { padding: 1.5rem; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
+    .modal-body { padding: 1.5rem; }
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
     .form-group.full { grid-column: span 2; }
-    label { font-size: 0.85rem; font-weight: 700; color: var(--text-gray); text-transform: uppercase; letter-spacing: 0.5px; }
-    input, select, textarea { padding: 1rem; border: 2px solid var(--border); border-radius: 12px; font-size: 1rem; font-weight: 500; transition: all 0.3s; background: #FAFCFF; }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: #4318FF; background: white; box-shadow: 0 0 0 4px rgba(67, 24, 255, 0.1); }
-    
-    .btn-submit { width: 100%; background: var(--brand-gradient); color: white; border: none; padding: 1.2rem; border-radius: 12px; font-weight: 700; font-size: 1.1rem; cursor: pointer; margin-top: 1.5rem; transition: transform 0.2s; }
-    .btn-submit:hover { transform: translateY(-2px); }
+    label { font-size: 0.85rem; color: var(--text-main); margin-bottom: 4px; display: block; }
+    input, select, textarea { width: 100%; padding: 0.6rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.9rem; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--monday-blue); }
+    .btn-submit { width: 100%; background: var(--monday-blue); color: white; border: none; padding: 0.8rem; border-radius: 4px; cursor: pointer; margin-top: 1rem; font-size: 1rem; }
 
-    /* Loader Principal */
-    .loader-wrap { position: fixed; inset: 0; background: var(--bg-main); z-index: 200; display: flex; justify-content: center; align-items: center; }
-    .spinner { width: 50px; height: 50px; border: 5px solid #E2E8F0; border-top-color: #4318FF; border-radius: 50%; animation: spin 1s cubic-bezier(0.5, 0, 0.5, 1) infinite; }
+    /* Loader */
+    .loader-wrap { position: fixed; inset: 0; background: rgba(255,255,255,0.8); z-index: 200; display: flex; justify-content: center; align-items: center; }
+    .spinner { width: 40px; height: 40px; border: 4px solid var(--border-light); border-top-color: var(--monday-blue); border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
@@ -111,42 +113,79 @@
 
   <aside class="sidebar">
     <div class="logo-container">
-      <div class="logo-title">Fibra Inn</div>
-      <div class="logo-subtitle">Corporate Hub</div>
+      <div style="background: var(--monday-blue); width: 20px; height: 20px; border-radius: 4px;"></div>
+      <div class="logo-title">Fibra Inn WorkOS</div>
     </div>
-    <div class="nav-item active">📊 Panel Central</div>
-    <div class="nav-item">📋 Mis Folios</div>
-    <div class="nav-item">📈 Reportes</div>
-    <div class="nav-item" style="margin-top: auto;">⚙️ Configuración</div>
+    <div class="workspace-section">Espacios de trabajo</div>
+    <div class="nav-item active"><span>📊</span> Corporativo Hub</div>
+    <div class="nav-item"><span>📋</span> Mis tareas</div>
   </aside>
 
   <div class="loader-wrap" id="loader"><div class="spinner"></div></div>
 
-  <main class="main-wrapper" id="main-content" style="opacity: 0; transition: opacity 0.8s;">
+  <main class="main-wrapper" id="main-content" style="opacity: 0; transition: opacity 0.5s;">
     
-    <div class="top-header">
-      <h1 class="page-title">Visión Estratégica</h1>
-      <button class="btn-create" onclick="abrirModal()">+ Generar Folio</button>
+    <div class="board-header">
+      <div class="board-title-row">
+        <h1 class="page-title">Requerimientos Operativos</h1>
+      </div>
+      <div class="toolbar">
+        
+        <div class="view-toggle">
+          <button id="tab-tabla" class="btn-view active" onclick="cambiarVista('tabla')">📋 Tabla Principal</button>
+          <button id="tab-graficas" class="btn-view" onclick="cambiarVista('graficas')">📈 Panel de Gráficas</button>
+        </div>
+
+        <div class="right-tools">
+          <select id="filtroDepartamento" class="filter-select" onchange="aplicarFiltro()">
+            <option value="Todos">Filtrar: Todos</option>
+            <option value="Mantenimiento">Mantenimiento</option>
+            <option value="Ama de llaves">Ama de llaves</option>
+            <option value="Jurídico">Jurídico</option>
+            <option value="Operaciones">Operaciones</option>
+            <option value="Finanzas">Finanzas</option>
+            <option value="Sistemas">Sistemas (IT)</option>
+            <option value="Recursos Humanos">Recursos Humanos</option>
+            <option value="Compras">Compras</option>
+          </select>
+          <button class="btn-monday" onclick="abrirModal()">+ Agregar tarea</button>
+        </div>
+      </div>
     </div>
 
-    <div class="stats-grid">
-      <div class="stat-card">
-        <div class="stat-info"><h4>Nuevos Requerimientos</h4><h2 id="kpi-abiertos">0</h2></div>
-        <div class="stat-icon" style="background: rgba(255, 181, 71, 0.1); color: var(--status-open);">🚨</div>
+    <div class="board-content" id="vista-tabla">
+      <div class="group-container group-abiertos">
+        <div class="group-header"><span>⋁</span> Nuevos / Pendientes</div>
+        <table class="monday-table">
+          <thead>
+            <tr><th class="cell-checkbox"></th><th>Tarea / Asunto</th><th class="cell-prioridad">Prioridad</th><th class="cell-depto">Departamento</th><th>Solicitante</th><th class="cell-fecha">Fecha</th><th>ID</th></tr>
+          </thead>
+          <tbody id="tbody-abiertos"></tbody>
+        </table>
       </div>
-      <div class="stat-card">
-        <div class="stat-info"><h4>En Proceso</h4><h2 id="kpi-proceso">0</h2></div>
-        <div class="stat-icon" style="background: rgba(57, 101, 255, 0.1); color: var(--status-process);">⚙️</div>
+      <div class="group-container group-proceso">
+        <div class="group-header"><span>⋁</span> En Proceso</div>
+        <table class="monday-table">
+          <thead>
+            <tr><th class="cell-checkbox"></th><th>Tarea / Asunto</th><th class="cell-prioridad">Prioridad</th><th class="cell-depto">Departamento</th><th>Solicitante</th><th class="cell-fecha">Fecha</th><th>ID</th></tr>
+          </thead>
+          <tbody id="tbody-proceso"></tbody>
+        </table>
       </div>
-      <div class="stat-card">
-        <div class="stat-info"><h4>Completados</h4><h2 id="kpi-resuelto">0</h2></div>
-        <div class="stat-icon" style="background: rgba(5, 205, 153, 0.1); color: var(--status-closed);">✅</div>
+      <div class="group-container group-resueltos">
+        <div class="group-header"><span>⋁</span> Completado</div>
+        <table class="monday-table">
+          <thead>
+            <tr><th class="cell-checkbox"></th><th>Tarea / Asunto</th><th class="cell-prioridad">Prioridad</th><th class="cell-depto">Departamento</th><th>Solicitante</th><th class="cell-fecha">Fecha</th><th>ID</th></tr>
+          </thead>
+          <tbody id="tbody-resueltos"></tbody>
+        </table>
       </div>
     </div>
 
-    <div class="dashboard-grid">
+    <div class="dashboard-view" id="vista-graficas">
       <div class="chart-box">
-        <h3>Distribución de Estatus</h3>
+        <h3>Estatus de Tareas</h3>
         <div class="canvas-container"><canvas id="statusChart"></canvas></div>
       </div>
       <div class="chart-box">
@@ -155,45 +194,23 @@
       </div>
     </div>
 
-    <div class="kanban-board">
-      <div class="kanban-col">
-        <div class="col-header">
-          <div class="col-title"><div class="dot" style="background: var(--status-open);"></div> Recepción</div>
-        </div>
-        <div id="col-abiertos" style="display: flex; flex-direction: column; gap: 1.2rem;"></div>
-      </div>
-      
-      <div class="kanban-col">
-        <div class="col-header">
-          <div class="col-title"><div class="dot" style="background: var(--status-process);"></div> En Ejecución</div>
-        </div>
-        <div id="col-proceso" style="display: flex; flex-direction: column; gap: 1.2rem;"></div>
-      </div>
-
-      <div class="kanban-col">
-        <div class="col-header">
-          <div class="col-title"><div class="dot" style="background: var(--status-closed);"></div> Finalizados</div>
-        </div>
-        <div id="col-resueltos" style="display: flex; flex-direction: column; gap: 1.2rem;"></div>
-      </div>
-    </div>
   </main>
 
   <div class="modal-overlay" id="modal">
     <div class="modal">
       <div class="modal-header">
-        <h2>Nuevo Folio Operativo</h2>
-        <button onclick="cerrarModal()" style="background:none; border:none; font-size:2rem; cursor:pointer; color:var(--text-gray);">&times;</button>
+        <h2 style="font-size: 1.4rem; font-weight: 500;">Agregar nueva tarea</h2>
+        <button onclick="cerrarModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--text-gray);">&times;</button>
       </div>
       <form id="ticketForm" onsubmit="enviarTicket(event)">
         <div class="modal-body">
           <div class="form-grid">
             <div class="form-group full">
-              <label>Asunto Principal</label>
-              <input type="text" id="asunto" placeholder="Ej. Falla en caldera principal" required>
+              <label>Tarea / Asunto</label>
+              <input type="text" id="asunto" required>
             </div>
             <div class="form-group">
-              <label>Departamento Asignado</label>
+              <label>Departamento</label>
               <select id="departamento" required>
                 <option value="Mantenimiento">Mantenimiento</option>
                 <option value="Ama de llaves">Ama de llaves</option>
@@ -208,25 +225,25 @@
             <div class="form-group">
               <label>Prioridad</label>
               <select id="prioridad" required>
-                <option value="Baja">Rutina (Baja)</option>
-                <option value="Media">Importante (Media)</option>
-                <option value="Alta">Crítica (Alta)</option>
+                <option value="Baja">Baja</option>
+                <option value="Media">Media</option>
+                <option value="Alta">Alta</option>
               </select>
             </div>
             <div class="form-group">
               <label>Solicitante</label>
-              <input type="text" id="solicitante" placeholder="Nombre de quien reporta" required>
+              <input type="text" id="solicitante" required>
             </div>
             <div class="form-group">
               <label>Categoría</label>
               <input type="text" id="categoria" value="General" required>
             </div>
             <div class="form-group full">
-              <label>Detalles del Requerimiento</label>
-              <textarea id="descripcion" rows="3" placeholder="Describe a detalle el problema o necesidad..." required></textarea>
+              <label>Notas / Descripción</label>
+              <textarea id="descripcion" rows="2" required></textarea>
             </div>
           </div>
-          <button type="submit" class="btn-submit" id="btnGuardar">Registrar Folio en el Sistema</button>
+          <button type="submit" class="btn-submit" id="btnGuardar">Crear tarea</button>
         </div>
       </form>
     </div>
@@ -236,9 +253,26 @@
     // TU API ESTÁ AQUÍ
     const API_URL = "https://script.google.com/macros/s/AKfycbzDOlrGBX2SwWISncNGzsQ8BKcLpIkXYM9Ytdk51ecJg7R9HxJvoYeebKB6mIeOLuSb/exec";
 
+    let todosLosTickets = []; 
     let chartEstatus, chartDepto;
 
     document.addEventListener('DOMContentLoaded', cargarDatos);
+
+    // Función para cambiar de pestaña
+    function cambiarVista(vista) {
+      document.getElementById('tab-tabla').classList.remove('active');
+      document.getElementById('tab-graficas').classList.remove('active');
+      
+      if(vista === 'tabla') {
+        document.getElementById('tab-tabla').classList.add('active');
+        document.getElementById('vista-tabla').style.display = 'flex';
+        document.getElementById('vista-graficas').style.display = 'none';
+      } else {
+        document.getElementById('tab-graficas').classList.add('active');
+        document.getElementById('vista-tabla').style.display = 'none';
+        document.getElementById('vista-graficas').style.display = 'grid';
+      }
+    }
 
     function abrirModal() { document.getElementById('modal').classList.add('active'); }
     function cerrarModal() { document.getElementById('modal').classList.remove('active'); document.getElementById('ticketForm').reset(); }
@@ -248,55 +282,76 @@
         const response = await fetch(API_URL);
         const data = await response.json();
         if (data.exito) {
-          dibujarTablero(data.datos);
-          actualizarGraficas(data.datos);
+          todosLosTickets = data.datos; 
+          aplicarFiltro(); 
         }
       } catch (error) { console.error("Error:", error); }
     }
 
-    function dibujarTablero(tickets) {
+    function aplicarFiltro() {
+      const deptoSeleccionado = document.getElementById('filtroDepartamento').value;
+      let ticketsFiltrados = todosLosTickets;
+      
+      if (deptoSeleccionado !== "Todos") {
+        ticketsFiltrados = todosLosTickets.filter(ticket => ticket.departamento === deptoSeleccionado);
+      }
+      
+      dibujarTablero(ticketsFiltrados);
+      actualizarGraficas(ticketsFiltrados);
+      
       document.getElementById('loader').style.display = 'none';
       document.getElementById('main-content').style.opacity = '1';
+    }
 
-      const colAbierto = document.getElementById('col-abiertos');
-      const colProceso = document.getElementById('col-proceso');
-      const colResuelto = document.getElementById('col-resueltos');
+    function obtenerColorPrioridad(prioridad) {
+      if(prioridad.includes('Alta')) return 'var(--prio-alta)';
+      if(prioridad.includes('Media')) return 'var(--prio-media)';
+      return 'var(--prio-baja)';
+    }
+
+    function dibujarTablero(tickets) {
+      const bodyAbiertos = document.getElementById('tbody-abiertos');
+      const bodyProceso = document.getElementById('tbody-proceso');
+      const bodyResueltos = document.getElementById('tbody-resueltos');
       
-      colAbierto.innerHTML = ''; colProceso.innerHTML = ''; colResuelto.innerHTML = '';
-      let cAbierto = 0, cProceso = 0, cResuelto = 0;
+      bodyAbiertos.innerHTML = ''; bodyProceso.innerHTML = ''; bodyResueltos.innerHTML = '';
+      
+      const filaVacia = `<tr><td class="cell-checkbox"></td><td colspan="6" style="color:var(--text-gray); text-align:left; padding-left:1rem;">+ Agregar tarea</td></tr>`;
 
       tickets.forEach(ticket => {
+        const colorPrio = obtenerColorPrioridad(ticket.prioridad);
         const inicial = ticket.solicitante.charAt(0).toUpperCase();
         
-        const card = `
-          <div class="ticket-card priority-${ticket.prioridad}">
-            <div class="t-header">
-              <span class="t-id">${ticket.id}</span>
-              <span class="t-date">${ticket.fecha.split(' ')[0]}</span>
-            </div>
-            <div class="t-title">${ticket.asunto}</div>
-            <div class="t-desc">${ticket.descripcion}</div>
-            <div class="t-footer">
-              <span class="t-dept">${ticket.departamento}</span>
-              <div class="t-user">${inicial}</div>
-            </div>
-          </div>`;
+        const fila = `
+          <tr>
+            <td class="cell-checkbox"><input type="checkbox" disabled></td>
+            <td class="cell-tarea">${ticket.asunto}</td>
+            <td class="cell-prioridad" style="background-color: ${colorPrio};">${ticket.prioridad}</td>
+            <td class="cell-depto">${ticket.departamento}</td>
+            <td>
+              <div style="display:flex; align-items:center; justify-content:center; gap:6px;">
+                <div style="width:24px; height:24px; background:#000; color:#fff; border-radius:50%; font-size:0.7rem; display:flex; align-items:center; justify-content:center;">${inicial}</div>
+                <span style="font-size:0.85rem;">${ticket.solicitante.split(' ')[0]}</span>
+              </div>
+            </td>
+            <td class="cell-fecha">${ticket.fecha.split(' ')[0]}</td>
+            <td style="color:var(--text-gray); font-size:0.8rem;">${ticket.id}</td>
+          </tr>
+        `;
 
         const estatus = ticket.estatus.toLowerCase();
-        if (estatus.includes('abierto')) { colAbierto.innerHTML += card; cAbierto++; }
-        else if (estatus.includes('proceso')) { colProceso.innerHTML += card; cProceso++; }
-        else if (estatus.includes('resuelto')) { colResuelto.innerHTML += card; cResuelto++; }
+        if (estatus.includes('abierto')) bodyAbiertos.innerHTML += fila; 
+        else if (estatus.includes('proceso')) bodyProceso.innerHTML += fila; 
+        else if (estatus.includes('resuelto')) bodyResueltos.innerHTML += fila; 
       });
 
-      // Actualizar KPIs superiores
-      document.getElementById('kpi-abiertos').innerText = cAbierto;
-      document.getElementById('kpi-proceso').innerText = cProceso;
-      document.getElementById('kpi-resuelto').innerText = cResuelto;
+      bodyAbiertos.innerHTML += filaVacia;
+      bodyProceso.innerHTML += filaVacia;
+      bodyResueltos.innerHTML += filaVacia;
     }
 
     function actualizarGraficas(tickets) {
       let abiertos = 0, proceso = 0, resueltos = 0;
-      // Actualizado con los nuevos departamentos
       let deptosCount = { "Mantenimiento": 0, "Ama de llaves": 0, "Jurídico": 0, "Operaciones": 0, "Finanzas": 0, "Sistemas": 0, "Recursos Humanos": 0, "Compras": 0 };
 
       tickets.forEach(t => {
@@ -304,13 +359,11 @@
         if (estatus.includes('abierto')) abiertos++;
         else if (estatus.includes('proceso')) proceso++;
         else if (estatus.includes('resuelto')) resueltos++;
-
         if (deptosCount[t.departamento] !== undefined) deptosCount[t.departamento]++;
       });
 
-      // Estilos Premium para Gráficas de Chart.js
-      Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
-      Chart.defaults.color = '#64748B';
+      Chart.defaults.font.family = "'Roboto', sans-serif";
+      Chart.defaults.color = '#676879';
 
       const ctxStatus = document.getElementById('statusChart').getContext('2d');
       if (chartEstatus) chartEstatus.destroy();
@@ -318,9 +371,9 @@
         type: 'doughnut',
         data: {
           labels: ['Nuevos', 'En Proceso', 'Resueltos'],
-          datasets: [{ data: [abiertos, proceso, resueltos], backgroundColor: ['#FFB547', '#3965FF', '#05CD99'], borderWidth: 0, hoverOffset: 4 }]
+          datasets: [{ data: [abiertos, proceso, resueltos], backgroundColor: ['#579BFC', '#FDAB3D', '#00C875'], borderWidth: 0 }]
         },
-        options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'right', labels: {usePointStyle: true, padding: 20} } } }
+        options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'right' } } }
       });
 
       const ctxDept = document.getElementById('deptChart').getContext('2d');
@@ -329,11 +382,11 @@
         type: 'bar',
         data: {
           labels: Object.keys(deptosCount),
-          datasets: [{ data: Object.values(deptosCount), backgroundColor: '#4318FF', borderRadius: 8, barThickness: 24 }]
+          datasets: [{ label: 'Tareas', data: Object.values(deptosCount), backgroundColor: '#0073EA', borderRadius: 4 }]
         },
         options: { 
           responsive: true, maintainAspectRatio: false, 
-          scales: { y: { beginAtZero: true, grid: { borderDash: [5, 5], color: '#E2E8F0' }, ticks: {stepSize: 1} }, x: { grid: { display: false } } }, 
+          scales: { y: { beginAtZero: true, ticks: {stepSize: 1} } }, 
           plugins: { legend: {display: false} } 
         }
       });
@@ -341,7 +394,7 @@
 
     async function enviarTicket(event) {
       event.preventDefault();
-      document.getElementById('btnGuardar').innerText = 'Procesando Folio...';
+      document.getElementById('btnGuardar').innerText = 'Creando...';
       const payload = {
         accion: "crear",
         ticket: {
@@ -356,10 +409,11 @@
         cerrarModal();
         document.getElementById('main-content').style.opacity = '0';
         document.getElementById('loader').style.display = 'flex';
+        document.getElementById('filtroDepartamento').value = 'Todos'; 
         setTimeout(cargarDatos, 1500); 
       } catch (error) {
         console.error("Error:", error); setTimeout(cargarDatos, 1500); 
-      } finally { document.getElementById('btnGuardar').innerText = 'Registrar Folio en el Sistema'; }
+      } finally { document.getElementById('btnGuardar').innerText = 'Crear tarea'; }
     }
   </script>
 </body>
