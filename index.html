@@ -3,424 +3,310 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Gestor de Tareas | WorkOS</title>
-  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <title>WorkOS | Fibra Inn</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-  
   <style>
     :root {
-      --bg-main: #FFFFFF; --bg-board: #F5F6F8; --text-main: #323338; --text-gray: #676879;
-      --border-color: #D0D4E4; --border-light: #E6E9EF;
-      --monday-blue: #0073EA; --monday-hover: #0060B9;
+      --sidebar: #0F172A; --bg: #F8FAFC; --surface: #FFFFFF;
+      --primary: #3B82F6; --text: #1E293B; --text-light: #64748B;
+      --border: #E2E8F0; 
       
-      --group-blue: #579BFC; --group-yellow: #FDAB3D; --group-green: #00C875; --group-red: #E2445C;
-      --prio-critica: #333333; --prio-alta: #E2445C; --prio-media: #A25DDC; --prio-baja: #579BFC;
+      --stat-pend: #F59E0B; --stat-proc: #3B82F6; --stat-listo: #10B981;
+      --prio-alta: #EF4444; --prio-media: #F59E0B; --prio-baja: #3B82F6;
     }
     
-    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
-    body { display: flex; height: 100vh; background-color: var(--bg-board); color: var(--text-main); overflow: hidden; }
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
+    body { display: flex; height: 100vh; background: var(--bg); color: var(--text); overflow: hidden; }
     
-    .sidebar { width: 260px; background: var(--bg-main); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 1.5rem 1rem; }
-    .logo-container { margin-bottom: 2rem; display: flex; align-items: center; gap: 10px; padding-left: 0.5rem; }
-    .logo-title { font-size: 1.2rem; font-weight: 700; color: var(--text-main); }
-    .nav-item { padding: 0.6rem 0.8rem; margin-bottom: 0.2rem; border-radius: 4px; color: var(--text-main); font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: background 0.2s; }
-    .nav-item.active { background: #cce5ff; color: var(--monday-blue); font-weight: 500; }
-    .nav-item:hover:not(.active) { background: #F5F6F8; }
+    /* Panel Lateral */
+    .sidebar { width: 280px; background: var(--sidebar); color: white; display: flex; flex-direction: column; }
+    .brand { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
+    .brand-icon { background: linear-gradient(135deg, #3B82F6, #8B5CF6); width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font-weight: bold; }
+    .brand-text h2 { font-size: 1.1rem; font-weight: 700; }
+    .brand-text p { font-size: 0.75rem; color: #94A3B8; }
+    
+    .menu { padding: 1.5rem 1rem; flex: 1; }
+    .menu-item { padding: 0.8rem 1rem; border-radius: 8px; color: #CBD5E1; font-weight: 500; font-size: 0.95rem; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: 0.2s; margin-bottom: 0.5rem; }
+    .menu-item.active { background: rgba(59, 130, 246, 0.15); color: #60A5FA; font-weight: 600; border-left: 3px solid #3B82F6; }
+    .menu-item:hover:not(.active) { background: rgba(255,255,255,0.05); }
+    
+    /* Contenido Principal */
+    .main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
+    .header { background: var(--surface); padding: 1.5rem 2.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .header-greeting h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); }
+    .header-greeting p { font-size: 0.9rem; color: var(--text-light); margin-top: 4px; }
+    
+    .profile { display: flex; align-items: center; gap: 12px; }
+    .avatar { width: 40px; height: 40px; border-radius: 50%; background: #E2E8F0; display: grid; place-items: center; font-weight: 700; color: var(--primary); border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    
+    /* Controles */
+    .controls { padding: 1.5rem 2.5rem; display: flex; justify-content: space-between; align-items: center; }
+    .btn-primary { background: var(--primary); color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3); transition: 0.2s; }
+    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 8px -1px rgba(59, 130, 246, 0.4); }
+    
+    /* Tabla Impactante */
+    .table-container { background: var(--surface); margin: 0 2.5rem 2.5rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border); overflow: hidden; }
+    table { width: 100%; border-collapse: collapse; }
+    th { background: #F8FAFC; padding: 1rem; text-align: left; font-size: 0.85rem; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
+    td { padding: 1rem; border-bottom: 1px solid var(--border); font-size: 0.95rem; vertical-align: middle; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #F1F5F9; }
+    
+    /* Selectores Interactivos */
+    .pill-select { appearance: none; -webkit-appearance: none; border: none; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; cursor: pointer; text-align: center; width: 130px; outline: none; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    .pill-select:hover { filter: brightness(0.95); }
+    
+    .status-Pendiente { background: #FEF3C7; color: #D97706; }
+    .status-Proceso { background: #DBEAFE; color: #2563EB; }
+    .status-Listo { background: #D1FAE5; color: #059669; }
+    
+    .prio-Alta { background: #FEE2E2; color: #DC2626; }
+    .prio-Media { background: #FEF3C7; color: #D97706; }
+    .prio-Baja { background: #DBEAFE; color: #2563EB; }
 
-    .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow-y: auto; background: var(--bg-main); border-top-left-radius: 8px; margin-top: 10px; border: 1px solid var(--border-color); }
-    .board-header { padding: 1.5rem 2.5rem 1rem 2.5rem; border-bottom: 1px solid var(--border-light); }
-    .page-title { font-size: 1.8rem; font-weight: 500; color: var(--text-main); margin-bottom: 1rem; }
-    
-    .toolbar { display: flex; align-items: center; justify-content: space-between; }
-    .view-toggle { display: flex; background: var(--border-light); padding: 4px; border-radius: 6px; }
-    .btn-view { background: transparent; border: none; padding: 6px 16px; border-radius: 4px; cursor: pointer; color: var(--text-gray); font-weight: 500; font-size: 0.9rem; transition: all 0.2s; }
-    .btn-view.active { background: white; color: var(--monday-blue); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
-    
-    .right-tools { display: flex; align-items: center; gap: 1rem; }
-    .filter-select { padding: 0.5rem 1rem; border: 1px solid var(--border-color); border-radius: 4px; background: white; color: var(--text-main); font-size: 0.9rem; cursor: pointer; outline: none; }
-    .btn-monday { background: var(--monday-blue); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; font-weight: 500; font-size: 0.9rem; cursor: pointer; transition: background 0.2s; }
-    .btn-monday:hover { background: var(--monday-hover); }
-
-    /* VISTA DE TABLA - GESTIÓN DE TAREAS */
-    .board-content { padding: 2rem 2.5rem; display: flex; flex-direction: column; gap: 2.5rem; }
-    .group-container { display: flex; flex-direction: column; gap: 0.5rem; }
-    .group-header { display: flex; align-items: center; gap: 8px; font-size: 1.1rem; font-weight: 500; margin-bottom: 0.5rem; }
-    
-    .monday-table { width: 100%; border-collapse: collapse; border: 1px solid var(--border-color); border-radius: 4px; background: white; }
-    .monday-table th { padding: 0.6rem; text-align: center; font-weight: 400; color: var(--text-gray); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); font-size: 0.85rem; }
-    .monday-table td { border-right: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); text-align: center; font-size: 0.9rem; height: 38px; padding: 0; }
-    
-    .editable-select { width: 100%; height: 38px; border: none; color: white; text-align: center; font-weight: 500; font-size: 0.85rem; cursor: pointer; outline: none; text-align-last: center; appearance: none; -webkit-appearance: none; }
-    .editable-select:hover { filter: brightness(0.9); }
-    .select-wrapper { position: relative; width: 100%; height: 100%; }
-    .select-wrapper::after { content: '▼'; position: absolute; right: 8px; top: 12px; color: white; font-size: 0.6rem; pointer-events: none; }
-
-    /* Colores Estatus Monday */
-    .group-porhacer .group-header { color: var(--text-gray); }
-    .group-porhacer .monday-table { border-left: 6px solid var(--text-gray); }
-    
-    .group-encurso .group-header { color: var(--group-yellow); }
-    .group-encurso .monday-table { border-left: 6px solid var(--group-yellow); }
-    
-    .group-estancado .group-header { color: var(--group-red); }
-    .group-estancado .monday-table { border-left: 6px solid var(--group-red); }
-    
-    .group-listo .group-header { color: var(--group-green); }
-    .group-listo .monday-table { border-left: 6px solid var(--group-green); }
-
-    .dashboard-view { display: none; padding: 2rem 2.5rem; grid-template-columns: 1fr 2fr; gap: 1.5rem; height: 400px; }
-    .chart-box { background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; }
-    .chart-box h3 { font-size: 1.1rem; font-weight: 500; margin-bottom: 1.5rem; color: var(--text-main); }
-    .canvas-container { flex: 1; position: relative; width: 100%; }
-
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); display: none; place-items: center; z-index: 100; }
+    /* Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: none; place-items: center; z-index: 100; }
     .modal-overlay.active { display: grid; }
-    .modal { background: white; width: 100%; max-width: 600px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); display: flex; flex-direction: column; overflow: hidden; padding: 1.5rem; gap: 1rem;}
-    input, select, textarea { width: 100%; padding: 0.6rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.9rem; }
-    .btn-submit { width: 100%; background: var(--monday-blue); color: white; border: none; padding: 0.8rem; border-radius: 4px; cursor: pointer; margin-top: 1rem; font-size: 1rem; }
+    .modal { background: var(--surface); width: 100%; max-width: 500px; border-radius: 16px; padding: 2rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+    .modal-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; }
     
-    .loader-wrap { position: fixed; inset: 0; background: rgba(255,255,255,0.7); z-index: 200; display: flex; justify-content: center; align-items: center; flex-direction: column; gap: 10px; }
-    .spinner { width: 40px; height: 40px; border: 4px solid var(--border-light); border-top-color: var(--monday-blue); border-radius: 50%; animation: spin 1s linear infinite; }
+    .form-group { margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
+    label { font-size: 0.85rem; font-weight: 600; color: var(--text-light); }
+    input, select { padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; outline: none; }
+    input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+    
+    /* Loader */
+    .loader-wrap { position: fixed; inset: 0; background: rgba(248, 250, 252, 0.8); z-index: 200; display: none; justify-content: center; align-items: center; flex-direction: column; gap: 1rem; backdrop-filter: blur(2px); }
+    .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
 
   <aside class="sidebar">
-    <div class="logo-container">
-      <div style="background: var(--monday-blue); width: 24px; height: 24px; border-radius: 4px; color: white; display: grid; place-items: center; font-weight: bold; font-size: 0.8rem;">FI</div>
-      <div class="logo-title">WorkOS</div>
+    <div class="brand">
+      <div class="brand-icon">FI</div>
+      <div class="brand-text">
+        <h2>WorkOS</h2>
+        <p>Hampton Inn Chihuahua</p>
+      </div>
     </div>
-    <div class="nav-item active"><span>📋</span> Gestión de Proyectos</div>
-    <div class="nav-item"><span>📅</span> Cronograma</div>
+    <div class="menu">
+      <div class="menu-item active">📋 Tablero Operativo</div>
+      <div class="menu-item">📈 Analíticas</div>
+      <div class="menu-item">⚙️ Configuración</div>
+    </div>
   </aside>
 
-  <div class="loader-wrap" id="loader">
-    <div class="spinner"></div>
-    <div id="loader-text" style="font-weight: 500; color: var(--text-main);">Sincronizando tareas...</div>
-  </div>
-
-  <main class="main-wrapper" id="main-content" style="opacity: 0; transition: opacity 0.5s;">
-    
-    <div class="board-header">
-      <h1 class="page-title">Tablero Principal de Actividades</h1>
-      <div class="toolbar">
-        <div class="view-toggle">
-          <button id="tab-tabla" class="btn-view active" onclick="cambiarVista('tabla')">📋 Tabla de Tareas</button>
-          <button id="tab-graficas" class="btn-view" onclick="cambiarVista('graficas')">📈 Panel de Control</button>
+  <main class="main">
+    <header class="header">
+      <div class="header-greeting">
+        <h1>Hola, David</h1>
+        <p>Aquí está el resumen de las operaciones de hoy.</p>
+      </div>
+      <div class="profile">
+        <div style="text-align: right;">
+          <div style="font-weight: 600; font-size: 0.9rem;">David Torres</div>
+          <div style="font-size: 0.75rem; color: var(--text-light);">Mantenimiento</div>
         </div>
-
-        <div class="right-tools">
-          <select id="filtroProyecto" class="filter-select" onchange="aplicarFiltro()">
-            <option value="Todos">Todos los proyectos</option>
-            <option value="Mantenimiento Preventivo">Mantenimiento Preventivo</option>
-            <option value="Reparaciones Hampton">Reparaciones Hampton</option>
-            <option value="Proyectos Especiales">Proyectos Especiales</option>
-            <option value="Administración">Administración</option>
-          </select>
-          <button class="btn-monday" onclick="abrirModal()">+ Nueva tarea</button>
-        </div>
+        <div class="avatar">DT</div>
       </div>
+    </header>
+
+    <div class="controls">
+      <div style="display: flex; gap: 1rem;">
+        <select id="filtroDepto" onchange="aplicarFiltros()" style="padding: 0.6rem 1rem; border: 1px solid var(--border); border-radius: 8px; font-weight: 500; outline: none;">
+          <option value="Todos">Todas las áreas</option>
+          <option value="Mantenimiento">Mantenimiento</option>
+          <option value="Ama de llaves">Ama de llaves</option>
+          <option value="Sistemas">Sistemas</option>
+        </select>
+      </div>
+      <button class="btn-primary" onclick="abrirModal()">+ Nuevo Requerimiento</button>
     </div>
 
-    <div class="board-content" id="vista-tabla">
-      
-      <div class="group-container group-estancado">
-        <div class="group-header"><span>⋁</span> Estancado / Con problemas</div>
-        <table class="monday-table">
-          <thead><tr><th style="width:40px;"></th><th style="text-align:left; padding-left:1rem;">Nombre de Tarea</th><th style="width:130px;">Responsable</th><th style="width:140px;">Estatus</th><th style="width:120px;">Prioridad</th><th style="width:140px;">Fecha Límite</th><th style="width:160px;">Proyecto</th></tr></thead>
-          <tbody id="tbody-estancado"></tbody>
-        </table>
-      </div>
-
-      <div class="group-container group-encurso">
-        <div class="group-header"><span>⋁</span> En curso</div>
-        <table class="monday-table">
-          <thead><tr><th style="width:40px;"></th><th style="text-align:left; padding-left:1rem;">Nombre de Tarea</th><th style="width:130px;">Responsable</th><th style="width:140px;">Estatus</th><th style="width:120px;">Prioridad</th><th style="width:140px;">Fecha Límite</th><th style="width:160px;">Proyecto</th></tr></thead>
-          <tbody id="tbody-encurso"></tbody>
-        </table>
-      </div>
-
-      <div class="group-container group-porhacer">
-        <div class="group-header"><span>⋁</span> Por hacer (Backlog)</div>
-        <table class="monday-table">
-          <thead><tr><th style="width:40px;"></th><th style="text-align:left; padding-left:1rem;">Nombre de Tarea</th><th style="width:130px;">Responsable</th><th style="width:140px;">Estatus</th><th style="width:120px;">Prioridad</th><th style="width:140px;">Fecha Límite</th><th style="width:160px;">Proyecto</th></tr></thead>
-          <tbody id="tbody-porhacer"></tbody>
-        </table>
-      </div>
-
-      <div class="group-container group-listo">
-        <div class="group-header"><span>⋁</span> Listo</div>
-        <table class="monday-table">
-          <thead><tr><th style="width:40px;"></th><th style="text-align:left; padding-left:1rem;">Nombre de Tarea</th><th style="width:130px;">Responsable</th><th style="width:140px;">Estatus</th><th style="width:120px;">Prioridad</th><th style="width:140px;">Fecha Límite</th><th style="width:160px;">Proyecto</th></tr></thead>
-          <tbody id="tbody-listo"></tbody>
-        </table>
-      </div>
-
+    <div class="table-container">
+      <table>
+        <thead>
+          <tr>
+            <th>Folio</th>
+            <th>Asunto</th>
+            <th>Responsable</th>
+            <th>Departamento</th>
+            <th>Prioridad</th>
+            <th>Estatus</th>
+          </tr>
+        </thead>
+        <tbody id="tabla-body">
+          </tbody>
+      </table>
     </div>
-
-    <div class="dashboard-view" id="vista-graficas">
-      <div class="chart-box">
-        <h3>Estatus Global</h3>
-        <div class="canvas-container"><canvas id="statusChart"></canvas></div>
-      </div>
-      <div class="chart-box">
-        <h3>Distribución de Tareas por Responsable</h3>
-        <div class="canvas-container"><canvas id="respChart"></canvas></div>
-      </div>
-    </div>
-
   </main>
 
   <div class="modal-overlay" id="modal">
     <div class="modal">
-      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
-        <h2 style="font-size: 1.4rem; font-weight: 500;">Crear nueva tarea</h2>
-        <button onclick="cerrarModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--text-gray);">&times;</button>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2 class="modal-title" style="margin: 0;">Registrar Operación</h2>
+        <button onclick="cerrarModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-light);">&times;</button>
       </div>
-      <form id="ticketForm" onsubmit="enviarTicket(event)">
-        <div class="form-grid">
-          <div class="form-group full"><label>Nombre de la tarea</label><input type="text" id="nombre" placeholder="Ej. Revisar válvulas de presión" required></div>
-          
-          <div class="form-group">
-            <label>Responsable</label>
-            <select id="responsable" required>
-              <option value="David Torres">David Torres</option>
-              <option value="Turno 1">Equipo Turno 1</option>
-              <option value="Turno 2">Equipo Turno 2</option>
-              <option value="Contratista Externo">Contratista Externo</option>
+      
+      <form id="formTicket" onsubmit="guardarTicket(event)">
+        <div class="form-group">
+          <label>Asunto / Descripción</label>
+          <input type="text" id="inpAsunto" required placeholder="Ej. Revisión de calderas">
+        </div>
+        
+        <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+          <div class="form-group" style="flex: 1; margin: 0;">
+            <label>Departamento</label>
+            <select id="inpDepto" required>
+              <option value="Mantenimiento" selected>Mantenimiento</option>
+              <option value="Ama de llaves">Ama de llaves</option>
+              <option value="Sistemas">Sistemas</option>
+              <option value="Operaciones">Operaciones</option>
             </select>
           </div>
-          
-          <div class="form-group">
-            <label>Grupo / Proyecto</label>
-            <select id="proyecto" required>
-              <option value="Mantenimiento Preventivo">Mantenimiento Preventivo</option>
-              <option value="Reparaciones Hampton">Reparaciones Hampton</option>
-              <option value="Proyectos Especiales">Proyectos Especiales</option>
-              <option value="Administración">Administración</option>
-            </select>
-          </div>
-          
-          <div class="form-group">
+          <div class="form-group" style="flex: 1; margin: 0;">
             <label>Prioridad</label>
-            <select id="prioridad" required>
+            <select id="inpPrio" required>
               <option value="Baja">Baja</option>
               <option value="Media">Media</option>
               <option value="Alta">Alta</option>
-              <option value="Crítica">Crítica</option>
             </select>
           </div>
-          
-          <div class="form-group"><label>Fecha Límite</label><input type="date" id="fechaLimite" required></div>
-          <div class="form-group full"><label>Notas adicionales</label><textarea id="notas" rows="2"></textarea></div>
         </div>
-        <button type="submit" class="btn-submit" id="btnGuardar">Guardar Tarea</button>
+        
+        <div class="form-group">
+          <label>Asignado a</label>
+          <input type="text" id="inpResp" required value="David Torres">
+        </div>
+        
+        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;" id="btnSubmit">Guardar en Base de Datos</button>
       </form>
     </div>
   </div>
 
+  <div class="loader-wrap" id="loader">
+    <div class="spinner"></div>
+    <div style="font-weight: 600; color: var(--text);">Sincronizando...</div>
+  </div>
+
   <script>
+    // 🚨 PON AQUÍ TU NUEVA URL DESPUÉS DE HACER "NUEVA IMPLEMENTACIÓN" 🚨
     const API_URL = "https://script.google.com/macros/s/AKfycbzDOlrGBX2SwWISncNGzsQ8BKcLpIkXYM9Ytdk51ecJg7R9HxJvoYeebKB6mIeOLuSb/exec";
 
-    let todasLasTareas = []; 
-    let chartEstatus, chartResp;
+    let datosGlobales = [];
 
     document.addEventListener('DOMContentLoaded', cargarDatos);
 
-    function cambiarVista(vista) {
-      document.getElementById('tab-tabla').classList.remove('active');
-      document.getElementById('tab-graficas').classList.remove('active');
-      if(vista === 'tabla') {
-        document.getElementById('tab-tabla').classList.add('active');
-        document.getElementById('vista-tabla').style.display = 'flex';
-        document.getElementById('vista-graficas').style.display = 'none';
-      } else {
-        document.getElementById('tab-graficas').classList.add('active');
-        document.getElementById('vista-tabla').style.display = 'none';
-        document.getElementById('vista-graficas').style.display = 'grid';
-      }
-    }
-
     function abrirModal() { document.getElementById('modal').classList.add('active'); }
-    function cerrarModal() { document.getElementById('modal').classList.remove('active'); document.getElementById('ticketForm').reset(); }
-
-    function mostrarLoader(texto) {
-      document.getElementById('loader-text').innerText = texto;
-      document.getElementById('loader').style.display = 'flex';
-    }
+    function cerrarModal() { document.getElementById('modal').classList.remove('active'); document.getElementById('formTicket').reset(); }
+    function mostrarCarga(mostrar) { document.getElementById('loader').style.display = mostrar ? 'flex' : 'none'; }
 
     async function cargarDatos() {
+      mostrarCarga(true);
       try {
-        const response = await fetch(API_URL);
-        const data = await response.json();
-        if (data.exito) {
-          todasLasTareas = data.datos; 
-          aplicarFiltro(); 
+        const res = await fetch(API_URL);
+        const json = await res.json();
+        if(json.exito) {
+          datosGlobales = json.datos;
+          aplicarFiltros();
         }
-      } catch (error) { console.error("Error:", error); }
+      } catch (e) { console.error(e); }
+      mostrarCarga(false);
     }
 
-    function aplicarFiltro() {
-      const proySeleccionado = document.getElementById('filtroProyecto').value;
-      let tareasFiltradas = todasLasTareas;
-      if (proySeleccionado !== "Todos") {
-        tareasFiltradas = todasLasTareas.filter(t => t.proyecto === proySeleccionado);
+    function aplicarFiltros() {
+      const depto = document.getElementById('filtroDepto').value;
+      const filtrados = depto === 'Todos' ? datosGlobales : datosGlobales.filter(d => d.departamento === depto);
+      dibujarTabla(filtrados);
+    }
+
+    function getClase(tipo, valor) {
+      if(tipo === 'estatus') {
+        if(valor.includes('Pendiente')) return 'status-Pendiente';
+        if(valor.includes('Proceso')) return 'status-Proceso';
+        return 'status-Listo';
+      } else {
+        if(valor.includes('Alta')) return 'prio-Alta';
+        if(valor.includes('Media')) return 'prio-Media';
+        return 'prio-Baja';
       }
-      dibujarTablero(tareasFiltradas);
-      actualizarGraficas(tareasFiltradas);
-      document.getElementById('loader').style.display = 'none';
-      document.getElementById('main-content').style.opacity = '1';
     }
 
-    // Sistema de Colores Monday
-    function colorPrio(p) { return p.includes('Crítica') ? 'var(--prio-critica)' : p.includes('Alta') ? 'var(--prio-alta)' : p.includes('Media') ? 'var(--prio-media)' : 'var(--prio-baja)'; }
-    function colorStat(s) { 
-      const st = s.toLowerCase(); 
-      return st.includes('hacer') ? '#C4C4C4' : st.includes('curso') ? 'var(--group-yellow)' : st.includes('estancado') ? 'var(--group-red)' : 'var(--group-green)'; 
-    }
-
-    function dibujarTablero(tareas) {
-      const bPorHacer = document.getElementById('tbody-porhacer');
-      const bEnCurso = document.getElementById('tbody-encurso');
-      const bEstancado = document.getElementById('tbody-estancado');
-      const bListo = document.getElementById('tbody-listo');
+    function dibujarTabla(datos) {
+      const tbody = document.getElementById('tabla-body');
+      tbody.innerHTML = '';
       
-      bPorHacer.innerHTML = ''; bEnCurso.innerHTML = ''; bEstancado.innerHTML = ''; bListo.innerHTML = '';
-      
-      tareas.forEach(tarea => {
-        const bgPrio = colorPrio(tarea.prioridad);
-        const bgStat = colorStat(tarea.estatus);
-        const inicial = tarea.responsable.charAt(0).toUpperCase();
+      datos.forEach(d => {
+        const claseStat = getClase('estatus', d.estatus);
+        const clasePrio = getClase('prioridad', d.prioridad);
         
-        const comboEstatus = `
-          <div class="select-wrapper">
-            <select class="editable-select" style="background-color: ${bgStat}; color: ${bgStat==='#C4C4C4' ? '#333' : '#fff'}" onchange="editarCelda('${tarea.id}', 'Estatus', this.value)">
-              <option value="Por hacer" ${tarea.estatus === 'Por hacer' ? 'selected' : ''}>Por hacer</option>
-              <option value="En curso" ${tarea.estatus === 'En curso' ? 'selected' : ''}>En curso</option>
-              <option value="Estancado" ${tarea.estatus === 'Estancado' ? 'selected' : ''}>Estancado</option>
-              <option value="Listo" ${tarea.estatus === 'Listo' ? 'selected' : ''}>Listo</option>
-            </select>
-          </div>`;
-
-        const comboPrioridad = `
-          <div class="select-wrapper">
-            <select class="editable-select" style="background-color: ${bgPrio};" onchange="editarCelda('${tarea.id}', 'Prioridad', this.value)">
-              <option value="Baja" ${tarea.prioridad === 'Baja' ? 'selected' : ''}>Baja</option>
-              <option value="Media" ${tarea.prioridad === 'Media' ? 'selected' : ''}>Media</option>
-              <option value="Alta" ${tarea.prioridad === 'Alta' ? 'selected' : ''}>Alta</option>
-              <option value="Crítica" ${tarea.prioridad === 'Crítica' ? 'selected' : ''}>Crítica</option>
-            </select>
-          </div>`;
-
-        // Formato visual de la fecha
-        const dateObj = new Date(tarea.fechaLimite);
-        const fechaFormat = dateObj.toLocaleDateString('es-ES', { day: '2-digit', month: 'short' });
-
-        const fila = `
+        tbody.innerHTML += `
           <tr>
-            <td style="background:#F5F6F8; border-right:1px solid var(--border-color);"></td>
-            <td style="text-align:left; padding-left:1rem; font-weight:400; color: ${tarea.estatus==='Listo' ? '#999' : '#333'}; text-decoration: ${tarea.estatus==='Listo' ? 'line-through' : 'none'};">${tarea.nombre}</td>
-            
+            <td style="font-weight: 600; color: var(--primary); font-size: 0.85rem;">${d.id}</td>
+            <td style="font-weight: 500;">${d.asunto}</td>
             <td>
-              <div style="display:flex; align-items:center; justify-content:center; gap:6px;">
-                <div style="width:24px; height:24px; background:#e1e1e1; color:#333; border-radius:50%; font-size:0.7rem; display:grid; place-items:center;">${inicial}</div>
-                <span style="font-size:0.85rem;">${tarea.responsable}</span>
+              <div style="display: flex; align-items: center; gap: 8px;">
+                <div style="width:28px; height:28px; background:#E2E8F0; border-radius:50%; display:grid; place-items:center; font-size:0.7rem; font-weight:bold;">${d.responsable.charAt(0)}</div>
+                ${d.responsable}
               </div>
             </td>
-            
-            <td style="padding:0;">${comboEstatus}</td>
-            <td style="padding:0;">${comboPrioridad}</td>
-            
-            <td style="font-size:0.85rem; color: ${dateObj < new Date() && tarea.estatus !== 'Listo' ? '#E2445C' : 'inherit'}">${fechaFormat}</td>
-            <td style="font-size:0.85rem; color:var(--text-gray);">${tarea.proyecto}</td>
+            <td><span style="background: #F1F5F9; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">${d.departamento}</span></td>
+            <td>
+              <select class="pill-select ${clasePrio}" onchange="actualizarDato('${d.id}', 'Prioridad', this.value)">
+                <option value="Baja" ${d.prioridad === 'Baja' ? 'selected' : ''}>Baja</option>
+                <option value="Media" ${d.prioridad === 'Media' ? 'selected' : ''}>Media</option>
+                <option value="Alta" ${d.prioridad === 'Alta' ? 'selected' : ''}>Alta</option>
+              </select>
+            </td>
+            <td>
+              <select class="pill-select ${claseStat}" onchange="actualizarDato('${d.id}', 'Estatus', this.value)">
+                <option value="Pendiente" ${d.estatus === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
+                <option value="En Proceso" ${d.estatus === 'En Proceso' ? 'selected' : ''}>En Proceso</option>
+                <option value="Listo" ${d.estatus === 'Listo' ? 'selected' : ''}>Listo</option>
+              </select>
+            </td>
           </tr>
         `;
-
-        const s = tarea.estatus.toLowerCase();
-        if (s.includes('hacer')) bPorHacer.innerHTML += fila; 
-        else if (s.includes('curso')) bEnCurso.innerHTML += fila; 
-        else if (s.includes('estancado')) bEstancado.innerHTML += fila; 
-        else if (s.includes('listo')) bListo.innerHTML += fila; 
       });
     }
 
-    async function editarCelda(id, campo, nuevoValor) {
-      mostrarLoader(`Actualizando tarea...`);
-      const payload = { accion: "actualizar", id: id, campo: campo, valor: nuevoValor };
-
-      try {
-        await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
-        setTimeout(cargarDatos, 1000); 
-      } catch (error) {
-        console.error("Error al actualizar:", error);
-        alert("Hubo un error al actualizar. Revisa tu conexión.");
-        cargarDatos();
-      }
-    }
-
-    function actualizarGraficas(tareas) {
-      let porHacer = 0, enCurso = 0, estancado = 0, listo = 0;
-      let respCount = {};
-
-      tareas.forEach(t => {
-        const s = t.estatus.toLowerCase();
-        if (s.includes('hacer')) porHacer++;
-        else if (s.includes('curso')) enCurso++;
-        else if (s.includes('estancado')) estancado++;
-        else if (s.includes('listo')) listo++;
-
-        if (!respCount[t.responsable]) respCount[t.responsable] = 0;
-        respCount[t.responsable]++;
-      });
-
-      Chart.defaults.font.family = "'Roboto', sans-serif";
+    async function guardarTicket(e) {
+      e.preventDefault();
+      cerrarModal();
+      mostrarCarga(true);
       
-      const ctxStatus = document.getElementById('statusChart').getContext('2d');
-      if (chartEstatus) chartEstatus.destroy();
-      chartEstatus = new Chart(ctxStatus, {
-        type: 'doughnut',
-        data: { 
-          labels: ['Por hacer', 'En curso', 'Estancado', 'Listo'], 
-          datasets: [{ data: [porHacer, enCurso, estancado, listo], backgroundColor: ['#C4C4C4', '#FDAB3D', '#E2445C', '#00C875'], borderWidth: 0 }] 
-        },
-        options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'right' } } }
-      });
-
-      const ctxResp = document.getElementById('respChart').getContext('2d');
-      if (chartResp) chartResp.destroy();
-      chartResp = new Chart(ctxResp, {
-        type: 'bar',
-        data: { labels: Object.keys(respCount), datasets: [{ label: 'Tareas Asignadas', data: Object.values(respCount), backgroundColor: '#0073EA', borderRadius: 4 }] },
-        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: {stepSize: 1} } }, plugins: { legend: {display: false} } }
-      });
-    }
-
-    async function enviarTicket(event) {
-      event.preventDefault();
-      document.getElementById('btnGuardar').innerText = 'Creando...';
       const payload = {
         accion: "crear",
-        tarea: {
-          nombre: document.getElementById('nombre').value, 
-          responsable: document.getElementById('responsable').value,
-          proyecto: document.getElementById('proyecto').value, 
-          prioridad: document.getElementById('prioridad').value, 
-          fechaLimite: document.getElementById('fechaLimite').value,
-          notas: document.getElementById('notas').value
+        item: {
+          asunto: document.getElementById('inpAsunto').value,
+          departamento: document.getElementById('inpDepto').value,
+          prioridad: document.getElementById('inpPrio').value,
+          responsable: document.getElementById('inpResp').value
         }
       };
 
       try {
-        await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify(payload) });
-        cerrarModal();
-        mostrarLoader("Registrando tarea en el plan...");
-        document.getElementById('main-content').style.opacity = '0';
-        document.getElementById('filtroProyecto').value = 'Todos'; 
-        setTimeout(cargarDatos, 1500); 
-      } catch (error) {
-        console.error("Error:", error); setTimeout(cargarDatos, 1500); 
-      } finally { document.getElementById('btnGuardar').innerText = 'Guardar Tarea'; }
+        await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
+        setTimeout(cargarDatos, 1000);
+      } catch(e) { 
+        alert("Error de red. Verifica tu conexión.");
+        mostrarCarga(false);
+      }
+    }
+
+    async function actualizarDato(id, campo, valor) {
+      mostrarCarga(true);
+      const payload = { accion: "actualizar", id: id, campo: campo, valor: valor };
+      try {
+        await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
+        setTimeout(cargarDatos, 1000);
+      } catch(e) {
+        alert("Error al actualizar");
+        mostrarCarga(false);
+      }
     }
   </script>
 </body>
