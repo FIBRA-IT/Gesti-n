@@ -15,72 +15,79 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
     body { display: flex; height: 100vh; background: #F5F6F8; overflow: hidden; }
     
-    .sidebar { width: 260px; background: #F7F8FA; border-right: 1px solid var(--border); padding: 2rem 1.2rem; display: flex; flex-direction: column; }
-    .nav-item { padding: 0.8rem 1rem; border-radius: 8px; margin-bottom: 0.5rem; cursor: pointer; color: var(--text); font-weight: 500; transition: 0.2s; }
-    .nav-item.active { background: #E4F1FF; color: var(--monday-blue); font-weight: 700; border-left: 4px solid var(--monday-blue); }
+    /* Sidebar Profesional */
+    .sidebar { width: 260px; background: #1A1F36; padding: 2rem 1.2rem; display: flex; flex-direction: column; color: white; }
+    .nav-item { padding: 0.9rem 1rem; border-radius: 8px; margin-bottom: 0.6rem; cursor: pointer; color: #A0AEC0; font-weight: 500; transition: 0.3s; }
+    .nav-item.active { background: rgba(255,255,255,0.1); color: white; font-weight: 700; border-left: 4px solid var(--monday-blue); }
+    .nav-item:hover:not(.active) { color: white; background: rgba(255,255,255,0.05); }
 
     .main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; background: white; padding: 2rem 3rem; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid #EEE; padding-bottom: 1rem; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid #EEE; padding-bottom: 1.5rem; }
     
-    .toolbar { display: flex; justify-content: space-between; margin-bottom: 1.5rem; position: sticky; top: 0; background: white; z-index: 10; padding: 10px 0; }
-    .btn-create { background: var(--monday-blue); color: white; border: none; padding: 0.8rem 1.5rem; border-radius: 4px; font-weight: 600; cursor: pointer; }
-    .select-filtro { padding: 0.6rem; border: 1px solid var(--border); border-radius: 4px; min-width: 220px; }
+    .toolbar { display: flex; justify-content: space-between; margin-bottom: 1.5rem; position: sticky; top: 0; background: white; z-index: 10; padding: 10px 0; border-bottom: 1px solid #F1F1F1; }
+    .btn-create { background: var(--monday-blue); color: white; border: none; padding: 0.8rem 2rem; border-radius: 6px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 115, 234, 0.2); }
+    .select-filtro { padding: 0.7rem; border: 1px solid var(--border); border-radius: 6px; min-width: 250px; font-weight: 600; }
 
-    /* TABLA MONDAY */
-    .monday-table { width: 100%; border-collapse: collapse; table-layout: fixed; margin-bottom: 2rem; border: 1px solid var(--border); }
-    .monday-table th { padding: 0.8rem; background: #FAFBFC; font-size: 0.8rem; color: #676879; text-transform: uppercase; border-bottom: 1px solid var(--border); border-right: 1px solid #EEE; }
-    .monday-table td { height: 65px; border-bottom: 1px solid #EEE; border-right: 1px solid #EEE; text-align: center; vertical-align: middle; }
+    /* TABLA ESTILO MONDAY */
+    .monday-table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+    .monday-table th { padding: 1rem; background: #FAFBFC; font-size: 0.75rem; color: #676879; text-transform: uppercase; border-bottom: 1px solid var(--border); border-right: 1px solid #EEE; letter-spacing: 1px; }
+    .monday-table td { height: 75px; border-bottom: 1px solid #EEE; border-right: 1px solid #EEE; text-align: center; vertical-align: middle; font-size: 0.9rem; }
     
-    .cell-task { text-align: left !important; padding-left: 1rem !important; border-left: 6px solid var(--monday-blue); width: 350px; }
-    .task-title { font-weight: 600; font-size: 0.95rem; color: #323338; }
-    .task-desc { font-size: 0.75rem; color: #676879; margin-top: 4px; }
+    .cell-task { text-align: left !important; padding: 0.5rem 1.5rem !important; border-left: 8px solid var(--monday-blue); width: 380px; }
+    .task-title { font-weight: 700; font-size: 1rem; color: #1A1F36; }
+    .task-desc { font-size: 0.8rem; color: #64748B; margin-top: 5px; line-height: 1.3; font-style: italic; }
     
-    .monday-select { appearance: none; width: 100%; height: 100%; border: none; color: white; font-weight: 600; text-align: center; text-align-last: center; cursor: pointer; outline: none; }
+    .monday-select { appearance: none; width: 100%; height: 100%; border: none; color: white; font-weight: 700; text-align: center; cursor: pointer; outline: none; transition: 0.2s; }
+    .monday-select:hover { filter: brightness(0.9); }
 
-    /* Gráficas Pro */
-    .dashboard-view { display: none; grid-template-columns: 1fr 1fr; gap: 2rem; }
-    .chart-box { background: #FFFFFF; padding: 2rem; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 10px 20px rgba(0,0,0,0.05); }
-    .canvas-container { height: 350px; width: 100%; }
+    /* ANALÍTICAS DE ALTO NIVEL */
+    .dashboard-view { display: none; grid-template-columns: 1fr 1fr; gap: 3rem; padding-top: 1rem; }
+    .chart-box { background: #FFFFFF; padding: 2.5rem; border-radius: 20px; border: 1px solid #E2E8F0; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05); }
+    .chart-box h3 { margin-bottom: 2rem; font-size: 1.2rem; color: #1A1F36; border-left: 4px solid var(--monday-blue); padding-left: 10px; }
+    .canvas-container { height: 400px; width: 100%; }
 
     /* Modal */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; place-items: center; z-index: 100; backdrop-filter: blur(4px); }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); display: none; place-items: center; z-index: 100; backdrop-filter: blur(5px); }
     .modal-overlay.active { display: grid; }
-    .modal { background: white; width: 600px; border-radius: 12px; padding: 2rem; }
-    .form-group { margin-bottom: 1rem; display: flex; flex-direction: column; gap: 5px; }
-    label { font-size: 0.8rem; font-weight: 700; color: #323338; }
-    input, select, textarea { padding: 0.8rem; border: 1px solid var(--border); border-radius: 6px; font-size: 0.9rem; }
-    textarea { height: 80px; resize: none; }
+    .modal { background: white; width: 650px; border-radius: 16px; padding: 3rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+    .form-group { margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 8px; }
+    label { font-size: 0.85rem; font-weight: 800; color: #1A1F36; text-transform: uppercase; }
+    input, select, textarea { padding: 0.9rem; border: 1.5px solid #E2E8F0; border-radius: 8px; font-size: 1rem; transition: 0.3s; }
+    input:focus, select:focus, textarea:focus { border-color: var(--monday-blue); box-shadow: 0 0 0 4px rgba(0, 115, 234, 0.1); outline: none; }
+    textarea { height: 120px; resize: none; }
 
-    .loader { position: fixed; inset: 0; background: rgba(255,255,255,0.9); display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 200; font-weight: 700; gap: 10px; }
-    .spinner { width: 40px; height: 40px; border: 4px solid #DDD; border-top-color: var(--monday-blue); border-radius: 50%; animation: spin 1s linear infinite; }
+    .loader { position: fixed; inset: 0; background: #FFF; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 500; }
+    .spinner { width: 50px; height: 50px; border: 5px solid #F3F3F3; border-top-color: var(--monday-blue); border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
 
   <aside class="sidebar">
-    <div style="font-size: 1.5rem; font-weight: 800; margin-bottom: 2rem; color: #1A1F36;">FI WorkOS</div>
-    <div class="nav-item active" id="nav-tab" onclick="cambiarVista('tabla')">📋 Tablero General</div>
-    <div class="nav-item" id="nav-chart" onclick="cambiarVista('graficas')">📈 Analíticas Pro</div>
+    <div style="font-size: 1.8rem; font-weight: 800; margin-bottom: 3rem; letter-spacing: -1px;">Fibra Inn <span style="color:var(--monday-blue)">OS</span></div>
+    <div class="nav-item active" id="nav-tab" onclick="cambiarVista('tabla')">📋 Tablero de Gestión</div>
+    <div class="nav-item" id="nav-chart" onclick="cambiarVista('graficas')">📈 Reportes Ejecutivos</div>
   </aside>
 
-  <div class="loader" id="loader"><div class="spinner"></div>SINCRONIZANDO...</div>
+  <div class="loader" id="loader"><div class="spinner"></div><p style="margin-top:20px; font-weight:800; letter-spacing:2px; color:#1A1F36">SINCRONIZANDO SISTEMA...</p></div>
 
   <main class="main">
     <div class="header">
-      <h1 style="font-weight: 500;">Requerimientos Corporativos</h1>
-      <div style="background: #1A1F36; color: white; padding: 8px 18px; border-radius: 30px; font-size: 0.8rem; font-weight: 700;">CORPORATIVO</div>
+      <h1 style="font-weight: 800; font-size: 2rem;">Control Operativo Corporativo</h1>
+      <div style="background: #E2E8F0; color: #1A1F36; padding: 10px 25px; border-radius: 50px; font-size: 0.85rem; font-weight: 800;">PERFIL: ADMINISTRADOR</div>
     </div>
 
     <div class="toolbar">
-      <button class="btn-create" onclick="abrirModal()">+ NUEVA TAREA</button>
+      <button class="btn-create" onclick="abrirModal()">+ NUEVO REGISTRO</button>
       <select id="filtroDepto" class="select-filtro" onchange="aplicarFiltro()">
-        <option value="Todos">Todas las Áreas</option>
+        <option value="Todos">Ver Todos los Departamentos</option>
         <option value="Mantenimiento">Mantenimiento</option>
         <option value="Jurídico">Jurídico</option>
         <option value="Ama de llaves">Ama de llaves</option>
         <option value="Sistemas">Sistemas</option>
         <option value="Compras">Compras</option>
+        <option value="Operaciones">Operaciones</option>
+        <option value="Finanzas">Finanzas</option>
       </select>
     </div>
 
@@ -88,12 +95,12 @@
       <table class="monday-table">
         <thead>
           <tr>
-            <th style="width:40px;"></th>
-            <th>Tarea y Descripción</th>
-            <th style="width:150px;">Responsable</th>
-            <th style="width:130px;">Estatus</th>
-            <th style="width:120px;">Prioridad</th>
-            <th style="width:120px;">Inicio</th>
+            <th style="width:50px;"></th>
+            <th>Tarea y Requerimiento</th>
+            <th style="width:160px;">Responsable</th>
+            <th style="width:150px;">Estatus</th>
+            <th style="width:140px;">Prioridad</th>
+            <th style="width:120px;">F. Inicio</th>
             <th style="width:120px;">Vence</th>
           </tr>
         </thead>
@@ -102,38 +109,61 @@
     </div>
 
     <div class="dashboard-view" id="view-graficas">
-      <div class="chart-box"><h3>Estado de Tareas</h3><div class="canvas-container"><canvas id="statusChart"></canvas></div></div>
-      <div class="chart-box"><h3>Demanda por Área</h3><div class="canvas-container"><canvas id="deptChart"></canvas></div></div>
+      <div class="chart-box"><h3>Distribución de Estatus</h3><div class="canvas-container"><canvas id="statusChart"></canvas></div></div>
+      <div class="chart-box"><h3>Demanda Operativa por Área</h3><div class="canvas-container"><canvas id="deptChart"></canvas></div></div>
     </div>
   </main>
 
   <div class="modal-overlay" id="modal">
     <div class="modal">
-      <h2 style="margin-bottom: 1.5rem;">Nuevo Registro</h2>
+      <h2 style="margin-bottom: 2.5rem; font-weight: 800; font-size: 1.8rem; letter-spacing: -1px;">Alta de Requerimiento</h2>
       <form id="formTicket" onsubmit="guardar(event)">
-        <div class="form-group"><label>Tarea</label><input type="text" id="inpTarea" required></div>
-        <div class="form-group"><label>Descripción Detallada</label><textarea id="inpDesc" required></textarea></div>
-        <div style="display: flex; gap: 1rem;">
-          <div class="form-group" style="flex: 1;"><label>Área</label><select id="inpDepto"><option value="Mantenimiento">Mantenimiento</option><option value="Jurídico">Jurídico</option><option value="Ama de llaves">Ama de llaves</option><option value="Sistemas">Sistemas</option><option value="Compras">Compras</option></select></div>
-          <div class="form-group" style="flex: 1;"><label>Prioridad</label><select id="inpPrio"><option value="Baja">Baja</option><option value="Media">Media</option><option value="Alta">Alta</option><option value="Crítica">Crítica</option></select></div>
+        <div class="form-group"><label>Nombre de la Tarea</label><input type="text" id="inpTarea" required placeholder="Ej. Auditoría de Calidad Q1"></div>
+        <div class="form-group"><label>Descripción Detallada</label><textarea id="inpDesc" required placeholder="Describe los puntos clave del requerimiento..."></textarea></div>
+        
+        <div style="display: flex; gap: 1.5rem;">
+          <div class="form-group" style="flex: 1;"><label>Departamento</label>
+            <select id="inpDepto">
+              <option value="Mantenimiento">Mantenimiento</option>
+              <option value="Jurídico">Jurídico</option>
+              <option value="Ama de llaves">Ama de llaves</option>
+              <option value="Sistemas">Sistemas</option>
+              <option value="Compras">Compras</option>
+              <option value="Operaciones">Operaciones</option>
+              <option value="Finanzas">Finanzas</option>
+            </select>
+          </div>
+          <div class="form-group" style="flex: 1;"><label>Prioridad</label>
+            <select id="inpPrio">
+              <option value="Baja">Baja</option>
+              <option value="Media">Media</option>
+              <option value="Alta">Alta</option>
+              <option value="Crítica">Crítica</option>
+            </select>
+          </div>
         </div>
-        <div style="display: flex; gap: 1rem;">
-          <div class="form-group" style="flex: 1;"><label>F. Inicio</label><input type="date" id="inpFInicio" required></div>
-          <div class="form-group" style="flex: 1;"><label>F. Final</label><input type="date" id="inpFFin" required></div>
+
+        <div style="display: flex; gap: 1.5rem;">
+          <div class="form-group" style="flex: 1;"><label>Fecha Inicio</label><input type="date" id="inpFInicio" required></div>
+          <div class="form-group" style="flex: 1;"><label>Fecha Vencimiento</label><input type="date" id="inpFFin" required></div>
         </div>
-        <div class="form-group"><label>Asignado a (Escritura Libre)</label><input type="text" id="inpResp" required></div>
-        <div style="display: flex; gap: 1rem; margin-top: 1rem;">
-          <button type="button" style="flex: 1; padding: 0.8rem;" onclick="cerrarModal()">CANCELAR</button>
-          <button type="submit" class="btn-create" style="flex: 1;">GUARDAR</button>
+
+        <div class="form-group"><label>Responsable de Ejecución</label><input type="text" id="inpResp" required placeholder="Nombre del encargado o puesto corporativo"></div>
+        
+        <div style="display: flex; gap: 1.5rem; margin-top: 2rem;">
+          <button type="button" style="flex: 1; padding: 1rem; cursor:pointer; border-radius:8px; border:2px solid #E2E8F0; font-weight:800;" onclick="cerrarModal()">CANCELAR</button>
+          <button type="submit" class="btn-create" style="flex: 1.5;">GUARDAR CAMBIOS</button>
         </div>
       </form>
     </div>
   </div>
 
   <script>
+    // 🚨 REEMPLAZA CON TU NUEVA URL 🚨
     const API_URL = "https://script.google.com/macros/s/AKfycbzDOlrGBX2SwWISncNGzsQ8BKcLpIkXYM9Ytdk51ecJg7R9HxJvoYeebKB6mIeOLuSb/exec";
+    
     let datos = [];
-    let chart1, chart2;
+    let ch1, ch2;
 
     document.addEventListener('DOMContentLoaded', load);
 
@@ -143,40 +173,29 @@
         datos = res.datos;
         aplicarFiltro();
         document.getElementById('loader').style.display = 'none';
+      }).catch(e => {
+        alert("Error de conexión con la base de datos.");
+        document.getElementById('loader').style.display = 'none';
       });
-    }
-
-    function cambiarVista(v) {
-      document.getElementById('nav-tab').classList.toggle('active', v==='tabla');
-      document.getElementById('nav-chart').classList.toggle('active', v==='graficas');
-      document.getElementById('view-tabla').style.display = v==='tabla'?'block':'none';
-      document.getElementById('view-graficas').style.display = v==='graficas'?'grid':'none';
-      if(v==='graficas') renderCharts();
-    }
-
-    function aplicarFiltro() {
-      const depto = document.getElementById('filtroDepto').value;
-      const filtrados = depto === 'Todos' ? datos : datos.filter(d => d.departamento === depto);
-      renderTable(filtrados);
     }
 
     function renderTable(arr) {
       const body = document.getElementById('tabla-body');
       body.innerHTML = '';
       arr.forEach(d => {
-        const cStat = d.estatus==='Listo'?'var(--stat-listo)':(d.estatus==='En curso'?'var(--stat-curso)':(d.estatus==='Estancado'?'var(--stat-estancado)':'var(--stat-gris)'));
-        const cPrio = d.prioridad==='Crítica'?'#333':(d.prioridad==='Alta'?'var(--prio-alta)':(d.prioridad==='Media'?'var(--prio-media)':'var(--prio-baja)'));
+        const cStat = d.estatus==='Listo'?'#00C875':(d.estatus==='En curso'?'#FDAB3D':(d.estatus==='Estancado'?'#E2445C':'#C4C4C4'));
+        const cPrio = d.prioridad==='Crítica'?'#1A1F36':(d.prioridad==='Alta'?'#E2445C':(d.prioridad==='Media'?'#A25DDC':'#579BFC'));
         
         body.innerHTML += `
           <tr>
             <td style="background: #F5F6F8;"></td>
             <td class="cell-task">
               <div class="task-title">${d.tarea}</div>
-              <div class="task-desc">${d.descripcion || 'Sin detalles adicionales'}</div>
+              <div class="task-desc">${d.descripcion || 'Sin descripción técnica'}</div>
             </td>
-            <td><span style="font-weight:700;">${d.responsable}</span></td>
+            <td><span style="font-weight:800; color:#1A1F36">${d.responsable}</span></td>
             <td style="background:${cStat};">
-              <select class="monday-select" onchange="update('${d.id}','Estatus',this.value)" style="color:${cStat==='var(--stat-gris)'?'#333':'#FFF'}">
+              <select class="monday-select" onchange="update('${d.id}','Estatus',this.value)" style="background:${cStat}; color:${cStat==='#C4C4C4'?'#323338':'#FFF'}">
                 <option value="Por hacer" ${d.estatus==='Por hacer'?'selected':''}>Por hacer</option>
                 <option value="En curso" ${d.estatus==='En curso'?'selected':''}>En curso</option>
                 <option value="Estancado" ${d.estatus==='Estancado'?'selected':''}>Estancado</option>
@@ -184,15 +203,15 @@
               </select>
             </td>
             <td style="background:${cPrio};">
-              <select class="monday-select" onchange="update('${d.id}','Prioridad',this.value)">
+              <select class="monday-select" onchange="update('${d.id}','Prioridad',this.value)" style="background:${cPrio}; color:#FFF">
                 <option value="Baja" ${d.prioridad==='Baja'?'selected':''}>Baja</option>
                 <option value="Media" ${d.prioridad==='Media'?'selected':''}>Media</option>
                 <option value="Alta" ${d.prioridad==='Alta'?'selected':''}>Alta</option>
                 <option value="Crítica" ${d.prioridad==='Crítica'?'selected':''}>Crítica</option>
               </select>
             </td>
-            <td style="color:#666; font-size:0.8rem;">${d.fechaInicio}</td>
-            <td style="color:#666; font-size:0.8rem; font-weight:700;">${d.fechaFin}</td>
+            <td style="color:#64748B; font-weight:600">${d.fechaInicio}</td>
+            <td style="color:#1A1F36; font-weight:800">${d.fechaFin}</td>
           </tr>
         `;
       });
@@ -203,17 +222,17 @@
       cerrarModal();
       document.getElementById('loader').style.display = 'flex';
       
-      const item = {
+      const payload = {
         tarea: document.getElementById('inpTarea').value,
-        descripcion: document.getElementById('inpDesc').value, // ¡CORREGIDO!
+        descripcion: document.getElementById('inpDesc').value,
         departamento: document.getElementById('inpDepto').value,
         prioridad: document.getElementById('inpPrio').value,
         responsable: document.getElementById('inpResp').value,
-        fechaInicio: document.getElementById('inpFInicio').value, // ¡NUEVO!
-        fechaFin: document.getElementById('inpFFin').value // ¡NUEVO!
+        fechaInicio: document.getElementById('inpFInicio').value,
+        fechaFin: document.getElementById('inpFFin').value
       };
 
-      await fetch(API_URL, { method: 'POST', body: JSON.stringify({accion:"crear", item: item}) });
+      await fetch(API_URL, { method: 'POST', body: JSON.stringify({accion:"crear", item: payload}) });
       load();
     }
 
@@ -225,27 +244,38 @@
 
     function renderCharts() {
       const stats = { listo:0, curso:0, estancado:0, hacer:0 };
-      const deptos = {};
+      const deptData = {};
       datos.forEach(d => {
         if(d.estatus==='Listo') stats.listo++; else if(d.estatus==='En curso') stats.curso++; else if(d.estatus==='Estancado') stats.estancado++; else stats.hacer++;
-        deptos[d.departamento] = (deptos[d.departamento] || 0) + 1;
+        deptData[d.departamento] = (deptData[d.departamento] || 0) + 1;
       });
 
-      if(chart1) chart1.destroy();
-      chart1 = new Chart(document.getElementById('statusChart'), {
+      if(ch1) ch1.destroy();
+      ch1 = new Chart(document.getElementById('statusChart'), {
         type: 'doughnut',
-        data: { labels: ['Listo', 'En curso', 'Estancado', 'Pendiente'], datasets: [{ data: [stats.listo, stats.curso, stats.estancado, stats.hacer], backgroundColor: ['#00C875','#FDAB3D','#E2445C','#C4C4C4'], borderWidth: 0 }] },
-        options: { maintainAspectRatio: false, cutout: '75%' }
+        data: { labels: ['Listo', 'En curso', 'Estancado', 'Pendiente'], datasets: [{ data: [stats.listo, stats.curso, stats.estancado, stats.hacer], backgroundColor: ['#00C875','#FDAB3D','#E2445C','#CBD5E0'], borderWidth: 0 }] },
+        options: { maintainAspectRatio: false, cutout: '80%', plugins: { legend: { position: 'bottom', labels: { padding: 20, font: { weight: 'bold' } } } } }
       });
 
-      if(chart2) chart2.destroy();
-      chart2 = new Chart(document.getElementById('deptChart'), {
+      if(ch2) ch2.destroy();
+      ch2 = new Chart(document.getElementById('deptChart'), {
         type: 'bar',
-        data: { labels: Object.keys(deptos), datasets: [{ label: 'Tareas', data: Object.values(deptos), backgroundColor: '#0073EA', borderRadius: 8 }] },
-        options: { maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: {stepSize: 1} } } }
+        data: { labels: Object.keys(deptData), datasets: [{ label: 'Requerimientos', data: Object.values(deptData), backgroundColor: '#0073EA', borderRadius: 10 }] },
+        options: { maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } }, plugins: { legend: { display: false } } }
       });
     }
 
+    function cambiarVista(v) {
+      document.getElementById('nav-tab').classList.toggle('active', v==='tabla');
+      document.getElementById('nav-chart').classList.toggle('active', v==='graficas');
+      document.getElementById('view-tabla').style.display = v==='tabla'?'block':'none';
+      document.getElementById('view-graficas').style.display = v==='graficas'?'grid':'none';
+      if(v==='graficas') setTimeout(renderCharts, 100);
+    }
+    function aplicarFiltro() {
+      const depto = document.getElementById('filtroDepto').value;
+      renderTable(depto === 'Todos' ? datos : datos.filter(d => d.departamento === depto));
+    }
     function abrirModal() { document.getElementById('modal').classList.add('active'); }
     function cerrarModal() { document.getElementById('modal').classList.remove('active'); document.getElementById('formTicket').reset(); }
   </script>
