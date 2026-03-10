@@ -3,89 +3,86 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WorkOS Fibra Inn | Enterprise</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Fibra Inn | Corporate WorkOS</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   <style>
     :root {
-      --bg: #FFFFFF; --text: #323338; --monday-blue: #0073EA; --border: #D0D4E4;
-      --stat-listo: #00C875; --stat-curso: #FDAB3D; --stat-estancado: #E2445C; --stat-gris: #C4C4C4;
-      --prio-alta: #E2445C; --prio-media: #A25DDC; --prio-baja: #579BFC;
+      --bg: #F8FAFC; --sidebar: #1E293B; --monday-blue: #0073EA; --text: #1E293B;
+      --stat-listo: #00C875; --stat-curso: #FDAB3D; --stat-estancado: #E2445C; --stat-gris: #94A3B8;
     }
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
-    body { display: flex; height: 100vh; background: #F5F6F8; overflow: hidden; }
+    body { display: flex; height: 100vh; background: var(--bg); overflow: hidden; color: var(--text); }
     
-    /* Sidebar Profesional */
-    .sidebar { width: 260px; background: #1A1F36; padding: 2rem 1.2rem; display: flex; flex-direction: column; color: white; }
-    .nav-item { padding: 0.9rem 1rem; border-radius: 8px; margin-bottom: 0.6rem; cursor: pointer; color: #A0AEC0; font-weight: 500; transition: 0.3s; }
-    .nav-item.active { background: rgba(255,255,255,0.1); color: white; font-weight: 700; border-left: 4px solid var(--monday-blue); }
-    .nav-item:hover:not(.active) { color: white; background: rgba(255,255,255,0.05); }
+    /* Sidebar */
+    .sidebar { width: 280px; background: var(--sidebar); padding: 2.5rem 1.5rem; display: flex; flex-direction: column; color: white; }
+    .nav-item { padding: 1rem 1.2rem; border-radius: 12px; margin-bottom: 0.8rem; cursor: pointer; color: #94A3B8; font-weight: 600; transition: 0.3s; }
+    .nav-item.active { background: var(--monday-blue); color: white; box-shadow: 0 10px 15px -3px rgba(0, 115, 234, 0.3); }
 
-    .main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; background: white; padding: 2rem 3rem; }
-    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid #EEE; padding-bottom: 1.5rem; }
+    .main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 2rem 3rem; background: white; }
+    .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2.5rem; }
     
-    .toolbar { display: flex; justify-content: space-between; margin-bottom: 1.5rem; position: sticky; top: 0; background: white; z-index: 10; padding: 10px 0; border-bottom: 1px solid #F1F1F1; }
-    .btn-create { background: var(--monday-blue); color: white; border: none; padding: 0.8rem 2rem; border-radius: 6px; font-weight: 700; cursor: pointer; box-shadow: 0 4px 12px rgba(0, 115, 234, 0.2); }
-    .select-filtro { padding: 0.7rem; border: 1px solid var(--border); border-radius: 6px; min-width: 250px; font-weight: 600; }
+    .toolbar { display: flex; justify-content: space-between; margin-bottom: 1.5rem; position: sticky; top: 0; background: white; z-index: 10; padding: 10px 0; border-bottom: 1px solid #F1F5F9; }
+    .btn-add { background: var(--monday-blue); color: white; border: none; padding: 0.8rem 2rem; border-radius: 8px; font-weight: 800; cursor: pointer; transition: 0.2s; }
+    .btn-add:hover { transform: translateY(-2px); filter: brightness(1.1); }
 
-    /* TABLA ESTILO MONDAY */
-    .monday-table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 1px solid var(--border); box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
-    .monday-table th { padding: 1rem; background: #FAFBFC; font-size: 0.75rem; color: #676879; text-transform: uppercase; border-bottom: 1px solid var(--border); border-right: 1px solid #EEE; letter-spacing: 1px; }
-    .monday-table td { height: 75px; border-bottom: 1px solid #EEE; border-right: 1px solid #EEE; text-align: center; vertical-align: middle; font-size: 0.9rem; }
+    /* TABLA MONDAY */
+    .monday-table { width: 100%; border-collapse: collapse; table-layout: fixed; border: 1px solid #E2E8F0; border-radius: 12px; overflow: hidden; }
+    .monday-table th { padding: 1rem; background: #F8FAFC; font-size: 0.75rem; color: #64748B; text-transform: uppercase; font-weight: 800; text-align: center; border-bottom: 2px solid #E2E8F0; }
+    .monday-table td { height: 80px; border-bottom: 1px solid #F1F5F9; text-align: center; font-size: 0.9rem; }
     
-    .cell-task { text-align: left !important; padding: 0.5rem 1.5rem !important; border-left: 8px solid var(--monday-blue); width: 380px; }
-    .task-title { font-weight: 700; font-size: 1rem; color: #1A1F36; }
-    .task-desc { font-size: 0.8rem; color: #64748B; margin-top: 5px; line-height: 1.3; font-style: italic; }
+    .cell-task { text-align: left !important; padding-left: 1.5rem !important; border-left: 6px solid var(--monday-blue); width: 400px; }
+    .task-title { font-weight: 700; font-size: 1rem; color: #0F172A; }
+    .task-desc { font-size: 0.8rem; color: #64748B; margin-top: 6px; line-height: 1.4; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
     
-    .monday-select { appearance: none; width: 100%; height: 100%; border: none; color: white; font-weight: 700; text-align: center; cursor: pointer; outline: none; transition: 0.2s; }
-    .monday-select:hover { filter: brightness(0.9); }
+    .monday-select { appearance: none; width: 100%; height: 100%; border: none; color: white; font-weight: 800; text-align: center; cursor: pointer; outline: none; }
 
-    /* ANALÍTICAS DE ALTO NIVEL */
-    .dashboard-view { display: none; grid-template-columns: 1fr 1fr; gap: 3rem; padding-top: 1rem; }
-    .chart-box { background: #FFFFFF; padding: 2.5rem; border-radius: 20px; border: 1px solid #E2E8F0; box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05); }
-    .chart-box h3 { margin-bottom: 2rem; font-size: 1.2rem; color: #1A1F36; border-left: 4px solid var(--monday-blue); padding-left: 10px; }
-    .canvas-container { height: 400px; width: 100%; }
+    /* DASHBOARD VISUAL */
+    .dashboard-view { display: none; grid-template-columns: 1fr 1fr; gap: 2.5rem; padding-top: 1rem; }
+    .chart-card { background: white; padding: 2.5rem; border-radius: 24px; border: 1px solid #E2E8F0; box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05); }
+    .chart-card h3 { margin-bottom: 2rem; font-size: 1.3rem; font-weight: 800; border-left: 5px solid var(--monday-blue); padding-left: 15px; }
 
-    /* Modal */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); display: none; place-items: center; z-index: 100; backdrop-filter: blur(5px); }
+    /* Modal Premium */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.7); display: none; place-items: center; z-index: 100; backdrop-filter: blur(8px); }
     .modal-overlay.active { display: grid; }
-    .modal { background: white; width: 650px; border-radius: 16px; padding: 3rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); }
+    .modal { background: white; width: 680px; border-radius: 20px; padding: 3rem; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5); }
     .form-group { margin-bottom: 1.5rem; display: flex; flex-direction: column; gap: 8px; }
-    label { font-size: 0.85rem; font-weight: 800; color: #1A1F36; text-transform: uppercase; }
-    input, select, textarea { padding: 0.9rem; border: 1.5px solid #E2E8F0; border-radius: 8px; font-size: 1rem; transition: 0.3s; }
-    input:focus, select:focus, textarea:focus { border-color: var(--monday-blue); box-shadow: 0 0 0 4px rgba(0, 115, 234, 0.1); outline: none; }
-    textarea { height: 120px; resize: none; }
+    label { font-size: 0.8rem; font-weight: 800; color: #475569; text-transform: uppercase; letter-spacing: 1px; }
+    input, select, textarea { padding: 1rem; border: 2px solid #E2E8F0; border-radius: 12px; font-size: 1rem; transition: 0.3s; font-weight: 500; }
+    input:focus, textarea:focus { border-color: var(--monday-blue); outline: none; box-shadow: 0 0 0 4px rgba(0, 115, 234, 0.1); }
+    textarea { height: 100px; resize: none; }
 
-    .loader { position: fixed; inset: 0; background: #FFF; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 500; }
-    .spinner { width: 50px; height: 50px; border: 5px solid #F3F3F3; border-top-color: var(--monday-blue); border-radius: 50%; animation: spin 1s linear infinite; }
+    .loader { position: fixed; inset: 0; background: #FFF; display: none; flex-direction: column; align-items: center; justify-content: center; z-index: 500; font-weight: 800; }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
 
   <aside class="sidebar">
-    <div style="font-size: 1.8rem; font-weight: 800; margin-bottom: 3rem; letter-spacing: -1px;">Fibra Inn <span style="color:var(--monday-blue)">OS</span></div>
-    <div class="nav-item active" id="nav-tab" onclick="cambiarVista('tabla')">📋 Tablero de Gestión</div>
-    <div class="nav-item" id="nav-chart" onclick="cambiarVista('graficas')">📈 Reportes Ejecutivos</div>
+    <div style="font-size: 1.8rem; font-weight: 800; margin-bottom: 3.5rem; letter-spacing: -1.5px;">Fibra Inn <span style="color:var(--monday-blue)">OS</span></div>
+    <div class="nav-item active" id="nav-tab" onclick="toggleView('tabla')">📋 Tablero Operativo</div>
+    <div class="nav-item" id="nav-chart" onclick="toggleView('graficas')">📊 Business Intelligence</div>
   </aside>
 
-  <div class="loader" id="loader"><div class="spinner"></div><p style="margin-top:20px; font-weight:800; letter-spacing:2px; color:#1A1F36">SINCRONIZANDO SISTEMA...</p></div>
+  <div class="loader" id="loader">
+    <div style="width: 50px; height: 50px; border: 5px solid #F1F5F9; border-top-color: var(--monday-blue); border-radius: 50%; animation: spin 1s linear infinite;"></div>
+    <p style="margin-top:20px; letter-spacing:3px;">ACTUALIZANDO SISTEMA...</p>
+  </div>
 
   <main class="main">
-    <div class="header">
-      <h1 style="font-weight: 800; font-size: 2rem;">Control Operativo Corporativo</h1>
-      <div style="background: #E2E8F0; color: #1A1F36; padding: 10px 25px; border-radius: 50px; font-size: 0.85rem; font-weight: 800;">PERFIL: ADMINISTRADOR</div>
-    </div>
+    <header class="header">
+      <h1 style="font-weight: 800; font-size: 2.2rem; letter-spacing: -1px;">Control de Requerimientos</h1>
+      <div style="background: #1E293B; color: white; padding: 10px 25px; border-radius: 50px; font-size: 0.8rem; font-weight: 800; letter-spacing: 1px;">CORPORATIVO</div>
+    </header>
 
     <div class="toolbar">
-      <button class="btn-create" onclick="abrirModal()">+ NUEVO REGISTRO</button>
-      <select id="filtroDepto" class="select-filtro" onchange="aplicarFiltro()">
-        <option value="Todos">Ver Todos los Departamentos</option>
+      <button class="btn-add" onclick="showModal()">+ NUEVO REGISTRO</button>
+      <select id="filtroDepto" class="select-filtro" onchange="runFilter()" style="padding: 0.8rem; border-radius: 10px; border: 1.5px solid #E2E8F0; font-weight: 700; min-width: 280px;">
+        <option value="Todos">Todas las Áreas Operativas</option>
         <option value="Mantenimiento">Mantenimiento</option>
         <option value="Jurídico">Jurídico</option>
         <option value="Ama de llaves">Ama de llaves</option>
-        <option value="Sistemas">Sistemas</option>
-        <option value="Compras">Compras</option>
+        <option value="Sistemas">Sistemas (IT)</option>
         <option value="Operaciones">Operaciones</option>
         <option value="Finanzas">Finanzas</option>
       </select>
@@ -96,45 +93,44 @@
         <thead>
           <tr>
             <th style="width:50px;"></th>
-            <th>Tarea y Requerimiento</th>
-            <th style="width:160px;">Responsable</th>
-            <th style="width:150px;">Estatus</th>
-            <th style="width:140px;">Prioridad</th>
-            <th style="width:120px;">F. Inicio</th>
-            <th style="width:120px;">Vence</th>
+            <th>Tarea y Especificaciones</th>
+            <th style="width:180px;">Responsable</th>
+            <th style="width:160px;">Estatus</th>
+            <th style="width:150px;">Prioridad</th>
+            <th style="width:140px;">F. Inicio</th>
+            <th style="width:140px;">F. Final</th>
           </tr>
         </thead>
-        <tbody id="tabla-body"></tbody>
+        <tbody id="data-body"></tbody>
       </table>
     </div>
 
     <div class="dashboard-view" id="view-graficas">
-      <div class="chart-box"><h3>Distribución de Estatus</h3><div class="canvas-container"><canvas id="statusChart"></canvas></div></div>
-      <div class="chart-box"><h3>Demanda Operativa por Área</h3><div class="canvas-container"><canvas id="deptChart"></canvas></div></div>
+      <div class="chart-card"><h3>Estado de la Operación</h3><div style="height:350px;"><canvas id="chartStatus"></canvas></div></div>
+      <div class="chart-card"><h3>Demanda por Departamento</h3><div style="height:350px;"><canvas id="chartDept"></canvas></div></div>
     </div>
   </main>
 
   <div class="modal-overlay" id="modal">
     <div class="modal">
-      <h2 style="margin-bottom: 2.5rem; font-weight: 800; font-size: 1.8rem; letter-spacing: -1px;">Alta de Requerimiento</h2>
-      <form id="formTicket" onsubmit="guardar(event)">
-        <div class="form-group"><label>Nombre de la Tarea</label><input type="text" id="inpTarea" required placeholder="Ej. Auditoría de Calidad Q1"></div>
-        <div class="form-group"><label>Descripción Detallada</label><textarea id="inpDesc" required placeholder="Describe los puntos clave del requerimiento..."></textarea></div>
+      <h2 style="margin-bottom: 2.5rem; font-weight: 800; font-size: 1.8rem; letter-spacing: -1px;">Registrar Actividad</h2>
+      <form id="taskForm" onsubmit="handleSave(event)">
+        <div class="form-group"><label>Nombre del Requerimiento</label><input type="text" id="valTarea" required></div>
+        <div class="form-group"><label>Descripción Detallada</label><textarea id="valDesc" required placeholder="Ingresa los detalles técnicos o legales..."></textarea></div>
         
         <div style="display: flex; gap: 1.5rem;">
-          <div class="form-group" style="flex: 1;"><label>Departamento</label>
-            <select id="inpDepto">
+          <div class="form-group" style="flex: 1;"><label>Área</label>
+            <select id="valDepto">
               <option value="Mantenimiento">Mantenimiento</option>
               <option value="Jurídico">Jurídico</option>
               <option value="Ama de llaves">Ama de llaves</option>
               <option value="Sistemas">Sistemas</option>
-              <option value="Compras">Compras</option>
               <option value="Operaciones">Operaciones</option>
               <option value="Finanzas">Finanzas</option>
             </select>
           </div>
           <div class="form-group" style="flex: 1;"><label>Prioridad</label>
-            <select id="inpPrio">
+            <select id="valPrio">
               <option value="Baja">Baja</option>
               <option value="Media">Media</option>
               <option value="Alta">Alta</option>
@@ -144,140 +140,138 @@
         </div>
 
         <div style="display: flex; gap: 1.5rem;">
-          <div class="form-group" style="flex: 1;"><label>Fecha Inicio</label><input type="date" id="inpFInicio" required></div>
-          <div class="form-group" style="flex: 1;"><label>Fecha Vencimiento</label><input type="date" id="inpFFin" required></div>
+          <div class="form-group" style="flex: 1;"><label>Fecha Inicio</label><input type="date" id="valInicio" required></div>
+          <div class="form-group" style="flex: 1;"><label>Fecha Vencimiento</label><input type="date" id="valFin" required></div>
         </div>
 
-        <div class="form-group"><label>Responsable de Ejecución</label><input type="text" id="inpResp" required placeholder="Nombre del encargado o puesto corporativo"></div>
+        <div class="form-group"><label>Responsable de Ejecución (Escribe el nombre)</label><input type="text" id="valResp" required placeholder="Ej: Lic. Sánchez / Ing. Moreno"></div>
         
         <div style="display: flex; gap: 1.5rem; margin-top: 2rem;">
-          <button type="button" style="flex: 1; padding: 1rem; cursor:pointer; border-radius:8px; border:2px solid #E2E8F0; font-weight:800;" onclick="cerrarModal()">CANCELAR</button>
-          <button type="submit" class="btn-create" style="flex: 1.5;">GUARDAR CAMBIOS</button>
+          <button type="button" style="flex: 1; padding: 1rem; border-radius:12px; font-weight:800; border: 2px solid #E2E8F0; cursor:pointer;" onclick="hideModal()">CANCELAR</button>
+          <button type="submit" class="btn-add" style="flex: 1.5;">GUARDAR REGISTRO</button>
         </div>
       </form>
     </div>
   </div>
 
   <script>
-    // 🚨 REEMPLAZA CON TU NUEVA URL 🚨
+    // 🚨 PON AQUÍ TU URL ACTUALIZADA 🚨
     const API_URL = "https://script.google.com/macros/s/AKfycbzDOlrGBX2SwWISncNGzsQ8BKcLpIkXYM9Ytdk51ecJg7R9HxJvoYeebKB6mIeOLuSb/exec";
     
-    let datos = [];
-    let ch1, ch2;
+    let db = [];
+    let ch1 = null, ch2 = null;
 
-    document.addEventListener('DOMContentLoaded', load);
+    document.addEventListener('DOMContentLoaded', init);
 
-    function load() {
+    async function init() {
       document.getElementById('loader').style.display = 'flex';
-      fetch(API_URL).then(r => r.json()).then(res => {
-        datos = res.datos;
-        aplicarFiltro();
-        document.getElementById('loader').style.display = 'none';
-      }).catch(e => {
-        alert("Error de conexión con la base de datos.");
-        document.getElementById('loader').style.display = 'none';
-      });
+      try {
+        const r = await fetch(API_URL);
+        const j = await r.json();
+        db = j.datos || [];
+        runFilter();
+      } catch(e) { console.error("Error cargando datos"); }
+      document.getElementById('loader').style.display = 'none';
     }
 
-    function renderTable(arr) {
-      const body = document.getElementById('tabla-body');
-      body.innerHTML = '';
-      arr.forEach(d => {
-        const cStat = d.estatus==='Listo'?'#00C875':(d.estatus==='En curso'?'#FDAB3D':(d.estatus==='Estancado'?'#E2445C':'#C4C4C4'));
-        const cPrio = d.prioridad==='Crítica'?'#1A1F36':(d.prioridad==='Alta'?'#E2445C':(d.prioridad==='Media'?'#A25DDC':'#579BFC'));
+    function render(list) {
+      const b = document.getElementById('data-body');
+      b.innerHTML = '';
+      list.forEach(row => {
+        const bgS = row.estatus==='Listo'?'#00C875':(row.estatus==='En curso'?'#FDAB3D':(row.estatus==='Estancado'?'#E2445C':'#94A3B8'));
+        const bgP = row.prioridad==='Crítica'?'#0F172A':(row.prioridad==='Alta'?'#E2445C':(row.prioridad==='Media'?'#A25DDC':'#579BFC'));
         
-        body.innerHTML += `
+        b.innerHTML += `
           <tr>
-            <td style="background: #F5F6F8;"></td>
+            <td style="background: #F8FAFC;"></td>
             <td class="cell-task">
-              <div class="task-title">${d.tarea}</div>
-              <div class="task-desc">${d.descripcion || 'Sin descripción técnica'}</div>
+              <div class="task-title">${row.tarea}</div>
+              <div class="task-desc">${row.descripcion}</div>
             </td>
-            <td><span style="font-weight:800; color:#1A1F36">${d.responsable}</span></td>
-            <td style="background:${cStat};">
-              <select class="monday-select" onchange="update('${d.id}','Estatus',this.value)" style="background:${cStat}; color:${cStat==='#C4C4C4'?'#323338':'#FFF'}">
-                <option value="Por hacer" ${d.estatus==='Por hacer'?'selected':''}>Por hacer</option>
-                <option value="En curso" ${d.estatus==='En curso'?'selected':''}>En curso</option>
-                <option value="Estancado" ${d.estatus==='Estancado'?'selected':''}>Estancado</option>
-                <option value="Listo" ${d.estatus==='Listo'?'selected':''}>Listo</option>
+            <td><span style="font-weight:800; color:#1E293B">${row.responsable}</span></td>
+            <td style="background:${bgS};">
+              <select class="monday-select" onchange="patch('${row.id}','Estatus',this.value)" style="background:${bgS}; color:${bgS==='#94A3B8'?'#333':'#FFF'}">
+                <option value="Por hacer" ${row.estatus==='Por hacer'?'selected':''}>Por hacer</option>
+                <option value="En curso" ${row.estatus==='En curso'?'selected':''}>En curso</option>
+                <option value="Estancado" ${row.estatus==='Estancado'?'selected':''}>Estancado</option>
+                <option value="Listo" ${row.estatus==='Listo'?'selected':''}>Listo</option>
               </select>
             </td>
-            <td style="background:${cPrio};">
-              <select class="monday-select" onchange="update('${d.id}','Prioridad',this.value)" style="background:${cPrio}; color:#FFF">
-                <option value="Baja" ${d.prioridad==='Baja'?'selected':''}>Baja</option>
-                <option value="Media" ${d.prioridad==='Media'?'selected':''}>Media</option>
-                <option value="Alta" ${d.prioridad==='Alta'?'selected':''}>Alta</option>
-                <option value="Crítica" ${d.prioridad==='Crítica'?'selected':''}>Crítica</option>
+            <td style="background:${bgP};">
+              <select class="monday-select" onchange="patch('${row.id}','Prioridad',this.value)" style="background:${bgP}; color:#FFF">
+                <option value="Baja" ${row.prioridad==='Baja'?'selected':''}>Baja</option>
+                <option value="Media" ${row.prioridad==='Media'?'selected':''}>Media</option>
+                <option value="Alta" ${row.prioridad==='Alta'?'selected':''}>Alta</option>
+                <option value="Crítica" ${row.prioridad==='Crítica'?'selected':''}>Crítica</option>
               </select>
             </td>
-            <td style="color:#64748B; font-weight:600">${d.fechaInicio}</td>
-            <td style="color:#1A1F36; font-weight:800">${d.fechaFin}</td>
-          </tr>
-        `;
+            <td style="color:#64748B; font-weight:600">${row.fechaInicio}</td>
+            <td style="color:#0F172A; font-weight:800">${row.fechaFin}</td>
+          </tr>`;
       });
     }
 
-    async function guardar(e) {
+    async function handleSave(e) {
       e.preventDefault();
-      cerrarModal();
+      hideModal();
       document.getElementById('loader').style.display = 'flex';
       
       const payload = {
-        tarea: document.getElementById('inpTarea').value,
-        descripcion: document.getElementById('inpDesc').value,
-        departamento: document.getElementById('inpDepto').value,
-        prioridad: document.getElementById('inpPrio').value,
-        responsable: document.getElementById('inpResp').value,
-        fechaInicio: document.getElementById('inpFInicio').value,
-        fechaFin: document.getElementById('inpFFin').value
+        tarea: document.getElementById('valTarea').value,
+        descripcion: document.getElementById('valDesc').value,
+        departamento: document.getElementById('valDepto').value,
+        prioridad: document.getElementById('valPrio').value,
+        responsable: document.getElementById('valResp').value,
+        fechaInicio: document.getElementById('valInicio').value,
+        fechaFin: document.getElementById('valFin').value
       };
 
       await fetch(API_URL, { method: 'POST', body: JSON.stringify({accion:"crear", item: payload}) });
-      load();
+      init();
     }
 
-    async function update(id, campo, valor) {
+    async function patch(id, campo, valor) {
       document.getElementById('loader').style.display = 'flex';
       await fetch(API_URL, { method: 'POST', body: JSON.stringify({accion:"actualizar", id:id, campo:campo, valor:valor}) });
-      load();
+      init();
     }
 
-    function renderCharts() {
+    function renderBI() {
       const stats = { listo:0, curso:0, estancado:0, hacer:0 };
-      const deptData = {};
-      datos.forEach(d => {
+      const dpts = {};
+      db.forEach(d => {
         if(d.estatus==='Listo') stats.listo++; else if(d.estatus==='En curso') stats.curso++; else if(d.estatus==='Estancado') stats.estancado++; else stats.hacer++;
-        deptData[d.departamento] = (deptData[d.departamento] || 0) + 1;
+        dpts[d.departamento] = (dpts[d.departamento] || 0) + 1;
       });
 
       if(ch1) ch1.destroy();
-      ch1 = new Chart(document.getElementById('statusChart'), {
+      ch1 = new Chart(document.getElementById('chartStatus'), {
         type: 'doughnut',
         data: { labels: ['Listo', 'En curso', 'Estancado', 'Pendiente'], datasets: [{ data: [stats.listo, stats.curso, stats.estancado, stats.hacer], backgroundColor: ['#00C875','#FDAB3D','#E2445C','#CBD5E0'], borderWidth: 0 }] },
-        options: { maintainAspectRatio: false, cutout: '80%', plugins: { legend: { position: 'bottom', labels: { padding: 20, font: { weight: 'bold' } } } } }
+        options: { maintainAspectRatio: false, cutout: '85%', plugins: { legend: { position: 'bottom', labels: { padding: 25, font: { weight: '800', size: 12 } } } } }
       });
 
       if(ch2) ch2.destroy();
-      ch2 = new Chart(document.getElementById('deptChart'), {
+      ch2 = new Chart(document.getElementById('chartDept'), {
         type: 'bar',
-        data: { labels: Object.keys(deptData), datasets: [{ label: 'Requerimientos', data: Object.values(deptData), backgroundColor: '#0073EA', borderRadius: 10 }] },
+        data: { labels: Object.keys(dpts), datasets: [{ label: 'Requerimientos', data: Object.values(dpts), backgroundColor: '#0073EA', borderRadius: 15 }] },
         options: { maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { display: false } }, x: { grid: { display: false } } }, plugins: { legend: { display: false } } }
       });
     }
 
-    function cambiarVista(v) {
+    function toggleView(v) {
       document.getElementById('nav-tab').classList.toggle('active', v==='tabla');
       document.getElementById('nav-chart').classList.toggle('active', v==='graficas');
       document.getElementById('view-tabla').style.display = v==='tabla'?'block':'none';
       document.getElementById('view-graficas').style.display = v==='graficas'?'grid':'none';
-      if(v==='graficas') setTimeout(renderCharts, 100);
+      if(v==='graficas') setTimeout(renderBI, 100);
     }
-    function aplicarFiltro() {
-      const depto = document.getElementById('filtroDepto').value;
-      renderTable(depto === 'Todos' ? datos : datos.filter(d => d.departamento === depto));
+    function runFilter() {
+      const f = document.getElementById('filtroDepto').value;
+      render(f === 'Todos' ? db : db.filter(d => d.departamento === f));
     }
-    function abrirModal() { document.getElementById('modal').classList.add('active'); }
-    function cerrarModal() { document.getElementById('modal').classList.remove('active'); document.getElementById('formTicket').reset(); }
+    function showModal() { document.getElementById('modal').classList.add('active'); }
+    function hideModal() { document.getElementById('modal').classList.remove('active'); document.getElementById('taskForm').reset(); }
   </script>
 </body>
 </html>
