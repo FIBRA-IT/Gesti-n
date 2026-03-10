@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Portal Corporativo | Gestión de Requerimientos</title>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --primary: #0F172A; 
+      --accent: #3B82F6;  
+      --accent-hover: #2563EB;
+      --bg: #F8FAFC;
+      --surface: #FFFFFF;
+      --text-main: #1E293B;
+      --text-muted: #64748B;
+      --border: #E2E8F0;
+      
+      --status-open: #F59E0B;
+      --status-process: #3B82F6;
+      --status-closed: #10B981;
+    }
+    
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Plus Jakarta Sans', sans-serif; }
+    
+    body { background-color: var(--bg); color: var(--text-main); height: 100vh; display: flex; flex-direction: column; overflow: hidden; }
+    
+    /* Navbar Corporativo */
+    .navbar { background: var(--primary); padding: 1rem 2.5rem; display: flex; justify-content: space-between; align-items: center; color: white; box-shadow: 0 4px 12px rgba(0,0,0,0.1); z-index: 10; }
+    .logo { font-size: 1.4rem; font-weight: 700; letter-spacing: -0.5px; display: flex; align-items: center; gap: 10px; }
+    .logo span { font-weight: 400; color: #94A3B8; }
+    
+    .btn-primary { background: var(--accent); color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 6px; font-weight: 600; cursor: pointer; transition: all 0.2s ease; font-size: 0.95rem; display: flex; align-items: center; gap: 8px; }
+    .btn-primary:hover { background: var(--accent-hover); transform: translateY(-1px); box-shadow: 0 4px 6px rgba(59, 130, 246, 0.3); }
+    .btn-primary:disabled { opacity: 0.7; cursor: not-allowed; }
+    
+    /* Área del Tablero */
+    .board-wrapper { flex: 1; overflow-x: auto; padding: 2rem 2.5rem; }
+    .board { display: flex; gap: 2rem; height: 100%; align-items: flex-start; min-width: 1100px; }
+    
+    .column { background: #F1F5F9; border-radius: 10px; width: calc(33.33% - 1.33rem); display: flex; flex-direction: column; max-height: 100%; border: 1px solid var(--border); }
+    .column-header { padding: 1.2rem; font-weight: 700; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid var(--border); }
+    .column-content { padding: 1rem; overflow-y: auto; flex: 1; display: flex; flex-direction: column; gap: 1rem; }
+    
+    .badge-count { background: var(--surface); color: var(--text-main); padding: 0.2rem 0.6rem; border-radius: 20px; font-size: 0.8rem; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
+    
+    #col-abiertos .column-header { border-bottom-color: var(--status-open); }
+    #col-proceso .column-header { border-bottom-color: var(--status-process); }
+    #col-resueltos .column-header { border-bottom-color: var(--status-closed); }
+    
+    /* Tarjetas */
+    .ticket-card { background: var(--surface); padding: 1.2rem; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.04); border: 1px solid var(--border); transition: all 0.2s; border-left: 4px solid transparent; }
+    .ticket-card:hover { transform: translateY(-3px); box-shadow: 0 8px 12px rgba(0,0,0,0.08); }
+    
+    .ticket-meta { display: flex; justify-content: space-between; font-size: 0.75rem; color: var(--text-muted); margin-bottom: 0.5rem; font-weight: 600; }
+    .ticket-title { font-size: 1.05rem; font-weight: 700; margin-bottom: 0.5rem; line-height: 1.3; color: var(--text-main); }
+    .ticket-desc { font-size: 0.85rem; color: var(--text-muted); margin-bottom: 1rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+    
+    .ticket-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 0.8rem; border-top: 1px solid #F1F5F9; }
+    .ticket-dept { font-size: 0.75rem; background: #E2E8F0; padding: 0.2rem 0.6rem; border-radius: 4px; font-weight: 600; color: #475569; }
+    .ticket-user { font-size: 0.8rem; font-weight: 500; display: flex; align-items: center; gap: 6px; }
+    .ticket-user::before { content: ''; width: 20px; height: 20px; background: var(--primary); border-radius: 50%; display: inline-block; }
+    
+    /* Modal */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: none; place-items: center; z-index: 50; opacity: 0; transition: opacity 0.3s ease; }
+    .modal-overlay.active { display: grid; opacity: 1; }
+    .modal { background: var(--surface); width: 100%; max-width: 600px; border-radius: 12px; box-shadow: 0 25px 50px -12px rgba(0,0,0,0.25); transform: translateY(20px); transition: transform 0.3s ease; display: flex; flex-direction: column; max-height: 90vh; }
+    .modal-overlay.active .modal { transform: translateY(0); }
+    
+    .modal-header { padding: 1.5rem 2rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
+    .modal-header h2 { font-size: 1.4rem; color: var(--primary); }
+    .close-btn { background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-muted); }
+    
+    .modal-body { padding: 2rem; overflow-y: auto; }
+    
+    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; margin-bottom: 1.2rem; }
+    .form-group { display: flex; flex-direction: column; gap: 0.4rem; }
+    .form-group.full { grid-column: span 2; }
+    
+    label { font-size: 0.85rem; font-weight: 600; color: #334155; }
+    input, select, textarea { width: 100%; padding: 0.7rem 1rem; border: 1px solid #CBD5E1; border-radius: 6px; font-size: 0.95rem; transition: border-color 0.2s; font-family: inherit; }
+    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--accent); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
+    textarea { resize: vertical; min-height: 100px; }
+    
+    .modal-footer { padding: 1.2rem 2rem; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; gap: 1rem; background: #F8FAFC; border-radius: 0 0 12px 12px; }
+    
+    /* Loading */
+    .loader-container { position: absolute; inset: 0; background: var(--bg); display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 5; gap: 1rem; }
+    .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin 1s linear infinite; }
+    .btn-spinner { width: 16px; height: 16px; border: 2px solid rgba(255,255,255,0.3); border-top-color: white; border-radius: 50%; animation: spin 1s linear infinite; display: none; }
+    
+    @keyframes spin { to { transform: rotate(360deg); } }
+  </style>
+</head>
+<body>
+
+  <nav class="navbar">
+    <div class="logo">Fibra Inn <span>| Corporate Platform</span></div>
+    <button class="btn-primary" onclick="abrirModal()">
+      <svg width="20" height="20" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4"></path></svg>
+      Generar Requerimiento
+    </button>
+  </nav>
+
+  <div class="loader-container" id="loader">
+    <div class="spinner"></div>
+    <p style="font-weight: 600; color: var(--text-muted);">Sincronizando con el sistema central...</p>
+  </div>
+
+  <div class="board-wrapper">
+    <div class="board" id="tablero" style="opacity: 0; transition: opacity 0.5s;">
+      
+      <div class="column" id="col-abiertos">
+        <div class="column-header">
+          <span>Nuevos / Abiertos</span>
+          <span class="badge-count" id="count-abierto">0</span>
+        </div>
+        <div class="column-content" id="content-abierto"></div>
+      </div>
+
+      <div class="column" id="col-proceso">
+        <div class="column-header">
+          <span>En Proceso / Asignados</span>
+          <span class="badge-count" id="count-proceso">0</span>
+        </div>
+        <div class="column-content" id="content-proceso"></div>
+      </div>
+
+      <div class="column" id="col-resueltos">
+        <div class="column-header">
+          <span>Completados</span>
+          <span class="badge-count" id="count-resuelto">0</span>
+        </div>
+        <div class="column-content" id="content-resuelto"></div>
+      </div>
+
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <div class="modal">
+      <div class="modal-header">
+        <h2>Nuevo Requerimiento</h2>
+        <button class="close-btn" onclick="cerrarModal()">&times;</button>
+      </div>
+      
+      <form id="ticketForm" onsubmit="enviarTicket(event)">
+        <div class="modal-body">
+          <div class="form-grid">
+            <div class="form-group">
+              <label>Solicitante</label>
+              <input type="text" id="solicitante" placeholder="Tu nombre completo" required>
+            </div>
+            <div class="form-group">
+              <label>Departamento</label>
+              <select id="departamento" required>
+                <option value="">Selecciona área...</option>
+                <option value="Operaciones">Operaciones / Hotel</option>
+                <option value="Finanzas">Finanzas / Contabilidad</option>
+                <option value="Sistemas">Sistemas / IT</option>
+                <option value="Recursos Humanos">Recursos Humanos</option>
+                <option value="Compras">Compras Corporativas</option>
+              </select>
+            </div>
+            
+            <div class="form-group full">
+              <label>Asunto Breve</label>
+              <input type="text" id="asunto" placeholder="Ej. Solicitud de accesos al sistema ERP" required>
+            </div>
+
+            <div class="form-group">
+              <label>Categoría</label>
+              <select id="categoria" required>
+                <option value="Soporte Técnico">Soporte Técnico</option>
+                <option value="Gestión de Accesos">Gestión de Accesos</option>
+                <option value="Solicitud de Insumos">Solicitud de Insumos</option>
+                <option value="Aclaración Nómina">Aclaración Nómina</option>
+                <option value="Mantenimiento">Mantenimiento General</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label>Nivel de Urgencia</label>
+              <select id="prioridad" required>
+                <option value="Baja">🟢 Rutina (Baja)</option>
+                <option value="Media">🟡 Importante (Media)</option>
+                <option value="Alta">🔴 Crítica (Alta)</option>
+              </select>
+            </div>
+
+            <div class="form-group full">
+              <label>Descripción del Requerimiento</label>
+              <textarea id="descripcion" placeholder="Proporciona todos los detalles posibles para agilizar la atención..." required></textarea>
+            </div>
+          </div>
+        </div>
+        
+        <div class="modal-footer">
+          <button type="button" class="btn-primary" style="background: white; color: var(--text-main); border: 1px solid var(--border);" onclick="cerrarModal()">Cancelar</button>
+          <button type="submit" class="btn-primary" id="btnGuardar">
+            <span id="btnText">Enviar Requerimiento</span>
+            <div class="btn-spinner" id="btnSpinner"></div>
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    // TU API ESTÁ AQUÍ
+    const API_URL = "https://script.google.com/macros/s/AKfycbzDOlrGBX2SwWISncNGzsQ8BKcLpIkXYM9Ytdk51ecJg7R9HxJvoYeebKB6mIeOLuSb/exec"; 
+
+    document.addEventListener('DOMContentLoaded', cargarTickets);
+
+    const modal = document.getElementById('modal');
+    function abrirModal() { modal.classList.add('active'); }
+    function cerrarModal() { modal.classList.remove('active'); document.getElementById('ticketForm').reset(); }
+
+    async function cargarTickets() {
+      try {
+        const response = await fetch(API_URL);
+        const data = await response.json();
+        
+        if (data.exito) {
+          dibujarTablero(data.datos);
+        } else {
+          console.error("Error en servidor:", data.error);
+        }
+      } catch (error) {
+        console.error("Error de conexión:", error);
+      }
+    }
+
+    function dibujarTablero(tickets) {
+      document.getElementById('loader').style.display = 'none';
+      document.getElementById('tablero').style.opacity = '1';
+
+      const colAbierto = document.getElementById('content-abierto');
+      const colProceso = document.getElementById('content-proceso');
+      const colResuelto = document.getElementById('content-resuelto');
+      
+      colAbierto.innerHTML = ''; colProceso.innerHTML = ''; colResuelto.innerHTML = '';
+      let cAbierto = 0, cProceso = 0, cResuelto = 0;
+
+      tickets.forEach(ticket => {
+        let colorBorde = ticket.prioridad.includes('Alta') ? '#EF4444' : 
+                         ticket.prioridad.includes('Media') ? '#F59E0B' : '#10B981';
+
+        const cardHTML = `
+          <div class="ticket-card" style="border-left-color: ${colorBorde};">
+            <div class="ticket-meta">
+              <span>${ticket.id}</span>
+              <span>${ticket.fecha.split(' ')[0]}</span>
+            </div>
+            <h3 class="ticket-title">${ticket.asunto}</h3>
+            <p class="ticket-desc">${ticket.descripcion}</p>
+            <div class="ticket-footer">
+              <span class="ticket-dept">${ticket.departamento}</span>
+              <div class="ticket-user">${ticket.solicitante.split(' ')[0]}</div>
+            </div>
+          </div>
+        `;
+
+        const estatus = ticket.estatus.toLowerCase();
+        if (estatus === 'abierto') {
+          colAbierto.innerHTML += cardHTML; cAbierto++;
+        } else if (estatus === 'en proceso') {
+          colProceso.innerHTML += cardHTML; cProceso++;
+        } else {
+          colResuelto.innerHTML += cardHTML; cResuelto++;
+        }
+      });
+
+      document.getElementById('count-abierto').innerText = cAbierto;
+      document.getElementById('count-proceso').innerText = cProceso;
+      document.getElementById('count-resuelto').innerText = cResuelto;
+    }
+
+    async function enviarTicket(event) {
+      event.preventDefault();
+      
+      const btn = document.getElementById('btnGuardar');
+      const text = document.getElementById('btnText');
+      const spinner = document.getElementById('btnSpinner');
+      
+      btn.disabled = true; text.innerText = 'Procesando...'; spinner.style.display = 'block';
+
+      const payload = {
+        accion: "crear",
+        ticket: {
+          solicitante: document.getElementById('solicitante').value,
+          departamento: document.getElementById('departamento').value,
+          asunto: document.getElementById('asunto').value,
+          categoria: document.getElementById('categoria').value,
+          prioridad: document.getElementById('prioridad').value,
+          descripcion: document.getElementById('descripcion').value
+        }
+      };
+
+      try {
+        // Usamos text/plain para evitar bloqueos CORS por parte del navegador
+        const response = await fetch(API_URL, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'text/plain;charset=utf-8',
+          },
+          body: JSON.stringify(payload)
+        });
+
+        cerrarModal();
+        document.getElementById('tablero').style.opacity = '0';
+        document.getElementById('loader').style.display = 'flex';
+        
+        // Damos tiempo a la hoja de cálculo para procesar antes de recargar
+        setTimeout(cargarTickets, 1500); 
+
+      } catch (error) {
+        console.error("Error enviando datos:", error);
+        alert("Hubo un error de conexión, pero es posible que el ticket se haya guardado.");
+        setTimeout(cargarTickets, 1500); 
+      } finally {
+        btn.disabled = false; text.innerText = 'Enviar Requerimiento'; spinner.style.display = 'none';
+      }
+    }
+  </script>
+</body>
+</html>
