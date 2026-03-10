@@ -28,31 +28,35 @@
     .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow-y: auto; padding: 2rem 3rem; }
     .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 2rem; border-bottom: 1px solid var(--border-light); padding-bottom: 1rem; }
     
-    /* Toolbar siempre visible */
+    /* Toolbar */
     .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; position: sticky; top: 0; background: white; z-index: 5; padding: 10px 0; }
-    .btn-monday { background: var(--monday-blue); color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 4px; font-weight: 500; cursor: pointer; }
-    .select-filtro { padding: 0.6rem; border: 1px solid var(--border-color); border-radius: 4px; outline: none; min-width: 200px; }
+    .btn-monday { background: var(--monday-blue); color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 4px; font-weight: 500; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0, 115, 234, 0.2); }
+    .btn-monday:hover { background: var(--monday-hover); transform: translateY(-1px); }
+    .select-filtro { padding: 0.6rem; border: 1px solid var(--border-color); border-radius: 4px; outline: none; min-width: 200px; font-weight: 500; }
 
     /* Tabla Estilo Monday */
     .monday-group { margin-bottom: 2rem; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
     .group-header { padding: 0.8rem 1.2rem; font-size: 1.1rem; font-weight: 500; color: var(--monday-blue); background: white; border-bottom: 1px solid var(--border-color); }
-    .monday-table { width: 100%; border-collapse: collapse; table-layout: fixed; }
+    .monday-table { width: 100%; border-collapse: collapse; table-layout: fixed; background: white; }
     .monday-table th { padding: 0.8rem; border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-light); font-weight: 500; color: var(--text-gray); font-size: 0.85rem; text-align: center; background: #FAFBFC; }
     .monday-table td { border-bottom: 1px solid var(--border-light); border-right: 1px solid var(--border-light); text-align: center; font-size: 0.9rem; height: 55px; padding: 0; }
     
     /* Celda de Tarea con Descripción (Imagen Monday) */
     .cell-tarea { text-align: left !important; padding: 0.5rem 1rem !important; border-left: 6px solid var(--monday-blue); }
     .tarea-titulo { font-weight: 500; color: var(--text-main); font-size: 0.95rem; }
-    .tarea-desc { font-size: 0.75rem; color: var(--text-gray); margin-top: 2px; }
+    .tarea-desc { font-size: 0.75rem; color: var(--text-gray); margin-top: 2px; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; text-overflow: ellipsis; }
     
-    .monday-select { appearance: none; width: 100%; height: 100%; border: none; color: white; font-weight: 500; text-align: center; text-align-last: center; cursor: pointer; }
+    .monday-select { appearance: none; -webkit-appearance: none; width: 100%; height: 100%; border: none; color: white; font-weight: 500; text-align: center; text-align-last: center; cursor: pointer; outline: none; }
+    .monday-select:hover { filter: brightness(0.9); }
 
-    /* Analíticas */
-    .dashboard-view { display: none; grid-template-columns: 1fr 2fr; gap: 1.5rem; height: 400px; }
-    .chart-box { background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; }
+    /* Analíticas Premium */
+    .dashboard-view { display: none; grid-template-columns: 1fr 2fr; gap: 1.5rem; height: 450px; padding-top: 1rem; }
+    .chart-box { background: white; padding: 1.5rem; border-radius: 12px; border: 1px solid var(--border-color); display: flex; flex-direction: column; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
+    .chart-title { font-size: 1.1rem; font-weight: 500; margin-bottom: 1.5rem; color: var(--text-main); font-family: 'Roboto', sans-serif; }
+    .canvas-container { flex: 1; position: relative; width: 100%; height: 100%; }
 
     /* Modal */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; place-items: center; z-index: 100; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; place-items: center; z-index: 100; backdrop-filter: blur(2px); }
     .modal-overlay.active { display: grid; }
     .modal { background: white; width: 100%; max-width: 550px; border-radius: 12px; padding: 2rem; box-shadow: 0 10px 30px rgba(0,0,0,0.2); }
     .form-group { margin-bottom: 1.2rem; display: flex; flex-direction: column; gap: 0.4rem; }
@@ -68,16 +72,16 @@
 <body>
 
   <aside class="panel-secundario">
-    <div class="panel-title">Fibra Inn Hub</div>
+    <div class="panel-title">Fibra Inn WorkOS</div>
     <div class="nav-item active" id="nav-tablero" onclick="cambiarVista('tabla')">📋 Tablero de Ejecución</div>
     <div class="nav-item" id="nav-graficas" onclick="cambiarVista('graficas')">📈 Analíticas y Reportes</div>
   </aside>
 
-  <div class="loader-wrap" id="loader"><div class="spinner"></div><div id="loader-text">Cargando...</div></div>
+  <div class="loader-wrap" id="loader"><div class="spinner"></div><div id="loader-text" style="font-weight: 500;">Sincronizando...</div></div>
 
   <main class="main-wrapper">
     <div class="header-top">
-      <h1 class="board-title">Gestión de Requerimientos Operativos</h1>
+      <h1 class="board-title">Requerimientos Corporativoshampton</h1>
       <div style="background: #E2E8F0; padding: 5px 15px; border-radius: 20px; font-size: 0.8rem; font-weight: 700;">SESIÓN: CORPORATIVO</div>
     </div>
 
@@ -85,22 +89,19 @@
       <div class="tools-left">
         <button class="btn-monday" onclick="abrirModal()">+ Nuevo Requerimiento</button>
         <select id="filtroDepto" class="select-filtro" onchange="aplicarFiltro()">
-          <option value="Todos">Todas las áreas</option>
+          <option value="Todos">Filtrar por Área: Todas</option>
           <option value="Mantenimiento">Mantenimiento</option>
           <option value="Jurídico">Jurídico</option>
           <option value="Ama de llaves">Ama de llaves</option>
           <option value="Sistemas">Sistemas</option>
-          <option value="Operaciones">Operaciones</option>
-          <option value="Finanzas">Finanzas</option>
           <option value="Compras">Compras</option>
-          <option value="Recursos Humanos">Recursos Humanos</option>
         </select>
       </div>
     </div>
 
     <div id="vista-tabla">
       <div class="monday-group">
-        <div class="group-header">▼ Pendientes y En Curso</div>
+        <div class="group-header">▼ Activos</div>
         <table class="monday-table"><tbody id="body-activos"></tbody></table>
       </div>
       <div class="monday-group">
@@ -110,21 +111,30 @@
     </div>
 
     <div class="dashboard-view" id="vista-graficas">
-      <div class="chart-box"><h3>Estatus General</h3><canvas id="statusChart"></canvas></div>
-      <div class="chart-box"><h3>Carga por Área</h3><canvas id="deptChart"></canvas></div>
+      <div class="chart-box">
+        <div class="chart-title">Estatus Global de Operaciones</div>
+        <div class="canvas-container"><canvas id="statusChart"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <div class="chart-title">Distribución de Carga por Área</div>
+        <div class="canvas-container"><canvas id="deptChart"></canvas></div>
+      </div>
     </div>
   </main>
 
   <div class="modal-overlay" id="modal">
     <div class="modal">
-      <h2 style="margin-bottom: 1.5rem;">Nuevo Requerimiento</h2>
+      <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+        <h2 style="font-size: 1.4rem; font-weight: 700;">Registrar Requerimiento</h2>
+        <button onclick="cerrarModal()" style="background: none; border: none; font-size: 1.8rem; cursor: pointer; color: var(--text-gray);">&times;</button>
+      </div>
       <form id="formTicket" onsubmit="guardarTicket(event)">
         <div class="form-group"><label>Tarea / Asunto</label><input type="text" id="inpAsunto" required></div>
         <div class="form-group"><label>Descripción Detallada</label><textarea id="inpDesc" required placeholder="Explica los detalles aquí..."></textarea></div>
         <div style="display: flex; gap: 1rem;">
           <div class="form-group" style="flex: 1;"><label>Área</label>
             <select id="inpDepto" required>
-              <option value="Mantenimiento">Mantenimiento</option>
+              <option value="Mantenimiento" selected>Mantenimiento</option>
               <option value="Jurídico">Jurídico</option>
               <option value="Ama de llaves">Ama de llaves</option>
               <option value="Sistemas">Sistemas</option>
@@ -135,10 +145,10 @@
             <select id="inpPrio" required><option value="Baja">Baja</option><option value="Media">Media</option><option value="Alta">Alta</option><option value="Crítica">Crítica</option></select>
           </div>
         </div>
-        <div class="form-group"><label>Asignar a (Nombre o Puesto)</label><input type="text" id="inpResp" required placeholder="Ej. Lic. Estrada / Jefe de Turno"></div>
+        <div class="form-group"><label>Asignar a (Texto Libre)</label><input type="text" id="inpResp" required placeholder="Ej. Juan Pérez / Jefe de Área"></div>
         <div style="display: flex; gap: 10px; margin-top: 1rem;">
           <button type="button" style="flex:1; padding: 0.8rem; cursor:pointer;" onclick="cerrarModal()">Cancelar</button>
-          <button type="submit" class="btn-monday" style="flex:2;">Registrar</button>
+          <button type="submit" class="btn-monday" style="flex:2;">Crear Tarea</button>
         </div>
       </form>
     </div>
@@ -174,7 +184,7 @@
     }
 
     async function cargarDatos() {
-      mostrarCarga(true, "Cargando tablero corporativo...");
+      mostrarCarga(true, "Conectando al servidor...");
       try {
         const res = await fetch(API_URL);
         const json = await res.json();
@@ -207,15 +217,15 @@
             <td style="width:40px; background: #F5F6F8;"><input type="checkbox" disabled></td>
             <td class="cell-tarea">
               <div class="tarea-titulo">${d.tarea}</div>
-              <div class="tarea-desc">${d.descripcion || 'Sin descripción adicional'}</div>
+              <div class="tarea-desc" title="${d.descripcion || ''}">${d.descripcion || 'Sin descripción adicional'}</div>
             </td>
             <td style="width:140px;">
               <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
-                <div style="width:24px; height:24px; background:#E2E8F0; border-radius:50%; display:grid; place-items:center; font-size:0.7rem; font-weight:bold;">${inicial}</div>
+                <div style="width:24px; height:24px; background:#0073EA; color:white; border-radius:50%; display:grid; place-items:center; font-size:0.75rem; font-weight:bold;">${inicial}</div>
                 <span style="font-size:0.8rem;">${d.responsable}</span>
               </div>
             </td>
-            <td style="width:150px; color: var(--text-gray); font-size: 0.8rem;">${d.departamento}</td>
+            <td style="width:160px; color: var(--text-gray); font-size: 0.8rem; font-weight: 500;">${d.departamento}</td>
             <td style="width:140px; background-color: ${bgStat};">
               <select class="monday-select" style="background: transparent; color: ${bgStat==='var(--stat-gris)'?'#333':'#fff'};" onchange="actualizarDato('${d.id}', 'Estatus', this.value)">
                 <option value="Por hacer" ${d.estatus==='Por hacer'?'selected':''}>Por hacer</option>
@@ -232,7 +242,7 @@
                 <option value="Crítica" ${d.prioridad==='Crítica'?'selected':''}>Crítica</option>
               </select>
             </td>
-            <td style="width:100px; font-size: 0.8rem; color: var(--text-gray);">${d.fecha}</td>
+            <td style="width:100px; font-size: 0.8rem; color: var(--text-gray); font-weight: 500;">${d.fecha}</td>
           </tr>
         `;
         if(d.estatus === 'Listo') bodyResueltos.innerHTML += filaHtml;
@@ -243,13 +253,13 @@
     async function guardarTicket(e) {
       e.preventDefault();
       cerrarModal();
-      mostrarCarga(true, "Guardando requerimiento...");
+      mostrarCarga(true, "Registrando en la nube...");
       
       const payload = {
         accion: "crear",
         item: {
           tarea: document.getElementById('inpAsunto').value,
-          descripcion: document.getElementById('inpDesc').value, // ¡AHORA SÍ SE ATRAPA!
+          descripcion: document.getElementById('inpDesc').value, // ¡AHORA SÍ SE ENVÍA LA DESCRIPCIÓN!
           departamento: document.getElementById('inpDepto').value,
           prioridad: document.getElementById('inpPrio').value,
           responsable: document.getElementById('inpResp').value
@@ -259,17 +269,18 @@
       try {
         await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
         setTimeout(cargarDatos, 1000);
-      } catch(e) { alert("Error de red."); mostrarCarga(false); }
+      } catch(e) { alert("Error."); mostrarCarga(false); }
     }
 
     async function actualizarDato(id, campo, valor) {
-      mostrarCarga(true, "Actualizando sistema...");
+      mostrarCarga(true, "Actualizando cambios...");
       try {
         await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({accion: "actualizar", id: id, campo: campo, valor: valor}) });
         setTimeout(cargarDatos, 1000);
       } catch(e) { alert("Error."); mostrarCarga(false); }
     }
 
+    // Configuración Premium de Gráficas
     function actualizarGraficas(datos) {
       let hacer = 0, curso = 0, estancado = 0, listo = 0;
       let deptos = { "Mantenimiento":0, "Jurídico":0, "Ama de llaves":0, "Sistemas":0, "Compras":0 };
@@ -277,12 +288,24 @@
         if(d.estatus==='Listo') listo++; else if(d.estatus==='En curso') curso++; else if(d.estatus==='Estancado') estancado++; else hacer++;
         if(deptos[d.departamento]!==undefined) deptos[d.departamento]++;
       });
+
+      Chart.defaults.font.family = "'Roboto', sans-serif";
+      
       const ctxStat = document.getElementById('statusChart').getContext('2d');
       if(chartEstatus) chartEstatus.destroy();
-      chartEstatus = new Chart(ctxStat, { type: 'doughnut', data: { labels: ['Pendiente', 'En curso', 'Estancado', 'Listo'], datasets: [{ data: [hacer, curso, estancado, listo], backgroundColor: ['#C4C4C4', '#FDAB3D', '#E2445C', '#00C875'], borderWidth: 0 }] }, options: { responsive: true, maintainAspectRatio: false } });
+      chartEstatus = new Chart(ctxStat, { 
+        type: 'doughnut', 
+        data: { labels: ['Por hacer', 'En curso', 'Estancado', 'Listo'], datasets: [{ data: [hacer, curso, estancado, listo], backgroundColor: ['#C4C4C4', '#FDAB3D', '#E2445C', '#00C875'], borderWidth: 0 }] },
+        options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'right', labels: { boxWidth: 15, padding: 15 } } } }
+      });
+
       const ctxDept = document.getElementById('deptChart').getContext('2d');
       if(chartDepto) chartDepto.destroy();
-      chartDepto = new Chart(ctxDept, { type: 'bar', data: { labels: Object.keys(deptos), datasets: [{ label: 'Tareas', data: Object.values(deptos), backgroundColor: '#0073EA', borderRadius: 4 }] }, options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: {stepSize: 1} } } } });
+      chartDepto = new Chart(ctxDept, { 
+        type: 'bar', 
+        data: { labels: Object.keys(deptos), datasets: [{ label: 'Tareas Activas', data: Object.values(deptos), backgroundColor: '#0073EA', borderRadius: 6 }] }, 
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { display: false }, ticks: { stepSize: 1 } }, x: { grid: { display: false } } }, plugins: { legend: { display: false } } }
+      });
     }
   </script>
 </body>
