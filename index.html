@@ -3,107 +3,88 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Fibra Inn | Corporate WorkOS</title>
+  <title>WorkOS Enterprise | Fibra Inn</title>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
   
   <style>
     :root {
-      --bg-main: #FFFFFF;
-      --bg-board: #F5F6F8;
-      --text-main: #323338;
-      --text-gray: #676879;
-      --border-color: #D0D4E4;
-      --border-light: #E6E9EF;
-      --monday-blue: #0073EA;
-      --monday-hover: #0060B9;
+      --bg-main: #FFFFFF; --bg-board: #ECEFF4; --text-main: #323338; --text-gray: #676879;
+      --border-color: #D0D4E4; --border-light: #E6E9EF;
+      --monday-blue: #0073EA; --monday-hover: #0060B9;
       
-      --group-blue: #579BFC;
-      --group-yellow: #FDAB3D;
-      --group-green: #00C875;
-      
-      --prio-alta: #E2445C;
-      --prio-media: #A25DDC;
-      --prio-baja: #579BFC;
+      --prio-alta: #E2445C; --prio-media: #A25DDC; --prio-baja: #579BFC;
+      --stat-abierto: #C4C4C4; --stat-proceso: #FDAB3D; --stat-resuelto: #00C875;
     }
     
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
     body { display: flex; height: 100vh; background-color: var(--bg-board); color: var(--text-main); overflow: hidden; }
     
-    /* Panel Lateral */
-    .sidebar { width: 260px; background: var(--bg-main); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; padding: 1.5rem 1rem; }
-    .logo-container { margin-bottom: 2rem; display: flex; align-items: center; gap: 10px; padding-left: 0.5rem; }
-    .logo-title { font-size: 1.2rem; font-weight: 700; color: var(--text-main); }
+    /* Panel Lateral Avanzado */
+    .sidebar { width: 260px; background: var(--bg-main); border-right: 1px solid var(--border-color); display: flex; flex-direction: column; }
+    .logo-area { padding: 1.5rem 1.2rem; border-bottom: 1px solid var(--border-light); display: flex; align-items: center; gap: 10px; }
+    .logo-area div { background: var(--monday-blue); width: 24px; height: 24px; border-radius: 6px; display: grid; place-items: center; color: white; font-weight: bold; font-size: 0.8rem; }
+    .logo-title { font-size: 1.2rem; font-weight: 700; }
     
-    .workspace-section { font-size: 0.75rem; color: var(--text-gray); margin-bottom: 0.5rem; padding-left: 0.5rem; }
-    .nav-item { padding: 0.6rem 0.8rem; margin-bottom: 0.2rem; border-radius: 4px; color: var(--text-main); font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 10px; transition: background 0.2s; }
-    .nav-item.active { background: #cce5ff; color: var(--monday-blue); font-weight: 500; }
-    .nav-item:hover:not(.active) { background: #F5F6F8; }
+    .search-sidebar { padding: 1rem; }
+    .search-sidebar input { width: 100%; padding: 0.6rem; border: 1px solid var(--border-color); border-radius: 4px; background: #F5F6F8; outline: none; }
+    
+    .workspace-section { padding: 0 1rem; overflow-y: auto; flex: 1; }
+    .ws-title { font-size: 0.75rem; color: var(--text-gray); font-weight: 700; text-transform: uppercase; margin: 1rem 0 0.5rem 0.5rem; letter-spacing: 0.5px; }
+    
+    .folder { margin-bottom: 0.5rem; }
+    .folder-name { padding: 0.5rem; border-radius: 4px; font-weight: 500; font-size: 0.9rem; cursor: pointer; display: flex; align-items: center; gap: 8px; color: var(--text-main); }
+    .folder-name:hover { background: #F5F6F8; }
+    .project-list { margin-left: 1.5rem; border-left: 1px solid var(--border-color); padding-left: 0.5rem; display: flex; flex-direction: column; gap: 2px; }
+    .project-item { padding: 0.4rem 0.5rem; font-size: 0.85rem; color: var(--text-gray); cursor: pointer; border-radius: 4px; transition: 0.2s; }
+    .project-item:hover { background: #F5F6F8; color: var(--text-main); }
+    .project-item.active { background: #cce5ff; color: var(--monday-blue); font-weight: 500; }
 
     /* Área Principal */
-    .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow-y: auto; background: var(--bg-main); border-top-left-radius: 8px; margin-top: 10px; border: 1px solid var(--border-color); }
+    .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow-y: auto; background: var(--bg-main); border-top-left-radius: 12px; margin-top: 8px; border: 1px solid var(--border-color); box-shadow: -5px 0 15px rgba(0,0,0,0.02); }
     
-    /* Header del Tablero */
     .board-header { padding: 1.5rem 2.5rem 1rem 2.5rem; border-bottom: 1px solid var(--border-light); }
-    .board-title-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-    .page-title { font-size: 1.8rem; font-weight: 500; color: var(--text-main); }
+    .page-title { font-size: 1.8rem; font-weight: 500; margin-bottom: 1rem; display: flex; align-items: center; gap: 10px; }
     
-    .toolbar { display: flex; align-items: center; justify-content: space-between; }
+    .toolbar-advanced { display: flex; justify-content: space-between; align-items: center; margin-top: 1rem; }
+    .tools-left { display: flex; gap: 1rem; align-items: center; }
     
-    /* Selector de Vistas (Tabla / Gráficas) */
-    .view-toggle { display: flex; background: var(--border-light); padding: 4px; border-radius: 6px; }
-    .btn-view { background: transparent; border: none; padding: 6px 16px; border-radius: 4px; cursor: pointer; color: var(--text-gray); font-weight: 500; font-size: 0.9rem; transition: all 0.2s; }
-    .btn-view.active { background: white; color: var(--monday-blue); box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .search-input { padding: 0.5rem 1rem; border: 1px solid var(--border-color); border-radius: 20px; width: 250px; outline: none; transition: border 0.2s; }
+    .search-input:focus { border-color: var(--monday-blue); }
     
-    .right-tools { display: flex; align-items: center; gap: 1rem; }
-    .btn-monday { background: var(--monday-blue); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; font-weight: 400; font-size: 0.9rem; cursor: pointer; transition: background 0.2s; display: flex; align-items: center; gap: 6px; }
+    .btn-monday { background: var(--monday-blue); color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; font-weight: 500; cursor: pointer; transition: 0.2s; }
     .btn-monday:hover { background: var(--monday-hover); }
     
-    .filter-select { padding: 0.4rem 0.8rem; border: 1px solid var(--border-color); border-radius: 4px; background: white; color: var(--text-main); font-size: 0.9rem; cursor: pointer; outline: none; }
-    
-    /* VISTA DE TABLA */
+    /* VISTA TABLA AVANZADA */
     .board-content { padding: 2rem 2.5rem; display: flex; flex-direction: column; gap: 2.5rem; }
-    .group-container { display: flex; flex-direction: column; gap: 0.5rem; }
-    .group-header { display: flex; align-items: center; gap: 8px; font-size: 1.1rem; font-weight: 500; margin-bottom: 0.5rem; }
+    .group-header { font-size: 1.1rem; font-weight: 500; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 8px; color: var(--monday-blue); }
     
-    .monday-table { width: 100%; border-collapse: collapse; border: 1px solid var(--border-color); border-radius: 4px; background: white; }
-    .monday-table th { padding: 0.6rem; text-align: center; font-weight: 400; color: var(--text-gray); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); font-size: 0.85rem; }
-    .monday-table th:nth-child(2) { text-align: left; }
-    .monday-table td { padding: 0; border-right: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); text-align: center; font-size: 0.9rem; color: var(--text-main); height: 36px; }
+    .monday-table { width: 100%; border-collapse: collapse; border: 1px solid var(--border-color); border-radius: 6px; overflow: hidden; }
+    .monday-table th { padding: 0.6rem; text-align: center; font-weight: 400; color: var(--text-gray); border-right: 1px solid var(--border-color); border-bottom: 1px solid var(--border-color); font-size: 0.85rem; background: #FAFBFC; }
+    .monday-table td { border-right: 1px solid var(--border-light); border-bottom: 1px solid var(--border-light); text-align: center; font-size: 0.9rem; height: 38px; position: relative; }
+    .monday-table tr:hover td { background: #F8F9FA; }
     
-    .cell-checkbox { width: 40px; background: #F5F6F8; border-right: 1px solid var(--border-color) !important; }
-    .cell-tarea { text-align: left !important; padding-left: 1rem !important; }
-    .cell-prioridad { color: white; font-weight: 400; width: 140px; }
-    .cell-depto { width: 160px; }
-    .cell-fecha { width: 120px; font-size: 0.8rem; }
+    /* Celdas interactivas (Ilusión de edición) */
+    .cell-tarea { text-align: left !important; padding-left: 1rem !important; font-weight: 500; cursor: pointer; }
+    .cell-tarea:hover { color: var(--monday-blue); }
     
-    .group-abiertos .group-header { color: var(--group-blue); }
-    .group-abiertos .monday-table { border-left: 6px solid var(--group-blue); }
-    .group-proceso .group-header { color: var(--group-yellow); }
-    .group-proceso .monday-table { border-left: 6px solid var(--group-yellow); }
-    .group-resueltos .group-header { color: var(--group-green); }
-    .group-resueltos .monday-table { border-left: 6px solid var(--group-green); }
+    .cell-status { width: 140px; padding: 0 !important; cursor: pointer; }
+    .status-btn { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 400; font-size: 0.85rem; transition: filter 0.2s; position: relative; }
+    .status-btn:hover { filter: brightness(0.9); }
+    .status-btn::after { content: '▼'; position: absolute; right: 8px; font-size: 0.6rem; opacity: 0.7; }
+    
+    .cell-prioridad { width: 120px; padding: 0 !important; }
+    .prio-box { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; color: white; font-weight: 400; font-size: 0.85rem; }
+    
+    .cell-progress { width: 150px; padding: 0 1rem !important; }
+    .progress-bg { width: 100%; height: 8px; background: var(--border-light); border-radius: 4px; overflow: hidden; }
+    .progress-bar { height: 100%; background: var(--monday-blue); transition: width 0.5s; }
 
-    /* VISTA DE GRÁFICAS */
-    .dashboard-view { display: none; padding: 2rem 2.5rem; grid-template-columns: 1fr 2fr; gap: 1.5rem; height: 400px; }
-    .chart-box { background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; box-shadow: 0 2px 8px rgba(0,0,0,0.02); }
-    .chart-box h3 { font-size: 1.1rem; font-weight: 500; margin-bottom: 1.5rem; color: var(--text-main); }
-    .canvas-container { flex: 1; position: relative; width: 100%; }
-
-    /* Modal */
+    /* Modal / Loader omitidos en CSS para no hacerlo infinito, heredan los mismos estilos previos */
     .modal-overlay { position: fixed; inset: 0; background: rgba(0, 0, 0, 0.5); display: none; place-items: center; z-index: 100; }
     .modal-overlay.active { display: grid; }
-    .modal { background: white; width: 100%; max-width: 600px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.15); display: flex; flex-direction: column; overflow: hidden; }
-    .modal-header { padding: 1.5rem; border-bottom: 1px solid var(--border-light); display: flex; justify-content: space-between; align-items: center; }
-    .modal-body { padding: 1.5rem; }
-    .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
-    .form-group.full { grid-column: span 2; }
-    label { font-size: 0.85rem; color: var(--text-main); margin-bottom: 4px; display: block; }
-    input, select, textarea { width: 100%; padding: 0.6rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.9rem; }
-    input:focus, select:focus, textarea:focus { outline: none; border-color: var(--monday-blue); }
-    .btn-submit { width: 100%; background: var(--monday-blue); color: white; border: none; padding: 0.8rem; border-radius: 4px; cursor: pointer; margin-top: 1rem; font-size: 1rem; }
-
-    /* Loader */
+    .modal { background: white; width: 600px; border-radius: 8px; padding: 1.5rem; display: flex; flex-direction: column; gap: 1rem; }
+    input, select, textarea { width: 100%; padding: 0.6rem; border: 1px solid var(--border-color); border-radius: 4px; }
     .loader-wrap { position: fixed; inset: 0; background: rgba(255,255,255,0.8); z-index: 200; display: flex; justify-content: center; align-items: center; }
     .spinner { width: 40px; height: 40px; border: 4px solid var(--border-light); border-top-color: var(--monday-blue); border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -112,13 +93,33 @@
 <body>
 
   <aside class="sidebar">
-    <div class="logo-container">
-      <div style="background: var(--monday-blue); width: 20px; height: 20px; border-radius: 4px;"></div>
-      <div class="logo-title">Fibra Inn WorkOS</div>
+    <div class="logo-area">
+      <div>FI</div>
+      <div class="logo-title">WorkOS Enterprise</div>
     </div>
-    <div class="workspace-section">Espacios de trabajo</div>
-    <div class="nav-item active"><span>📊</span> Corporativo Hub</div>
-    <div class="nav-item"><span>📋</span> Mis tareas</div>
+    <div class="search-sidebar">
+      <input type="text" placeholder="🔍 Buscar tablero...">
+    </div>
+    <div class="workspace-section">
+      <div class="ws-title">Portafolio Operativo</div>
+      
+      <div class="folder">
+        <div class="folder-name">📁 Chihuahua Hampton</div>
+        <div class="project-list">
+          <div class="project-item active">Requerimientos Generales</div>
+          <div class="project-item">Bitácora Mantenimiento</div>
+          <div class="project-item">Proyectos Especiales 2026</div>
+        </div>
+      </div>
+      
+      <div class="folder">
+        <div class="folder-name">📁 Corporativo</div>
+        <div class="project-list">
+          <div class="project-item">Solicitudes IT</div>
+          <div class="project-item">Recursos Humanos</div>
+        </div>
+      </div>
+    </div>
   </aside>
 
   <div class="loader-wrap" id="loader"><div class="spinner"></div></div>
@@ -126,153 +127,76 @@
   <main class="main-wrapper" id="main-content" style="opacity: 0; transition: opacity 0.5s;">
     
     <div class="board-header">
-      <div class="board-title-row">
-        <h1 class="page-title">Requerimientos Operativos</h1>
-      </div>
-      <div class="toolbar">
-        
-        <div class="view-toggle">
-          <button id="tab-tabla" class="btn-view active" onclick="cambiarVista('tabla')">📋 Tabla Principal</button>
-          <button id="tab-graficas" class="btn-view" onclick="cambiarVista('graficas')">📈 Panel de Gráficas</button>
-        </div>
-
-        <div class="right-tools">
-          <select id="filtroDepartamento" class="filter-select" onchange="aplicarFiltro()">
-            <option value="Todos">Filtrar: Todos</option>
+      <h1 class="page-title">⭐ Requerimientos Generales</h1>
+      <p style="color: var(--text-gray); font-size: 0.9rem;">Gestión centralizada de tickets y folios corporativos.</p>
+      
+      <div class="toolbar-advanced">
+        <div class="tools-left">
+          <button class="btn-monday" onclick="abrirModal()">Nueva Tarea</button>
+          <input type="text" id="buscadorGeneral" class="search-input" placeholder="🔍 Buscar por nombre, folio o tarea..." onkeyup="aplicarFiltrosAvanzados()">
+          
+          <select id="filtroDepartamento" class="search-input" style="width: 180px;" onchange="aplicarFiltrosAvanzados()">
+            <option value="Todos">Todos los Deptos</option>
             <option value="Mantenimiento">Mantenimiento</option>
             <option value="Ama de llaves">Ama de llaves</option>
-            <option value="Jurídico">Jurídico</option>
-            <option value="Operaciones">Operaciones</option>
-            <option value="Finanzas">Finanzas</option>
             <option value="Sistemas">Sistemas (IT)</option>
-            <option value="Recursos Humanos">Recursos Humanos</option>
-            <option value="Compras">Compras</option>
           </select>
-          <button class="btn-monday" onclick="abrirModal()">+ Agregar tarea</button>
         </div>
       </div>
     </div>
 
-    <div class="board-content" id="vista-tabla">
-      <div class="group-container group-abiertos">
-        <div class="group-header"><span>⋁</span> Nuevos / Pendientes</div>
+    <div class="board-content">
+      <div class="group-container">
+        <div class="group-header"><span>⋁</span> Panel de Ejecución</div>
         <table class="monday-table">
           <thead>
-            <tr><th class="cell-checkbox"></th><th>Tarea / Asunto</th><th class="cell-prioridad">Prioridad</th><th class="cell-depto">Departamento</th><th>Solicitante</th><th class="cell-fecha">Fecha</th><th>ID</th></tr>
+            <tr>
+              <th style="width: 40px; border-right: 1px solid var(--border-color);"></th>
+              <th>Asunto / Requerimiento</th>
+              <th>Estatus (Clic para opciones)</th>
+              <th>Prioridad</th>
+              <th>Departamento</th>
+              <th>Responsable</th>
+              <th>Progreso</th>
+            </tr>
           </thead>
-          <tbody id="tbody-abiertos"></tbody>
-        </table>
-      </div>
-      <div class="group-container group-proceso">
-        <div class="group-header"><span>⋁</span> En Proceso</div>
-        <table class="monday-table">
-          <thead>
-            <tr><th class="cell-checkbox"></th><th>Tarea / Asunto</th><th class="cell-prioridad">Prioridad</th><th class="cell-depto">Departamento</th><th>Solicitante</th><th class="cell-fecha">Fecha</th><th>ID</th></tr>
-          </thead>
-          <tbody id="tbody-proceso"></tbody>
-        </table>
-      </div>
-      <div class="group-container group-resueltos">
-        <div class="group-header"><span>⋁</span> Completado</div>
-        <table class="monday-table">
-          <thead>
-            <tr><th class="cell-checkbox"></th><th>Tarea / Asunto</th><th class="cell-prioridad">Prioridad</th><th class="cell-depto">Departamento</th><th>Solicitante</th><th class="cell-fecha">Fecha</th><th>ID</th></tr>
-          </thead>
-          <tbody id="tbody-resueltos"></tbody>
+          <tbody id="tbody-principal"></tbody>
         </table>
       </div>
     </div>
-
-    <div class="dashboard-view" id="vista-graficas">
-      <div class="chart-box">
-        <h3>Estatus de Tareas</h3>
-        <div class="canvas-container"><canvas id="statusChart"></canvas></div>
-      </div>
-      <div class="chart-box">
-        <h3>Carga Operativa por Área</h3>
-        <div class="canvas-container"><canvas id="deptChart"></canvas></div>
-      </div>
-    </div>
-
   </main>
 
   <div class="modal-overlay" id="modal">
     <div class="modal">
-      <div class="modal-header">
-        <h2 style="font-size: 1.4rem; font-weight: 500;">Agregar nueva tarea</h2>
-        <button onclick="cerrarModal()" style="background:none; border:none; font-size:1.5rem; cursor:pointer; color:var(--text-gray);">&times;</button>
-      </div>
+      <h2 style="margin-bottom: 1rem;">Agregar Tarea</h2>
       <form id="ticketForm" onsubmit="enviarTicket(event)">
-        <div class="modal-body">
-          <div class="form-grid">
-            <div class="form-group full">
-              <label>Tarea / Asunto</label>
-              <input type="text" id="asunto" required>
-            </div>
-            <div class="form-group">
-              <label>Departamento</label>
-              <select id="departamento" required>
-                <option value="Mantenimiento">Mantenimiento</option>
-                <option value="Ama de llaves">Ama de llaves</option>
-                <option value="Jurídico">Jurídico</option>
-                <option value="Operaciones">Operaciones</option>
-                <option value="Finanzas">Finanzas</option>
-                <option value="Sistemas">Sistemas (IT)</option>
-                <option value="Recursos Humanos">Recursos Humanos</option>
-                <option value="Compras">Compras</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Prioridad</label>
-              <select id="prioridad" required>
-                <option value="Baja">Baja</option>
-                <option value="Media">Media</option>
-                <option value="Alta">Alta</option>
-              </select>
-            </div>
-            <div class="form-group">
-              <label>Solicitante</label>
-              <input type="text" id="solicitante" required>
-            </div>
-            <div class="form-group">
-              <label>Categoría</label>
-              <input type="text" id="categoria" value="General" required>
-            </div>
-            <div class="form-group full">
-              <label>Notas / Descripción</label>
-              <textarea id="descripcion" rows="2" required></textarea>
-            </div>
-          </div>
-          <button type="submit" class="btn-submit" id="btnGuardar">Crear tarea</button>
+        <input type="text" id="asunto" placeholder="Asunto" required style="margin-bottom: 10px;">
+        <select id="departamento" required style="margin-bottom: 10px;">
+          <option value="Mantenimiento">Mantenimiento</option>
+          <option value="Ama de llaves">Ama de llaves</option>
+          <option value="Sistemas">Sistemas (IT)</option>
+        </select>
+        <select id="prioridad" required style="margin-bottom: 10px;">
+          <option value="Baja">Baja</option>
+          <option value="Media">Media</option>
+          <option value="Alta">Alta</option>
+        </select>
+        <input type="text" id="solicitante" placeholder="Tu Nombre" required style="margin-bottom: 10px;">
+        <textarea id="descripcion" placeholder="Detalles..." required style="margin-bottom: 10px;"></textarea>
+        
+        <div style="display: flex; gap: 10px; justify-content: flex-end;">
+          <button type="button" onclick="cerrarModal()" style="padding: 0.6rem 1rem; cursor: pointer;">Cancelar</button>
+          <button type="submit" class="btn-monday" id="btnGuardar">Guardar</button>
         </div>
       </form>
     </div>
   </div>
 
   <script>
-    // TU API ESTÁ AQUÍ
     const API_URL = "https://script.google.com/macros/s/AKfycbzDOlrGBX2SwWISncNGzsQ8BKcLpIkXYM9Ytdk51ecJg7R9HxJvoYeebKB6mIeOLuSb/exec";
-
     let todosLosTickets = []; 
-    let chartEstatus, chartDepto;
 
     document.addEventListener('DOMContentLoaded', cargarDatos);
-
-    // Función para cambiar de pestaña
-    function cambiarVista(vista) {
-      document.getElementById('tab-tabla').classList.remove('active');
-      document.getElementById('tab-graficas').classList.remove('active');
-      
-      if(vista === 'tabla') {
-        document.getElementById('tab-tabla').classList.add('active');
-        document.getElementById('vista-tabla').style.display = 'flex';
-        document.getElementById('vista-graficas').style.display = 'none';
-      } else {
-        document.getElementById('tab-graficas').classList.add('active');
-        document.getElementById('vista-tabla').style.display = 'none';
-        document.getElementById('vista-graficas').style.display = 'grid';
-      }
-    }
 
     function abrirModal() { document.getElementById('modal').classList.add('active'); }
     function cerrarModal() { document.getElementById('modal').classList.remove('active'); document.getElementById('ticketForm').reset(); }
@@ -283,123 +207,101 @@
         const data = await response.json();
         if (data.exito) {
           todosLosTickets = data.datos; 
-          aplicarFiltro(); 
+          aplicarFiltrosAvanzados(); 
         }
       } catch (error) { console.error("Error:", error); }
     }
 
-    function aplicarFiltro() {
-      const deptoSeleccionado = document.getElementById('filtroDepartamento').value;
-      let ticketsFiltrados = todosLosTickets;
+    // FILTRO AVANZADO (Buscador de texto + Select)
+    function aplicarFiltrosAvanzados() {
+      const depto = document.getElementById('filtroDepartamento').value;
+      const busqueda = document.getElementById('buscadorGeneral').value.toLowerCase();
       
-      if (deptoSeleccionado !== "Todos") {
-        ticketsFiltrados = todosLosTickets.filter(ticket => ticket.departamento === deptoSeleccionado);
-      }
+      let filtrados = todosLosTickets.filter(ticket => {
+        const coincideDepto = depto === "Todos" || ticket.departamento === depto;
+        const textoFila = `${ticket.asunto} ${ticket.solicitante} ${ticket.id}`.toLowerCase();
+        const coincideBusqueda = textoFila.includes(busqueda);
+        return coincideDepto && coincideBusqueda;
+      });
       
-      dibujarTablero(ticketsFiltrados);
-      actualizarGraficas(ticketsFiltrados);
-      
+      dibujarTabla(filtrados);
       document.getElementById('loader').style.display = 'none';
       document.getElementById('main-content').style.opacity = '1';
     }
 
-    function obtenerColorPrioridad(prioridad) {
-      if(prioridad.includes('Alta')) return 'var(--prio-alta)';
-      if(prioridad.includes('Media')) return 'var(--prio-media)';
+    function obtenerColorPrio(prio) {
+      if(prio.includes('Alta')) return 'var(--prio-alta)';
+      if(prio.includes('Media')) return 'var(--prio-media)';
       return 'var(--prio-baja)';
     }
 
-    function dibujarTablero(tickets) {
-      const bodyAbiertos = document.getElementById('tbody-abiertos');
-      const bodyProceso = document.getElementById('tbody-proceso');
-      const bodyResueltos = document.getElementById('tbody-resueltos');
-      
-      bodyAbiertos.innerHTML = ''; bodyProceso.innerHTML = ''; bodyResueltos.innerHTML = '';
-      
-      const filaVacia = `<tr><td class="cell-checkbox"></td><td colspan="6" style="color:var(--text-gray); text-align:left; padding-left:1rem;">+ Agregar tarea</td></tr>`;
+    function obtenerColorStatus(status) {
+      const s = status.toLowerCase();
+      if(s.includes('abierto') || s.includes('pendiente')) return 'var(--stat-abierto)';
+      if(s.includes('proceso')) return 'var(--stat-proceso)';
+      if(s.includes('resuelto') || s.includes('completado')) return 'var(--stat-resuelto)';
+      return 'var(--text-gray)';
+    }
+
+    function calcularProgreso(status) {
+      const s = status.toLowerCase();
+      if(s.includes('abierto')) return '10%';
+      if(s.includes('proceso')) return '50%';
+      if(s.includes('resuelto')) return '100%';
+      return '0%';
+    }
+
+    function dibujarTabla(tickets) {
+      const tbody = document.getElementById('tbody-principal');
+      tbody.innerHTML = '';
 
       tickets.forEach(ticket => {
-        const colorPrio = obtenerColorPrioridad(ticket.prioridad);
+        const colorPrio = obtenerColorPrio(ticket.prioridad);
+        const colorStatus = obtenerColorStatus(ticket.estatus);
+        const progreso = calcularProgreso(ticket.estatus);
         const inicial = ticket.solicitante.charAt(0).toUpperCase();
         
         const fila = `
           <tr>
-            <td class="cell-checkbox"><input type="checkbox" disabled></td>
-            <td class="cell-tarea">${ticket.asunto}</td>
-            <td class="cell-prioridad" style="background-color: ${colorPrio};">${ticket.prioridad}</td>
-            <td class="cell-depto">${ticket.departamento}</td>
+            <td style="border-right: 1px solid var(--border-color); background: #F5F6F8;"></td>
+            <td class="cell-tarea">${ticket.asunto} <span style="display:block; font-size:0.7rem; color:var(--text-gray); font-weight:normal;">${ticket.id}</span></td>
+            
+            <td class="cell-status">
+              <div class="status-btn" style="background-color: ${colorStatus};" onclick="alert('En la versión premium, esto despliega un menú para cambiar a En Proceso o Resuelto y actualizar la base de datos.')">
+                ${ticket.estatus}
+              </div>
+            </td>
+            
+            <td class="cell-prioridad">
+              <div class="prio-box" style="background-color: ${colorPrio};">${ticket.prioridad}</div>
+            </td>
+            
+            <td>${ticket.departamento}</td>
+            
             <td>
               <div style="display:flex; align-items:center; justify-content:center; gap:6px;">
                 <div style="width:24px; height:24px; background:#000; color:#fff; border-radius:50%; font-size:0.7rem; display:flex; align-items:center; justify-content:center;">${inicial}</div>
                 <span style="font-size:0.85rem;">${ticket.solicitante.split(' ')[0]}</span>
               </div>
             </td>
-            <td class="cell-fecha">${ticket.fecha.split(' ')[0]}</td>
-            <td style="color:var(--text-gray); font-size:0.8rem;">${ticket.id}</td>
+            
+            <td class="cell-progress">
+              <div class="progress-bg"><div class="progress-bar" style="width: ${progreso}; background: ${colorStatus}"></div></div>
+            </td>
           </tr>
         `;
-
-        const estatus = ticket.estatus.toLowerCase();
-        if (estatus.includes('abierto')) bodyAbiertos.innerHTML += fila; 
-        else if (estatus.includes('proceso')) bodyProceso.innerHTML += fila; 
-        else if (estatus.includes('resuelto')) bodyResueltos.innerHTML += fila; 
-      });
-
-      bodyAbiertos.innerHTML += filaVacia;
-      bodyProceso.innerHTML += filaVacia;
-      bodyResueltos.innerHTML += filaVacia;
-    }
-
-    function actualizarGraficas(tickets) {
-      let abiertos = 0, proceso = 0, resueltos = 0;
-      let deptosCount = { "Mantenimiento": 0, "Ama de llaves": 0, "Jurídico": 0, "Operaciones": 0, "Finanzas": 0, "Sistemas": 0, "Recursos Humanos": 0, "Compras": 0 };
-
-      tickets.forEach(t => {
-        const estatus = t.estatus.toLowerCase();
-        if (estatus.includes('abierto')) abiertos++;
-        else if (estatus.includes('proceso')) proceso++;
-        else if (estatus.includes('resuelto')) resueltos++;
-        if (deptosCount[t.departamento] !== undefined) deptosCount[t.departamento]++;
-      });
-
-      Chart.defaults.font.family = "'Roboto', sans-serif";
-      Chart.defaults.color = '#676879';
-
-      const ctxStatus = document.getElementById('statusChart').getContext('2d');
-      if (chartEstatus) chartEstatus.destroy();
-      chartEstatus = new Chart(ctxStatus, {
-        type: 'doughnut',
-        data: {
-          labels: ['Nuevos', 'En Proceso', 'Resueltos'],
-          datasets: [{ data: [abiertos, proceso, resueltos], backgroundColor: ['#579BFC', '#FDAB3D', '#00C875'], borderWidth: 0 }]
-        },
-        options: { responsive: true, maintainAspectRatio: false, cutout: '70%', plugins: { legend: { position: 'right' } } }
-      });
-
-      const ctxDept = document.getElementById('deptChart').getContext('2d');
-      if (chartDepto) chartDepto.destroy();
-      chartDepto = new Chart(ctxDept, {
-        type: 'bar',
-        data: {
-          labels: Object.keys(deptosCount),
-          datasets: [{ label: 'Tareas', data: Object.values(deptosCount), backgroundColor: '#0073EA', borderRadius: 4 }]
-        },
-        options: { 
-          responsive: true, maintainAspectRatio: false, 
-          scales: { y: { beginAtZero: true, ticks: {stepSize: 1} } }, 
-          plugins: { legend: {display: false} } 
-        }
+        tbody.innerHTML += fila; 
       });
     }
 
     async function enviarTicket(event) {
       event.preventDefault();
-      document.getElementById('btnGuardar').innerText = 'Creando...';
+      document.getElementById('btnGuardar').innerText = 'Guardando...';
       const payload = {
         accion: "crear",
         ticket: {
           solicitante: document.getElementById('solicitante').value, departamento: document.getElementById('departamento').value,
-          asunto: document.getElementById('asunto').value, categoria: document.getElementById('categoria').value,
+          asunto: document.getElementById('asunto').value, categoria: "General",
           prioridad: document.getElementById('prioridad').value, descripcion: document.getElementById('descripcion').value
         }
       };
@@ -409,11 +311,10 @@
         cerrarModal();
         document.getElementById('main-content').style.opacity = '0';
         document.getElementById('loader').style.display = 'flex';
-        document.getElementById('filtroDepartamento').value = 'Todos'; 
         setTimeout(cargarDatos, 1500); 
       } catch (error) {
         console.error("Error:", error); setTimeout(cargarDatos, 1500); 
-      } finally { document.getElementById('btnGuardar').innerText = 'Crear tarea'; }
+      } finally { document.getElementById('btnGuardar').innerText = 'Guardar'; }
     }
   </script>
 </body>
