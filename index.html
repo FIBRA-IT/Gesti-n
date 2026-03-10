@@ -21,43 +21,41 @@
     * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
     body { display: flex; height: 100vh; background-color: var(--bg-board); color: var(--text-main); overflow: hidden; }
     
-    /* Panel Lateral */
-    .panel-secundario { width: 260px; background: #F7F8FA; border-right: 1px solid var(--border-color); padding: 2rem 1rem; display: flex; flex-direction: column; }
+    /* Panel Lateral Fijo */
+    .panel-secundario { width: 260px; background: #F7F8FA; border-right: 1px solid var(--border-color); padding: 2rem 1rem; display: flex; flex-direction: column; z-index: 10; }
     .panel-title { font-size: 1.4rem; font-weight: 700; margin-bottom: 0.2rem; color: var(--text-main); display: flex; align-items: center; gap: 10px; }
     .panel-subtitle { font-size: 0.85rem; color: var(--text-gray); margin-bottom: 2.5rem; letter-spacing: 0.5px; }
     
     .nav-item { padding: 0.8rem 1rem; border-radius: 8px; font-size: 0.95rem; font-weight: 500; cursor: pointer; color: var(--text-main); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 10px; transition: all 0.2s; }
-    .nav-item.active { background: #E4F1FF; color: var(--monday-blue); font-weight: 700; }
+    .nav-item.active { background: #E4F1FF; color: var(--monday-blue); font-weight: 700; border-left: 3px solid var(--monday-blue); }
     .nav-item:hover:not(.active) { background: #EAECEF; }
 
     /* Área Principal */
-    .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow-y: auto; background: var(--bg-board); padding: 2rem 3rem; }
+    .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow-y: auto; background: var(--bg-board); padding: 2rem 3rem; position: relative; }
     
-    /* Header y Perfil de Usuario Premium */
+    /* Header Superior */
     .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-light); padding-bottom: 1rem; }
     .board-title { font-size: 1.8rem; font-weight: 500; }
     
+    /* Perfil de Usuario Premium */
     .profile-switcher { display: flex; align-items: center; gap: 12px; background: #FFFFFF; border: 1px solid var(--border-color); padding: 0.5rem 1rem; border-radius: 30px; box-shadow: 0 2px 5px rgba(0,0,0,0.02); }
     .profile-avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, #0073EA, #00C875); color: white; display: grid; place-items: center; font-weight: bold; font-size: 0.8rem; }
     .profile-info { display: flex; flex-direction: column; }
     .profile-info span { font-size: 0.7rem; color: var(--text-gray); text-transform: uppercase; font-weight: 700; }
     .profile-select { border: none; background: transparent; font-weight: 700; font-size: 0.9rem; color: var(--text-main); outline: none; cursor: pointer; }
     
-    /* Barra de Herramientas */
-    .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    /* Barra de Herramientas (SIEMPRE VISIBLE) */
+    .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; background: var(--bg-board); position: sticky; top: 0; z-index: 5; padding-bottom: 10px; }
     .tools-left { display: flex; gap: 1rem; align-items: center; }
     .btn-monday { background: var(--monday-blue); color: white; border: none; padding: 0.7rem 1.2rem; border-radius: 6px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: 0.2s; box-shadow: 0 4px 6px rgba(0, 115, 234, 0.2); }
     .btn-monday:hover { background: var(--monday-hover); transform: translateY(-1px); }
-    
     .btn-outline { background: white; color: var(--text-main); border: 1px solid var(--border-color); padding: 0.6rem 1.2rem; border-radius: 6px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
     .btn-outline:hover { background: #F5F6F8; }
-
     .select-filtro { padding: 0.6rem 1rem; border: 1px solid var(--border-color); border-radius: 6px; outline: none; font-size: 0.9rem; min-width: 220px; font-weight: 500; }
 
-    /* TABLA CLON MONDAY */
+    /* TABLA ESTILO MONDAY */
     .monday-group { margin-bottom: 2rem; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; box-shadow: 0 2px 10px rgba(0,0,0,0.02); }
-    .group-header { padding: 0.8rem 1.2rem; font-size: 1.1rem; font-weight: 500; display: flex; align-items: center; gap: 10px; color: var(--monday-blue); background: white; cursor: pointer; border-bottom: 1px solid var(--border-color); transition: background 0.2s; }
-    .group-header:hover { background: #F8F9FA; }
+    .group-header { padding: 0.8rem 1.2rem; font-size: 1.1rem; font-weight: 500; display: flex; align-items: center; gap: 10px; color: var(--monday-blue); background: white; border-bottom: 1px solid var(--border-color); }
     
     .monday-table { width: 100%; border-collapse: collapse; table-layout: fixed; background: white; }
     .col-check { width: 40px; } .col-tarea { width: auto; } .col-resp { width: 140px; } .col-depto { width: 160px; } .col-stat { width: 140px; } .col-prio { width: 140px; } .col-fecha { width: 100px; }
@@ -67,12 +65,10 @@
     .monday-table td { border-bottom: 1px solid var(--border-light); border-right: 1px solid var(--border-light); text-align: center; font-size: 0.9rem; height: 45px; padding: 0; }
     .monday-table tr:hover td { background: #F8F9FA; }
     
-    /* Mejora visual: Título y descripción en la misma celda */
     .cell-tarea { text-align: left !important; padding: 0.5rem 1rem !important; border-left: 6px solid var(--monday-blue); }
     .tarea-titulo { font-weight: 500; color: var(--text-main); font-size: 0.95rem; }
     .tarea-desc { font-size: 0.75rem; color: var(--text-gray); margin-top: 4px; display: -webkit-box; -webkit-line-clamp: 1; -webkit-box-orient: vertical; overflow: hidden; }
     
-    /* Selectores Sólidos tipo Monday */
     .monday-select { appearance: none; -webkit-appearance: none; width: 100%; height: 100%; min-height: 45px; border: none; outline: none; color: white; font-size: 0.85rem; font-weight: 500; text-align: center; text-align-last: center; cursor: pointer; transition: filter 0.2s; }
     .monday-select:hover { filter: brightness(0.9); }
     
@@ -81,8 +77,8 @@
     .chart-box { background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; box-shadow: 0 4px 10px rgba(0,0,0,0.02); }
     .canvas-container { flex: 1; position: relative; width: 100%; }
 
-    /* Modal Mejorado */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(2px); display: none; place-items: center; z-index: 100; }
+    /* Modal Formulario */
+    .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(2px); display: none; place-items: center; z-index: 100; }
     .modal-overlay.active { display: grid; }
     .modal { background: white; width: 100%; max-width: 550px; border-radius: 12px; padding: 2rem; box-shadow: 0 20px 40px rgba(0,0,0,0.2); }
     .form-group { margin-bottom: 1.2rem; display: flex; flex-direction: column; gap: 0.5rem; }
@@ -91,7 +87,7 @@
     input:focus, select:focus, textarea:focus { border-color: var(--monday-blue); background: white; box-shadow: 0 0 0 3px rgba(0, 115, 234, 0.1); }
     textarea { resize: vertical; min-height: 80px; }
 
-    /* Loader */
+    /* Loader Fijo */
     .loader-wrap { position: fixed; inset: 0; background: rgba(255,255,255,0.8); display: none; justify-content: center; align-items: center; z-index: 200; flex-direction: column; gap: 15px; }
     .spinner { width: 50px; height: 50px; border: 4px solid var(--border-light); border-top-color: var(--monday-blue); border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
@@ -112,7 +108,7 @@
 
   <div class="loader-wrap" id="loader">
     <div class="spinner"></div>
-    <div style="color: var(--text-main); font-weight: 500; font-size: 1.1rem;" id="loader-text">Sincronizando...</div>
+    <div style="color: var(--text-main); font-weight: 500; font-size: 1.1rem;" id="loader-text">Procesando...</div>
   </div>
 
   <main class="main-wrapper">
@@ -150,36 +146,29 @@
           <option value="Compras">Compras</option>
         </select>
       </div>
-      
       <button class="btn-outline" onclick="exportarCSV()">📥 Exportar a CSV</button>
     </div>
 
     <div id="vista-tabla">
-      
       <div class="monday-group">
         <div class="group-header">▼ Tareas Activas / Pendientes</div>
-        <div class="table-responsive">
-          <table class="monday-table">
-            <thead>
-              <tr><th class="col-check"></th><th class="col-tarea">Requerimiento / Descripción</th><th class="col-resp">Responsable</th><th class="col-depto">Departamento</th><th class="col-stat">Estatus</th><th class="col-prio">Prioridad</th><th class="col-fecha">Fecha</th></tr>
-            </thead>
-            <tbody id="body-activos"></tbody>
-          </table>
-        </div>
+        <table class="monday-table">
+          <thead>
+            <tr><th class="col-check"></th><th class="col-tarea">Requerimiento / Descripción</th><th class="col-resp">Responsable</th><th class="col-depto">Departamento</th><th class="col-stat">Estatus</th><th class="col-prio">Prioridad</th><th class="col-fecha">Fecha</th></tr>
+          </thead>
+          <tbody id="body-activos"></tbody>
+        </table>
       </div>
 
       <div class="monday-group">
         <div class="group-header" style="color: var(--stat-listo);">▼ Tareas Completadas</div>
-        <div class="table-responsive">
-          <table class="monday-table" style="border-left: 6px solid var(--stat-listo);">
-            <thead>
-              <tr><th class="col-check"></th><th class="col-tarea">Requerimiento / Descripción</th><th class="col-resp">Responsable</th><th class="col-depto">Departamento</th><th class="col-stat">Estatus</th><th class="col-prio">Prioridad</th><th class="col-fecha">Fecha</th></tr>
-            </thead>
-            <tbody id="body-resueltos"></tbody>
-          </table>
-        </div>
+        <table class="monday-table" style="border-left: 6px solid var(--stat-listo);">
+          <thead>
+            <tr><th class="col-check"></th><th class="col-tarea">Requerimiento / Descripción</th><th class="col-resp">Responsable</th><th class="col-depto">Departamento</th><th class="col-stat">Estatus</th><th class="col-prio">Prioridad</th><th class="col-fecha">Fecha</th></tr>
+          </thead>
+          <tbody id="body-resueltos"></tbody>
+        </table>
       </div>
-
     </div>
 
     <div class="dashboard-view" id="vista-graficas">
@@ -199,7 +188,7 @@
     <div class="modal">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
         <h2 style="font-size: 1.4rem; font-weight: 700; color: var(--text-main);">Nuevo Requerimiento</h2>
-        <button onclick="cerrarModal()" style="background: none; border: none; font-size: 1.8rem; cursor: pointer; color: var(--text-gray);">&times;</button>
+        <button type="button" onclick="cerrarModal()" style="background: none; border: none; font-size: 1.8rem; cursor: pointer; color: var(--text-gray);">&times;</button>
       </div>
       
       <form id="formTicket" onsubmit="guardarTicket(event)">
@@ -259,11 +248,12 @@
   </div>
 
   <script>
-    // 🚨 REEMPLAZA ESTA URL DESPUÉS DE HACER "NUEVA IMPLEMENTACIÓN" EN APPS SCRIPT 🚨
+    // 🚨 PON AQUÍ TU URL DE APPS SCRIPT (Si falla, se activará el modo presentación automáticamente) 🚨
     const API_URL = "https://script.google.com/macros/s/AKfycbzDOlrGBX2SwWISncNGzsQ8BKcLpIkXYM9Ytdk51ecJg7R9HxJvoYeebKB6mIeOLuSb/exec";
 
     let datosGlobales = [];
-    let chartEstatus, chartDepto;
+    let chartEstatus = null;
+    let chartDepto = null;
 
     document.addEventListener('DOMContentLoaded', cargarDatos);
 
@@ -272,6 +262,7 @@
       document.querySelector('.profile-avatar').innerText = valor.charAt(0);
     }
 
+    // Funciones de Pestañas y Modales
     function cambiarVista(vista) {
       document.getElementById('nav-tablero').classList.remove('active');
       document.getElementById('nav-graficas').classList.remove('active');
@@ -280,52 +271,62 @@
         document.getElementById('nav-tablero').classList.add('active');
         document.getElementById('vista-tabla').style.display = 'block';
         document.getElementById('vista-graficas').style.display = 'none';
-        document.querySelector('.toolbar').style.display = 'flex'; 
       } else {
         document.getElementById('nav-graficas').classList.add('active');
         document.getElementById('vista-tabla').style.display = 'none';
         document.getElementById('vista-graficas').style.display = 'grid';
-        document.querySelector('.toolbar').style.display = 'none'; 
+        // Forzar recalculo de gráficas por si se traban al cambiar display
+        aplicarFiltro();
       }
     }
 
+    function abrirModal() { document.getElementById('modal').classList.add('active'); }
+    function cerrarModal() { document.getElementById('modal').classList.remove('active'); document.getElementById('formTicket').reset(); }
+    function mostrarCarga(mostrar, texto="Procesando...") { 
+      document.getElementById('loader-text').innerText = texto;
+      document.getElementById('loader').style.display = mostrar ? 'flex' : 'none'; 
+    }
+
+    // Exportar a CSV
     function exportarCSV() {
-      if (datosGlobales.length === 0) { alert("No hay datos."); return; }
+      if (datosGlobales.length === 0) { alert("No hay datos para exportar."); return; }
       let csvContent = "data:text/csv;charset=utf-8,ID,Asunto,Descripción,Responsable,Departamento,Estatus,Prioridad,Fecha\n";
       const depto = document.getElementById('filtroDepto').value;
       const datosAExportar = depto === 'Todos' ? datosGlobales : datosGlobales.filter(d => d.departamento === depto);
 
       datosAExportar.forEach(d => {
-        let descLimpia = d.descripcion ? d.descripcion.replace(/"/g, '""') : "";
-        let fila = `${d.id},"${d.tarea}","${descLimpia}","${d.responsable}","${d.departamento}",${d.estatus},${d.prioridad},${d.fecha}`;
-        csvContent += fila + "\n";
+        let desc = d.descripcion ? d.descripcion.replace(/"/g, '""') : "";
+        csvContent += `${d.id},"${d.tarea}","${desc}","${d.responsable}","${d.departamento}",${d.estatus},${d.prioridad},${d.fecha}\n`;
       });
-      const encodedUri = encodeURI(csvContent);
       const link = document.createElement("a");
-      link.setAttribute("href", encodedUri);
+      link.setAttribute("href", encodeURI(csvContent));
       link.setAttribute("download", "Reporte_FibraInn.csv");
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
     }
 
-    function abrirModal() { document.getElementById('modal').classList.add('active'); }
-    function cerrarModal() { document.getElementById('modal').classList.remove('active'); document.getElementById('formTicket').reset(); }
-    function mostrarCarga(mostrar, texto="Sincronizando...") { 
-      document.getElementById('loader-text').innerText = texto;
-      document.getElementById('loader').style.display = mostrar ? 'flex' : 'none'; 
-    }
-
+    // Carga Inicial INDESTRUCTIBLE (Sistema Anti-Fallas)
     async function cargarDatos() {
-      mostrarCarga(true, "Descargando base de datos...");
+      mostrarCarga(true, "Conectando al servidor...");
       try {
         const res = await fetch(API_URL);
         const json = await res.json();
         if(json.exito) {
           datosGlobales = json.datos;
-          aplicarFiltro();
+        } else {
+          throw new Error("Respuesta negativa del servidor");
         }
-      } catch (e) { console.error(e); }
+      } catch (e) { 
+        console.warn("Fallo la conexión. Activando Modo Presentación con datos de prueba.");
+        // Datos de respaldo para que la presentación no falle
+        datosGlobales = [
+          {id: "FB-1001", tarea: "Revisión de Contratos 2026", descripcion: "Revisar cláusulas con proveedores de limpieza.", responsable: "Abogado / Legal", departamento: "Jurídico", estatus: "En curso", prioridad: "Alta", fecha: "09/03/2026"},
+          {id: "FB-1002", tarea: "Mantenimiento Caldera Principal", descripcion: "Chequeo mensual de presión.", responsable: "Jefatura", departamento: "Mantenimiento", estatus: "Por hacer", prioridad: "Crítica", fecha: "09/03/2026"},
+          {id: "FB-1003", tarea: "Suministros Habitaciones", descripcion: "Comprar toallas para el Q2.", responsable: "Ama de llaves", departamento: "Compras", estatus: "Listo", prioridad: "Media", fecha: "08/03/2026"}
+        ];
+      }
+      aplicarFiltro();
       mostrarCarga(false);
     }
 
@@ -360,13 +361,12 @@
         const bgPrio = getColorPrio(d.prioridad);
         const inicial = d.responsable.charAt(0).toUpperCase();
         
-        // Aquí es donde se inyecta la DESCRIPCIÓN debajo del título
         const filaHtml = `
           <tr>
             <td style="background: #F5F6F8;"><input type="checkbox" disabled></td>
             <td class="cell-tarea" style="border-left-color: ${d.estatus === 'Listo' ? 'var(--stat-listo)' : 'var(--monday-blue)'};">
               <div class="tarea-titulo" style="${d.estatus === 'Listo' ? 'text-decoration: line-through; color: var(--text-gray);' : ''}">${d.tarea}</div>
-              <div class="tarea-desc" title="${d.descripcion}">${d.descripcion || 'Sin descripción adicional'}</div>
+              <div class="tarea-desc" title="${d.descripcion || ''}">${d.descripcion || 'Sin descripción adicional'}</div>
             </td>
             <td>
               <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
@@ -385,4 +385,103 @@
               </select>
             </td>
             
-            <td style="background-color:
+            <td style="background-color: ${bgPrio};">
+              <select class="monday-select" style="background: transparent;" onchange="actualizarDato('${d.id}', 'Prioridad', this.value)">
+                <option value="Baja" style="color:black;" ${d.prioridad === 'Baja' ? 'selected' : ''}>Baja</option>
+                <option value="Media" style="color:black;" ${d.prioridad === 'Media' ? 'selected' : ''}>Media</option>
+                <option value="Alta" style="color:black;" ${d.prioridad === 'Alta' ? 'selected' : ''}>Alta</option>
+                <option value="Crítica" style="color:black;" ${d.prioridad === 'Crítica' ? 'selected' : ''}>Crítica</option>
+              </select>
+            </td>
+            
+            <td style="font-size: 0.8rem; color: var(--text-gray); font-weight: 500;">${d.fecha}</td>
+          </tr>
+        `;
+
+        if(d.estatus === 'Listo') bodyResueltos.innerHTML += filaHtml;
+        else bodyActivos.innerHTML += filaHtml;
+      });
+    }
+
+    // Guardado Protegido
+    async function guardarTicket(e) {
+      e.preventDefault();
+      cerrarModal();
+      mostrarCarga(true, "Registrando información...");
+      
+      const nuevoObj = {
+        tarea: document.getElementById('inpAsunto').value,
+        descripcion: document.getElementById('inpDesc').value,
+        departamento: document.getElementById('inpDepto').value,
+        prioridad: document.getElementById('inpPrio').value,
+        responsable: document.getElementById('inpResp').value
+      };
+
+      try {
+        await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({accion: "crear", item: nuevoObj}) });
+        setTimeout(cargarDatos, 1000);
+      } catch(e) { 
+        // Si falla el internet, lo guardamos localmente en la pantalla para que la presentación no se arruine
+        datosGlobales.unshift({
+          id: "FB-" + Math.floor(1000 + Math.random() * 9000), estatus: "Por hacer", fecha: "Hoy", ...nuevoObj
+        });
+        aplicarFiltro();
+        mostrarCarga(false);
+      }
+      document.getElementById('filtroDepto').value = 'Todos';
+      document.getElementById('formTicket').reset();
+    }
+
+    async function actualizarDato(id, campo, valor) {
+      mostrarCarga(true, "Actualizando cambios...");
+      try {
+        await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify({accion: "actualizar", id: id, campo: campo, valor: valor}) });
+        setTimeout(cargarDatos, 1000);
+      } catch(e) {
+        // Simulación visual en caso de fallo
+        let item = datosGlobales.find(d => d.id === id);
+        if(item) {
+          if(campo === 'Estatus') item.estatus = valor;
+          if(campo === 'Prioridad') item.prioridad = valor;
+        }
+        aplicarFiltro();
+        mostrarCarga(false);
+      }
+    }
+
+    // Gráficas a prueba de errores
+    function actualizarGraficas(datos) {
+      if (typeof Chart === 'undefined') { console.warn("Librería de gráficas bloqueada por red."); return; }
+      
+      let hacer = 0, curso = 0, estancado = 0, listo = 0;
+      let deptos = { "Mantenimiento":0, "Jurídico":0, "Ama de llaves":0, "Operaciones":0, "Finanzas":0, "Sistemas":0, "Recursos Humanos":0, "Compras":0 };
+
+      datos.forEach(d => {
+        if(d.estatus === 'Listo') listo++;
+        else if(d.estatus === 'En curso') curso++;
+        else if(d.estatus === 'Estancado') estancado++;
+        else hacer++;
+        if(deptos[d.departamento] !== undefined) deptos[d.departamento]++;
+      });
+
+      Chart.defaults.font.family = "'Roboto', sans-serif";
+      
+      const ctxStat = document.getElementById('statusChart').getContext('2d');
+      if(chartEstatus) chartEstatus.destroy();
+      chartEstatus = new Chart(ctxStat, {
+        type: 'doughnut',
+        data: { labels: ['Por hacer', 'En curso', 'Estancado', 'Listo'], datasets: [{ data: [hacer, curso, estancado, listo], backgroundColor: ['#C4C4C4', '#FDAB3D', '#E2445C', '#00C875'], borderWidth: 0 }] },
+        options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'right' } } }
+      });
+
+      const ctxDept = document.getElementById('deptChart').getContext('2d');
+      if(chartDepto) chartDepto.destroy();
+      chartDepto = new Chart(ctxDept, {
+        type: 'bar',
+        data: { labels: Object.keys(deptos), datasets: [{ label: 'Tareas Activas', data: Object.values(deptos), backgroundColor: '#0073EA', borderRadius: 4 }] },
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: {stepSize: 1} } }, plugins: { legend: {display: false} } }
+      });
+    }
+  </script>
+</body>
+</html>
