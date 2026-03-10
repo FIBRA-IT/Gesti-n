@@ -3,193 +3,248 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>WorkOS | Fibra Inn</title>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <title>Plataforma Corporativa | Fibra Inn</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
   <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  
   <style>
     :root {
-      --sidebar: #0F172A; --bg: #F8FAFC; --surface: #FFFFFF;
-      --primary: #3B82F6; --text: #1E293B; --text-light: #64748B;
-      --border: #E2E8F0; 
+      --bg-board: #FFFFFF; --text-main: #323338; --text-gray: #676879;
+      --border-color: #D0D4E4; --border-light: #E6E9EF;
+      --monday-blue: #0073EA; --monday-hover: #0060B9;
+      --sidebar-bg: #292F4C;
       
-      --stat-pend: #F59E0B; --stat-proc: #3B82F6; --stat-listo: #10B981;
-      --prio-alta: #EF4444; --prio-media: #F59E0B; --prio-baja: #3B82F6;
+      --stat-listo: #00C875; --stat-curso: #FDAB3D; --stat-estancado: #E2445C; --stat-gris: #C4C4C4;
+      --prio-critica: #333333; --prio-alta: #E2445C; --prio-media: #A25DDC; --prio-baja: #579BFC;
     }
     
-    * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Plus Jakarta Sans', sans-serif; }
-    body { display: flex; height: 100vh; background: var(--bg); color: var(--text); overflow: hidden; }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Roboto', sans-serif; }
+    body { display: flex; height: 100vh; background-color: var(--bg-board); color: var(--text-main); overflow: hidden; }
     
-    /* Panel Lateral */
-    .sidebar { width: 280px; background: var(--sidebar); color: white; display: flex; flex-direction: column; }
-    .brand { padding: 1.5rem; border-bottom: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; gap: 12px; }
-    .brand-icon { background: linear-gradient(135deg, #3B82F6, #8B5CF6); width: 32px; height: 32px; border-radius: 8px; display: grid; place-items: center; font-weight: bold; }
-    .brand-text h2 { font-size: 1.1rem; font-weight: 700; }
-    .brand-text p { font-size: 0.75rem; color: #94A3B8; }
+    /* Panel Lateral Totalmente Funcional */
+    .panel-secundario { width: 240px; background: #F5F6F8; border-right: 1px solid var(--border-color); padding: 1.5rem 1rem; display: flex; flex-direction: column; }
+    .panel-title { font-size: 1.2rem; font-weight: 700; margin-bottom: 0.5rem; color: var(--text-main); display: flex; align-items: center; gap: 8px; }
+    .panel-subtitle { font-size: 0.8rem; color: var(--text-gray); margin-bottom: 2rem; }
     
-    .menu { padding: 1.5rem 1rem; flex: 1; }
-    .menu-item { padding: 0.8rem 1rem; border-radius: 8px; color: #CBD5E1; font-weight: 500; font-size: 0.95rem; display: flex; align-items: center; gap: 10px; cursor: pointer; transition: 0.2s; margin-bottom: 0.5rem; }
-    .menu-item.active { background: rgba(59, 130, 246, 0.15); color: #60A5FA; font-weight: 600; border-left: 3px solid #3B82F6; }
-    .menu-item:hover:not(.active) { background: rgba(255,255,255,0.05); }
+    .nav-item { padding: 0.8rem 1rem; border-radius: 6px; font-size: 0.95rem; font-weight: 500; cursor: pointer; color: var(--text-main); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 10px; transition: 0.2s; }
+    .nav-item.active { background: #E4F1FF; color: var(--monday-blue); }
+    .nav-item:hover:not(.active) { background: #E6E9EF; }
+
+    /* Main Area */
+    .main-wrapper { flex: 1; display: flex; flex-direction: column; overflow-y: auto; background: var(--bg-board); padding: 2rem 3rem; }
     
-    /* Contenido Principal */
-    .main { flex: 1; display: flex; flex-direction: column; overflow-y: auto; }
-    .header { background: var(--surface); padding: 1.5rem 2.5rem; border-bottom: 1px solid var(--border); display: flex; justify-content: space-between; align-items: center; }
-    .header-greeting h1 { font-size: 1.5rem; font-weight: 700; color: var(--text); }
-    .header-greeting p { font-size: 0.9rem; color: var(--text-light); margin-top: 4px; }
+    .header-top { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 1.5rem; border-bottom: 1px solid var(--border-light); padding-bottom: 1rem; }
+    .board-title { font-size: 1.8rem; font-weight: 500; }
     
-    .profile { display: flex; align-items: center; gap: 12px; }
-    .avatar { width: 40px; height: 40px; border-radius: 50%; background: #E2E8F0; display: grid; place-items: center; font-weight: 700; color: var(--primary); border: 2px solid white; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    /* Simulador de Usuario Activo */
+    .user-session { display: flex; align-items: center; gap: 10px; background: white; border: 1px solid var(--border-color); padding: 0.4rem 0.8rem; border-radius: 20px; font-size: 0.85rem; }
+    .user-avatar { width: 24px; height: 24px; background: var(--sidebar-bg); color: white; border-radius: 50%; display: grid; place-items: center; font-weight: bold; font-size: 0.7rem; }
     
-    /* Controles */
-    .controls { padding: 1.5rem 2.5rem; display: flex; justify-content: space-between; align-items: center; }
-    .btn-primary { background: var(--primary); color: white; border: none; padding: 0.7rem 1.5rem; border-radius: 8px; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 6px -1px rgba(59, 130, 246, 0.3); transition: 0.2s; }
-    .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 6px 8px -1px rgba(59, 130, 246, 0.4); }
+    /* Barra de Herramientas Funcional */
+    .toolbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem; }
+    .tools-left { display: flex; gap: 1rem; align-items: center; }
+    .btn-monday { background: var(--monday-blue); color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 4px; font-size: 0.9rem; font-weight: 500; cursor: pointer; transition: 0.2s; }
+    .btn-monday:hover { background: var(--monday-hover); }
     
-    /* Tabla Impactante */
-    .table-container { background: var(--surface); margin: 0 2.5rem 2.5rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05); border: 1px solid var(--border); overflow: hidden; }
-    table { width: 100%; border-collapse: collapse; }
-    th { background: #F8FAFC; padding: 1rem; text-align: left; font-size: 0.85rem; font-weight: 600; color: var(--text-light); text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid var(--border); }
-    td { padding: 1rem; border-bottom: 1px solid var(--border); font-size: 0.95rem; vertical-align: middle; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: #F1F5F9; }
+    .btn-outline { background: white; color: var(--text-main); border: 1px solid var(--border-color); padding: 0.6rem 1.2rem; border-radius: 4px; font-size: 0.9rem; cursor: pointer; transition: 0.2s; display: flex; align-items: center; gap: 6px; }
+    .btn-outline:hover { background: #F5F6F8; }
+
+    .select-filtro { padding: 0.5rem 1rem; border: 1px solid var(--border-color); border-radius: 4px; outline: none; font-size: 0.9rem; min-width: 200px; }
+
+    /* TABLA CLON MONDAY CON GRUPOS COLAPSABLES */
+    .monday-group { margin-bottom: 2rem; border: 1px solid var(--border-color); border-radius: 8px; overflow: hidden; }
+    .group-header { padding: 0.8rem 1rem; font-size: 1.1rem; font-weight: 500; display: flex; align-items: center; gap: 8px; color: var(--monday-blue); background: white; cursor: pointer; user-select: none; border-bottom: 1px solid var(--border-color); transition: background 0.2s; }
+    .group-header:hover { background: #F8F9FA; }
+    .group-icon { transition: transform 0.3s; font-size: 0.8rem; }
+    .group-icon.collapsed { transform: rotate(-90deg); }
     
-    /* Selectores Interactivos */
-    .pill-select { appearance: none; -webkit-appearance: none; border: none; padding: 0.5rem 1rem; border-radius: 20px; font-weight: 600; font-size: 0.85rem; cursor: pointer; text-align: center; width: 130px; outline: none; box-shadow: 0 1px 2px rgba(0,0,0,0.05); }
-    .pill-select:hover { filter: brightness(0.95); }
+    .table-responsive { transition: max-height 0.3s ease-out; overflow: hidden; }
+    .table-responsive.collapsed { max-height: 0; }
+
+    .monday-table { width: 100%; border-collapse: collapse; table-layout: fixed; background: white; }
+    .col-check { width: 40px; } .col-tarea { width: auto; } .col-resp { width: 140px; } .col-depto { width: 150px; } .col-stat { width: 140px; } .col-prio { width: 140px; } .col-fecha { width: 100px; }
+
+    .monday-table th { padding: 0.6rem; border-bottom: 1px solid var(--border-color); border-right: 1px solid var(--border-light); font-weight: 500; color: var(--text-gray); font-size: 0.85rem; text-align: center; background: #FAFBFC; }
+    .monday-table th.col-tarea { text-align: left; padding-left: 1rem; }
+    .monday-table td { border-bottom: 1px solid var(--border-light); border-right: 1px solid var(--border-light); text-align: center; font-size: 0.9rem; height: 38px; padding: 0; }
+    .monday-table tr:hover td { background: #F8F9FA; }
+    .cell-tarea { text-align: left !important; padding-left: 1rem !important; border-left: 6px solid var(--monday-blue); font-weight: 500; }
     
-    .status-Pendiente { background: #FEF3C7; color: #D97706; }
-    .status-Proceso { background: #DBEAFE; color: #2563EB; }
-    .status-Listo { background: #D1FAE5; color: #059669; }
+    /* Selectores Sólidos tipo Monday */
+    .monday-select { appearance: none; -webkit-appearance: none; width: 100%; height: 38px; border: none; outline: none; color: white; font-size: 0.85rem; font-weight: 500; text-align: center; text-align-last: center; cursor: pointer; transition: filter 0.2s; }
+    .monday-select:hover { filter: brightness(0.9); }
     
-    .prio-Alta { background: #FEE2E2; color: #DC2626; }
-    .prio-Media { background: #FEF3C7; color: #D97706; }
-    .prio-Baja { background: #DBEAFE; color: #2563EB; }
+    /* VISTA DE GRÁFICAS */
+    .dashboard-view { display: none; grid-template-columns: 1fr 2fr; gap: 1.5rem; height: 450px; }
+    .chart-box { background: white; padding: 1.5rem; border-radius: 8px; border: 1px solid var(--border-color); display: flex; flex-direction: column; }
+    .canvas-container { flex: 1; position: relative; width: 100%; }
 
     /* Modal */
-    .modal-overlay { position: fixed; inset: 0; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); display: none; place-items: center; z-index: 100; }
+    .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.5); display: none; place-items: center; z-index: 100; }
     .modal-overlay.active { display: grid; }
-    .modal { background: var(--surface); width: 100%; max-width: 500px; border-radius: 16px; padding: 2rem; box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
-    .modal-title { font-size: 1.25rem; font-weight: 700; margin-bottom: 1.5rem; }
-    
+    .modal { background: white; width: 100%; max-width: 500px; border-radius: 8px; padding: 1.5rem; box-shadow: 0 10px 25px rgba(0,0,0,0.2); }
     .form-group { margin-bottom: 1rem; display: flex; flex-direction: column; gap: 0.4rem; }
-    label { font-size: 0.85rem; font-weight: 600; color: var(--text-light); }
-    input, select { padding: 0.75rem; border: 1px solid var(--border); border-radius: 8px; font-size: 0.95rem; outline: none; }
-    input:focus, select:focus { border-color: var(--primary); box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1); }
-    
-    /* Loader */
-    .loader-wrap { position: fixed; inset: 0; background: rgba(248, 250, 252, 0.8); z-index: 200; display: none; justify-content: center; align-items: center; flex-direction: column; gap: 1rem; backdrop-filter: blur(2px); }
-    .spinner { width: 40px; height: 40px; border: 4px solid var(--border); border-top-color: var(--primary); border-radius: 50%; animation: spin 1s linear infinite; }
+    label { font-size: 0.85rem; color: var(--text-main); font-weight: 500; }
+    input, select, textarea { padding: 0.6rem; border: 1px solid var(--border-color); border-radius: 4px; font-size: 0.9rem; outline: none; }
+    input:focus, select:focus { border-color: var(--monday-blue); }
+
+    .loader-wrap { position: fixed; inset: 0; background: rgba(255,255,255,0.8); display: none; justify-content: center; align-items: center; z-index: 200; flex-direction: column; gap: 10px; }
+    .spinner { width: 40px; height: 40px; border: 4px solid var(--border-light); border-top-color: var(--monday-blue); border-radius: 50%; animation: spin 1s linear infinite; }
     @keyframes spin { to { transform: rotate(360deg); } }
   </style>
 </head>
 <body>
 
-  <aside class="sidebar">
-    <div class="brand">
-      <div class="brand-icon">FI</div>
-      <div class="brand-text">
-        <h2>WorkOS</h2>
-        <p>Hampton Inn Chihuahua</p>
+  <div class="panel-secundario">
+    <div class="panel-title">
+      <div style="background: var(--sidebar-bg); width: 20px; height: 20px; border-radius: 4px; display: grid; place-items: center; color: white; font-size: 0.6rem;">FI</div>
+      Fibra Inn
+    </div>
+    <div class="panel-subtitle">Plataforma Corporativa</div>
+    
+    <div class="nav-item active" id="nav-tablero" onclick="cambiarVista('tabla')">📋 Tablero de Ejecución</div>
+    <div class="nav-item" id="nav-graficas" onclick="cambiarVista('graficas')">📈 Analíticas y Reportes</div>
+  </div>
+
+  <div class="loader-wrap" id="loader">
+    <div class="spinner"></div>
+    <div style="color: var(--text-main); font-weight: 500;" id="loader-text">Sincronizando...</div>
+  </div>
+
+  <main class="main-wrapper">
+    
+    <div class="header-top">
+      <h1 class="board-title">Requerimientos Generales</h1>
+      
+      <div class="user-session">
+        <span style="color: var(--text-gray);">Sesión activa:</span>
+        <select style="border: none; background: transparent; font-weight: 600; outline: none; cursor: pointer; color: var(--text-main);">
+          <option>Dirección General</option>
+          <option>Gerencia de Operaciones</option>
+          <option>Jefatura de Mantenimiento</option>
+        </select>
+        <div class="user-avatar">AD</div>
       </div>
     </div>
-    <div class="menu">
-      <div class="menu-item active">📋 Tablero Operativo</div>
-      <div class="menu-item">📈 Analíticas</div>
-      <div class="menu-item">⚙️ Configuración</div>
-    </div>
-  </aside>
 
-  <main class="main">
-    <header class="header">
-      <div class="header-greeting">
-        <h1>Hola, David</h1>
-        <p>Aquí está el resumen de las operaciones de hoy.</p>
-      </div>
-      <div class="profile">
-        <div style="text-align: right;">
-          <div style="font-weight: 600; font-size: 0.9rem;">David Torres</div>
-          <div style="font-size: 0.75rem; color: var(--text-light);">Mantenimiento</div>
-        </div>
-        <div class="avatar">DT</div>
-      </div>
-    </header>
-
-    <div class="controls">
-      <div style="display: flex; gap: 1rem;">
-        <select id="filtroDepto" onchange="aplicarFiltros()" style="padding: 0.6rem 1rem; border: 1px solid var(--border); border-radius: 8px; font-weight: 500; outline: none;">
-          <option value="Todos">Todas las áreas</option>
+    <div class="toolbar">
+      <div class="tools-left">
+        <button class="btn-monday" onclick="abrirModal()">+ Nuevo Elemento</button>
+        <select id="filtroDepto" class="select-filtro" onchange="aplicarFiltro()">
+          <option value="Todos">Filtrar por Departamento: Todos</option>
           <option value="Mantenimiento">Mantenimiento</option>
+          <option value="Jurídico">Jurídico</option>
           <option value="Ama de llaves">Ama de llaves</option>
+          <option value="Operaciones">Operaciones</option>
+          <option value="Finanzas">Finanzas</option>
           <option value="Sistemas">Sistemas</option>
+          <option value="Recursos Humanos">Recursos Humanos</option>
+          <option value="Compras">Compras</option>
         </select>
       </div>
-      <button class="btn-primary" onclick="abrirModal()">+ Nuevo Requerimiento</button>
+      
+      <button class="btn-outline" onclick="exportarCSV()">
+        📥 Exportar a CSV
+      </button>
     </div>
 
-    <div class="table-container">
-      <table>
-        <thead>
-          <tr>
-            <th>Folio</th>
-            <th>Asunto</th>
-            <th>Responsable</th>
-            <th>Departamento</th>
-            <th>Prioridad</th>
-            <th>Estatus</th>
-          </tr>
-        </thead>
-        <tbody id="tabla-body">
-          </tbody>
-      </table>
+    <div id="vista-tabla">
+      
+      <div class="monday-group">
+        <div class="group-header" onclick="toggleGroup('tabla-activos', 'icon-activos')">
+          <span class="group-icon" id="icon-activos">▼</span> Tareas Activas / Pendientes
+        </div>
+        <div class="table-responsive" id="tabla-activos">
+          <table class="monday-table">
+            <thead>
+              <tr><th class="col-check"></th><th class="col-tarea">Tarea</th><th class="col-resp">Asignado a</th><th class="col-depto">Departamento</th><th class="col-stat">Estatus</th><th class="col-prio">Prioridad</th><th class="col-fecha">Fecha</th></tr>
+            </thead>
+            <tbody id="body-activos"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="monday-group">
+        <div class="group-header" style="color: var(--stat-listo);" onclick="toggleGroup('tabla-resueltos', 'icon-resueltos')">
+          <span class="group-icon" id="icon-resueltos">▼</span> Tareas Completadas
+        </div>
+        <div class="table-responsive" id="tabla-resueltos">
+          <table class="monday-table" style="border-left: 6px solid var(--stat-listo);">
+            <thead>
+              <tr><th class="col-check"></th><th class="col-tarea">Tarea</th><th class="col-resp">Asignado a</th><th class="col-depto">Departamento</th><th class="col-stat">Estatus</th><th class="col-prio">Prioridad</th><th class="col-fecha">Fecha</th></tr>
+            </thead>
+            <tbody id="body-resueltos"></tbody>
+          </table>
+        </div>
+      </div>
+
     </div>
+
+    <div class="dashboard-view" id="vista-graficas">
+      <div class="chart-box">
+        <h3 style="color: var(--text-main); margin-bottom: 1rem; font-weight: 500;">Estatus Global de Operaciones</h3>
+        <div class="canvas-container"><canvas id="statusChart"></canvas></div>
+      </div>
+      <div class="chart-box">
+        <h3 style="color: var(--text-main); margin-bottom: 1rem; font-weight: 500;">Distribución por Departamento</h3>
+        <div class="canvas-container"><canvas id="deptChart"></canvas></div>
+      </div>
+    </div>
+
   </main>
 
   <div class="modal-overlay" id="modal">
     <div class="modal">
       <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
-        <h2 class="modal-title" style="margin: 0;">Registrar Operación</h2>
-        <button onclick="cerrarModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-light);">&times;</button>
+        <h2 style="font-size: 1.2rem; font-weight: 500;">Crear nuevo elemento</h2>
+        <button onclick="cerrarModal()" style="background: none; border: none; font-size: 1.5rem; cursor: pointer; color: var(--text-gray);">&times;</button>
       </div>
       
       <form id="formTicket" onsubmit="guardarTicket(event)">
         <div class="form-group">
-          <label>Asunto / Descripción</label>
-          <input type="text" id="inpAsunto" required placeholder="Ej. Revisión de calderas">
+          <label>Nombre de la tarea / Asunto</label>
+          <input type="text" id="inpAsunto" required>
         </div>
         
-        <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
-          <div class="form-group" style="flex: 1; margin: 0;">
+        <div style="display: flex; gap: 1rem;">
+          <div class="form-group" style="flex: 1;">
             <label>Departamento</label>
             <select id="inpDepto" required>
               <option value="Mantenimiento" selected>Mantenimiento</option>
+              <option value="Jurídico">Jurídico</option>
               <option value="Ama de llaves">Ama de llaves</option>
-              <option value="Sistemas">Sistemas</option>
               <option value="Operaciones">Operaciones</option>
+              <option value="Finanzas">Finanzas</option>
+              <option value="Sistemas">Sistemas</option>
+              <option value="Recursos Humanos">Recursos Humanos</option>
+              <option value="Compras">Compras</option>
             </select>
           </div>
-          <div class="form-group" style="flex: 1; margin: 0;">
-            <label>Prioridad</label>
+          <div class="form-group" style="flex: 1;">
+            <label>Prioridad Inicial</label>
             <select id="inpPrio" required>
               <option value="Baja">Baja</option>
               <option value="Media">Media</option>
               <option value="Alta">Alta</option>
+              <option value="Crítica">Crítica</option>
             </select>
           </div>
         </div>
         
         <div class="form-group">
-          <label>Asignado a</label>
-          <input type="text" id="inpResp" required value="David Torres">
+          <label>Asignar a (Rol/Persona)</label>
+          <select id="inpResp" required>
+            <option value="Gerencia General">Gerencia General</option>
+            <option value="Jefe de Área" selected>Jefe de Área</option>
+            <option value="Supervisor en Turno">Supervisor en Turno</option>
+            <option value="Staff Operativo">Staff Operativo</option>
+            <option value="Proveedor Externo">Proveedor Externo</option>
+          </select>
         </div>
         
-        <button type="submit" class="btn-primary" style="width: 100%; justify-content: center; margin-top: 1rem;" id="btnSubmit">Guardar en Base de Datos</button>
+        <button type="submit" class="btn-monday" style="width: 100%; margin-top: 1rem;" id="btnSubmit">Guardar Tarea</button>
       </form>
     </div>
-  </div>
-
-  <div class="loader-wrap" id="loader">
-    <div class="spinner"></div>
-    <div style="font-weight: 600; color: var(--text);">Sincronizando...</div>
   </div>
 
   <script>
@@ -197,91 +252,175 @@
     const API_URL = "https://script.google.com/macros/s/AKfycbzDOlrGBX2SwWISncNGzsQ8BKcLpIkXYM9Ytdk51ecJg7R9HxJvoYeebKB6mIeOLuSb/exec";
 
     let datosGlobales = [];
+    let chartEstatus, chartDepto;
 
     document.addEventListener('DOMContentLoaded', cargarDatos);
 
+    // FUNCIÓN PARA EL MENÚ LATERAL (BOTONES FUNCIONALES)
+    function cambiarVista(vista) {
+      document.getElementById('nav-tablero').classList.remove('active');
+      document.getElementById('nav-graficas').classList.remove('active');
+      
+      if(vista === 'tabla') {
+        document.getElementById('nav-tablero').classList.add('active');
+        document.getElementById('vista-tabla').style.display = 'block';
+        document.getElementById('vista-graficas').style.display = 'none';
+        document.querySelector('.toolbar').style.display = 'flex'; // Mostrar barra en tabla
+      } else {
+        document.getElementById('nav-graficas').classList.add('active');
+        document.getElementById('vista-tabla').style.display = 'none';
+        document.getElementById('vista-graficas').style.display = 'grid';
+        document.querySelector('.toolbar').style.display = 'none'; // Ocultar barra en gráficas
+      }
+    }
+
+    // FUNCIÓN PARA COLAPSAR GRUPOS
+    function toggleGroup(tableId, iconId) {
+      const table = document.getElementById(tableId);
+      const icon = document.getElementById(iconId);
+      if (table.classList.contains('collapsed')) {
+        table.classList.remove('collapsed');
+        icon.classList.remove('collapsed');
+        table.style.maxHeight = table.scrollHeight + "px";
+      } else {
+        table.style.maxHeight = table.scrollHeight + "px"; // Fijar altura antes de colapsar
+        setTimeout(() => table.classList.add('collapsed'), 10);
+        icon.classList.add('collapsed');
+      }
+    }
+
+    // FUNCIÓN PARA EXPORTAR A EXCEL (CSV)
+    function exportarCSV() {
+      if (datosGlobales.length === 0) {
+        alert("No hay datos para exportar.");
+        return;
+      }
+      let csvContent = "data:text/csv;charset=utf-8,";
+      csvContent += "ID,Asunto,Responsable,Departamento,Estatus,Prioridad,Fecha\n"; // Encabezados
+      
+      const depto = document.getElementById('filtroDepto').value;
+      const datosAExportar = depto === 'Todos' ? datosGlobales : datosGlobales.filter(d => d.departamento === depto);
+
+      datosAExportar.forEach(d => {
+        let fila = `${d.id},"${d.tarea}","${d.responsable}","${d.departamento}",${d.estatus},${d.prioridad},${d.fecha}`;
+        csvContent += fila + "\n";
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", "Reporte_Operaciones_FibraInn.csv");
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+    }
+
     function abrirModal() { document.getElementById('modal').classList.add('active'); }
     function cerrarModal() { document.getElementById('modal').classList.remove('active'); document.getElementById('formTicket').reset(); }
-    function mostrarCarga(mostrar) { document.getElementById('loader').style.display = mostrar ? 'flex' : 'none'; }
+    function mostrarCarga(mostrar, texto="Sincronizando base de datos...") { 
+      document.getElementById('loader-text').innerText = texto;
+      document.getElementById('loader').style.display = mostrar ? 'flex' : 'none'; 
+    }
 
     async function cargarDatos() {
-      mostrarCarga(true);
+      mostrarCarga(true, "Conectando con el servidor...");
       try {
         const res = await fetch(API_URL);
         const json = await res.json();
         if(json.exito) {
           datosGlobales = json.datos;
-          aplicarFiltros();
+          aplicarFiltro();
         }
       } catch (e) { console.error(e); }
       mostrarCarga(false);
     }
 
-    function aplicarFiltros() {
+    function aplicarFiltro() {
       const depto = document.getElementById('filtroDepto').value;
       const filtrados = depto === 'Todos' ? datosGlobales : datosGlobales.filter(d => d.departamento === depto);
       dibujarTabla(filtrados);
+      actualizarGraficas(filtrados);
+      
+      // Asegurar que las tablas estén expandidas y calculadas al cargar
+      document.getElementById('tabla-activos').style.maxHeight = "none";
+      document.getElementById('tabla-resueltos').style.maxHeight = "none";
     }
 
-    function getClase(tipo, valor) {
-      if(tipo === 'estatus') {
-        if(valor.includes('Pendiente')) return 'status-Pendiente';
-        if(valor.includes('Proceso')) return 'status-Proceso';
-        return 'status-Listo';
-      } else {
-        if(valor.includes('Alta')) return 'prio-Alta';
-        if(valor.includes('Media')) return 'prio-Media';
-        return 'prio-Baja';
-      }
+    function getColorStatus(s) {
+      if(s === 'Listo') return 'var(--stat-listo)';
+      if(s === 'En curso') return 'var(--stat-curso)';
+      if(s === 'Estancado') return 'var(--stat-estancado)';
+      return 'var(--stat-gris)'; 
+    }
+
+    function getColorPrio(p) {
+      if(p === 'Crítica') return 'var(--prio-critica)';
+      if(p === 'Alta') return 'var(--prio-alta)';
+      if(p === 'Media') return 'var(--prio-media)';
+      return 'var(--prio-baja)'; 
     }
 
     function dibujarTabla(datos) {
-      const tbody = document.getElementById('tabla-body');
-      tbody.innerHTML = '';
+      const bodyActivos = document.getElementById('body-activos');
+      const bodyResueltos = document.getElementById('body-resueltos');
+      bodyActivos.innerHTML = ''; bodyResueltos.innerHTML = '';
       
       datos.forEach(d => {
-        const claseStat = getClase('estatus', d.estatus);
-        const clasePrio = getClase('prioridad', d.prioridad);
+        const bgStat = getColorStatus(d.estatus);
+        const bgPrio = getColorPrio(d.prioridad);
+        const inicial = d.responsable.charAt(0).toUpperCase();
         
-        tbody.innerHTML += `
+        const filaHtml = `
           <tr>
-            <td style="font-weight: 600; color: var(--primary); font-size: 0.85rem;">${d.id}</td>
-            <td style="font-weight: 500;">${d.asunto}</td>
+            <td style="background: #F5F6F8;"><input type="checkbox" disabled></td>
+            <td class="cell-tarea" style="border-left-color: ${d.estatus === 'Listo' ? 'var(--stat-listo)' : 'var(--monday-blue)'}; ${d.estatus === 'Listo' ? 'text-decoration: line-through; color: var(--text-gray);' : ''}">${d.tarea}</td>
             <td>
-              <div style="display: flex; align-items: center; gap: 8px;">
-                <div style="width:28px; height:28px; background:#E2E8F0; border-radius:50%; display:grid; place-items:center; font-size:0.7rem; font-weight:bold;">${d.responsable.charAt(0)}</div>
-                ${d.responsable}
+              <div style="display: flex; align-items: center; justify-content: center; gap: 6px;">
+                <div style="width:24px; height:24px; background:#E6E9EF; color:var(--text-main); border-radius:50%; display:grid; place-items:center; font-size:0.7rem; font-weight:bold;">${inicial}</div>
+                <span style="font-size:0.85rem;">${d.responsable}</span>
               </div>
             </td>
-            <td><span style="background: #F1F5F9; padding: 4px 8px; border-radius: 4px; font-size: 0.8rem; font-weight: 600;">${d.departamento}</span></td>
-            <td>
-              <select class="pill-select ${clasePrio}" onchange="actualizarDato('${d.id}', 'Prioridad', this.value)">
-                <option value="Baja" ${d.prioridad === 'Baja' ? 'selected' : ''}>Baja</option>
-                <option value="Media" ${d.prioridad === 'Media' ? 'selected' : ''}>Media</option>
-                <option value="Alta" ${d.prioridad === 'Alta' ? 'selected' : ''}>Alta</option>
+            <td>${d.departamento}</td>
+            
+            <td style="background-color: ${bgStat};">
+              <select class="monday-select" style="background: transparent; color: ${bgStat === 'var(--stat-gris)' ? '#333' : '#fff'};" onchange="actualizarDato('${d.id}', 'Estatus', this.value)">
+                <option value="Por hacer" style="color:black;" ${d.estatus === 'Por hacer' ? 'selected' : ''}>Por hacer</option>
+                <option value="En curso" style="color:black;" ${d.estatus === 'En curso' ? 'selected' : ''}>En curso</option>
+                <option value="Estancado" style="color:black;" ${d.estatus === 'Estancado' ? 'selected' : ''}>Estancado</option>
+                <option value="Listo" style="color:black;" ${d.estatus === 'Listo' ? 'selected' : ''}>Listo</option>
               </select>
             </td>
-            <td>
-              <select class="pill-select ${claseStat}" onchange="actualizarDato('${d.id}', 'Estatus', this.value)">
-                <option value="Pendiente" ${d.estatus === 'Pendiente' ? 'selected' : ''}>Pendiente</option>
-                <option value="En Proceso" ${d.estatus === 'En Proceso' ? 'selected' : ''}>En Proceso</option>
-                <option value="Listo" ${d.estatus === 'Listo' ? 'selected' : ''}>Listo</option>
+            
+            <td style="background-color: ${bgPrio};">
+              <select class="monday-select" style="background: transparent;" onchange="actualizarDato('${d.id}', 'Prioridad', this.value)">
+                <option value="Baja" style="color:black;" ${d.prioridad === 'Baja' ? 'selected' : ''}>Baja</option>
+                <option value="Media" style="color:black;" ${d.prioridad === 'Media' ? 'selected' : ''}>Media</option>
+                <option value="Alta" style="color:black;" ${d.prioridad === 'Alta' ? 'selected' : ''}>Alta</option>
+                <option value="Crítica" style="color:black;" ${d.prioridad === 'Crítica' ? 'selected' : ''}>Crítica</option>
               </select>
             </td>
+            
+            <td style="font-size: 0.8rem; color: var(--text-gray);">${d.fecha}</td>
           </tr>
         `;
+
+        if(d.estatus === 'Listo') {
+          bodyResueltos.innerHTML += filaHtml;
+        } else {
+          bodyActivos.innerHTML += filaHtml;
+        }
       });
     }
 
     async function guardarTicket(e) {
       e.preventDefault();
       cerrarModal();
-      mostrarCarga(true);
+      mostrarCarga(true, "Guardando nueva tarea...");
       
       const payload = {
         accion: "crear",
         item: {
-          asunto: document.getElementById('inpAsunto').value,
+          tarea: document.getElementById('inpAsunto').value,
           departamento: document.getElementById('inpDepto').value,
           prioridad: document.getElementById('inpPrio').value,
           responsable: document.getElementById('inpResp').value
@@ -290,23 +429,55 @@
 
       try {
         await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
+        document.getElementById('filtroDepto').value = 'Todos';
         setTimeout(cargarDatos, 1000);
       } catch(e) { 
-        alert("Error de red. Verifica tu conexión.");
+        alert("Error al guardar.");
         mostrarCarga(false);
       }
     }
 
     async function actualizarDato(id, campo, valor) {
-      mostrarCarga(true);
+      mostrarCarga(true, "Actualizando sistema...");
       const payload = { accion: "actualizar", id: id, campo: campo, valor: valor };
       try {
         await fetch(API_URL, { method: 'POST', headers: { 'Content-Type': 'text/plain' }, body: JSON.stringify(payload) });
         setTimeout(cargarDatos, 1000);
       } catch(e) {
-        alert("Error al actualizar");
+        alert("Error al actualizar la tabla.");
         mostrarCarga(false);
       }
+    }
+
+    function actualizarGraficas(datos) {
+      let hacer = 0, curso = 0, estancado = 0, listo = 0;
+      let deptos = { "Mantenimiento":0, "Jurídico":0, "Ama de llaves":0, "Operaciones":0, "Finanzas":0, "Sistemas":0, "Recursos Humanos":0, "Compras":0 };
+
+      datos.forEach(d => {
+        if(d.estatus === 'Listo') listo++;
+        else if(d.estatus === 'En curso') curso++;
+        else if(d.estatus === 'Estancado') estancado++;
+        else hacer++;
+        if(deptos[d.departamento] !== undefined) deptos[d.departamento]++;
+      });
+
+      Chart.defaults.font.family = "'Roboto', sans-serif";
+      
+      const ctxStat = document.getElementById('statusChart').getContext('2d');
+      if(chartEstatus) chartEstatus.destroy();
+      chartEstatus = new Chart(ctxStat, {
+        type: 'doughnut',
+        data: { labels: ['Por hacer', 'En curso', 'Estancado', 'Listo'], datasets: [{ data: [hacer, curso, estancado, listo], backgroundColor: ['#C4C4C4', '#FDAB3D', '#E2445C', '#00C875'], borderWidth: 0 }] },
+        options: { responsive: true, maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'right' } } }
+      });
+
+      const ctxDept = document.getElementById('deptChart').getContext('2d');
+      if(chartDepto) chartDepto.destroy();
+      chartDepto = new Chart(ctxDept, {
+        type: 'bar',
+        data: { labels: Object.keys(deptos), datasets: [{ label: 'Tareas Activas', data: Object.values(deptos), backgroundColor: '#0073EA', borderRadius: 4 }] },
+        options: { responsive: true, maintainAspectRatio: false, scales: { y: { beginAtZero: true, ticks: {stepSize: 1} } }, plugins: { legend: {display: false} } }
+      });
     }
   </script>
 </body>
