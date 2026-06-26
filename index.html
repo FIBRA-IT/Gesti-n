@@ -209,7 +209,7 @@
   </div>
 
   <script>
-    // URL CORRECTA QUE TERMINA EN /exec
+    // URL DEFINITIVA DE TU GOOGLE APPS SCRIPT
     const API_URL = "https://script.google.com/macros/s/AKfycbz6ZsrQM-kjuFHcPkrO5TkrAo2U54WX8csFyRvZG62vAlM8G8c5M800zMU2gs-X8VYiiA/exec";
     
     let baseDatos = [];
@@ -354,6 +354,7 @@
 
     async function guardarDatos(e) {
       e.preventDefault();
+
       const payload = {
         tarea: document.getElementById('f_tarea').value,
         descripcion: document.getElementById('f_desc').value,
@@ -370,12 +371,18 @@
       mostrarCarga(true, "GUARDANDO Y NOTIFICANDO...");
 
       try {
-        await fetch(API_URL, { 
+        const response = await fetch(API_URL, { 
           method: 'POST', 
           headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
           body: JSON.stringify({accion: "crear", item: payload}) 
         });
+        
+        const result = await response.json();
+        if(!result.exito) {
+           alert("Google Script rechazó los datos: " + result.error);
+        }
       } catch(error) {
+        alert("Error de conexión. Revisa que diste los permisos de correo en Google Apps Script.");
         console.error("Error al guardar:", error);
       }
       
@@ -385,13 +392,15 @@
     async function patch(id, campo, valor) {
       mostrarCarga(true, "ACTUALIZANDO...");
       try {
-        await fetch(API_URL, { 
+        const response = await fetch(API_URL, { 
           method: 'POST', 
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({accion: "actualizar", id: id, campo: campo, valor: valor}) 
         });
+        const result = await response.json();
+        if(!result.exito) alert("Error al actualizar: " + result.error);
       } catch(e) { 
-        console.error("Error al actualizar:", e);
+        alert("Fallo de conexión al actualizar.");
       }
       
       setTimeout(iniciarCarga, 1500);
