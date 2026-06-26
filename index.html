@@ -154,11 +154,9 @@
         </div>
       </div>
 
-      <!-- Contenedor dinámico de tablas separadas por hotel (siempre visibles) -->
       <div id="tablas-container"></div>
     </div>
 
-    <!-- Contenedor dinámico de gráficas separadas por hotel -->
     <div class="dashboard-view" id="view-graficas"></div>
   </main>
 
@@ -211,8 +209,8 @@
   </div>
 
   <script>
-    // ⚠️ MANTÉN AQUÍ LA URL ACTUALIZADA QUE TE DIO GOOGLE APPS SCRIPT
-    const API_URL = "https://script.google.com/macros/s/AKfycbwyU9_8W0HqE3nLqK9Y5nCjO_v6N1mOQ6QYw6Z0V8K8wU6WvV2l4C9y4n5W0zK5/exec";
+    // URL CORRECTA QUE TERMINA EN /exec
+    const API_URL = "https://script.google.com/macros/s/AKfycbz6ZsrQM-kjuFHcPkrO5TkrAo2U54WX8csFyRvZG62vAlM8G8c5M800zMU2gs-X8VYiiA/exec";
     
     let baseDatos = [];
     let chartsInstance = [];
@@ -228,7 +226,6 @@
       }
     }
 
-    // Ya no muestra textos en rojo de error, todo es silencioso para el usuario final.
     function mostrarCarga(mostrar, texto="PROCESANDO") {
       document.getElementById('loader-text').innerText = texto;
       document.getElementById('loader').style.display = mostrar ? 'flex' : 'none';
@@ -245,7 +242,7 @@
           if(document.getElementById('view-graficas').style.display === 'flex') renderCharts();
         }
       } catch(e) { 
-        console.warn("Fallo al obtener datos iniciales", e);
+        console.warn("Error de conexión:", e);
       }
       mostrarCarga(false);
     }
@@ -327,7 +324,6 @@
               });
           }
           
-          // Siempre se dibuja el título del hotel y la tabla (aunque esté vacía)
           container.innerHTML += `
             <div class="hotel-container">
                 <h2 class="hotel-header">🏢 ${hotel}</h2>
@@ -380,15 +376,14 @@
           body: JSON.stringify({accion: "crear", item: payload}) 
         });
       } catch(error) {
-        console.warn("Bloqueo CORS evadido silenciosamente.");
+        console.error("Error al guardar:", error);
       }
       
-      // Forzamos la actualización pasados 1.5s asumiendo que el servidor lo procesó
       setTimeout(iniciarCarga, 1500);
     }
 
     async function patch(id, campo, valor) {
-      mostrarCarga(true, "ACTUALIZANDO ESTADO...");
+      mostrarCarga(true, "ACTUALIZANDO...");
       try {
         await fetch(API_URL, { 
           method: 'POST', 
@@ -396,7 +391,7 @@
           body: JSON.stringify({accion: "actualizar", id: id, campo: campo, valor: valor}) 
         });
       } catch(e) { 
-        console.warn("Bloqueo CORS evadido silenciosamente.");
+        console.error("Error al actualizar:", e);
       }
       
       setTimeout(iniciarCarga, 1500);
@@ -404,18 +399,13 @@
 
     function renderCharts() {
       const container = document.getElementById('view-graficas');
-      
       chartsInstance.forEach(c => c.destroy());
       chartsInstance = [];
       
       const hoteles = ['Hampton Inn', 'Holiday Inn'];
       let htmlContent = '';
       
-      Chart.defaults.font.family = "'Plus Jakarta Sans', sans-serif";
-      Chart.defaults.color = '#64748B';
-
       hoteles.forEach((hotel, idx) => {
-          // Siempre se dibujan las gráficas para ambos hoteles
           htmlContent += `
             <div class="hotel-container" style="width: 100%;">
               <h2 class="hotel-header">🏢 ${hotel}</h2>
@@ -432,48 +422,32 @@
             </div>
           `;
       });
-      
       container.innerHTML = htmlContent;
 
       setTimeout(() => {
           hoteles.forEach((hotel, idx) => {
               const tareasHotel = baseDatos.filter(x => x.hotel === hotel || (!x.hotel && hotel === 'Hampton Inn'));
-              
               const st = { listo:0, curso:0, estancado:0, hacer:0 };
               const dp = {};
-              
-              if(tareasHotel.length > 0) {
-                  tareasHotel.forEach(d => {
-                    if(d.estatus==='Listo') st.listo++; else if(d.estatus==='En curso') st.curso++; else if(d.estatus==='Estancado') st.estancado++; else st.hacer++;
-                    dp[d.departamento] = (dp[d.departamento] || 0) + 1;
-                  });
-              } else {
-                  // Valores vacíos por defecto si no hay tareas
-                  dp["Sin Tareas"] = 0;
-              }
+              tareasHotel.forEach(d => {
+                if(d.estatus==='Listo') st.listo++; else if(d.estatus==='En curso') st.curso++; else if(d.estatus==='Estancado') st.estancado++; else st.hacer++;
+                dp[d.departamento] = (dp[d.departamento] || 0) + 1;
+              });
 
-              // Gráfica Doughnut
               const ctxStatus = document.getElementById(`statusChart_${idx}`);
               if(ctxStatus) {
                   chartsInstance.push(new Chart(ctxStatus, {
                     type: 'doughnut',
-                    data: { 
-                        labels: ['Completado', 'En Ejecución', 'Detenido', 'Pendiente'], 
-                        datasets: [{ data: [st.listo, st.curso, st.estancado, st.hacer], backgroundColor: ['#10B981','#F59E0B','#EF4444','#CBD5E1'], borderWidth: 4, borderColor: '#FFFFFF', hoverOffset: 8 }] 
-                    },
-                    options: { maintainAspectRatio: false, cutout: '75%', plugins: { legend: { position: 'right', labels: { font: { weight: 'bold', size: 12 }, padding: 20 } }, tooltip: { backgroundColor: '#0F172A', padding: 12, cornerRadius: 8, titleFont: { size: 14 } } }, animation: { animateScale: true, animateRotate: true } }
+                    data: { labels: ['Completado', 'En Ejecución', 'Detenido', 'Pendiente'], datasets: [{ data: [st.listo, st.curso, st.estancado, st.hacer], backgroundColor: ['#10B981','#F59E0B','#EF4444','#CBD5E1'], borderWidth: 4, borderColor: '#FFFFFF', hoverOffset: 8 }] },
+                    options: { maintainAspectRatio: false, cutout: '75%' }
                   }));
               }
-
-              // Gráfica Barras
               const ctxDept = document.getElementById(`deptChart_${idx}`);
               if(ctxDept) {
-                  const gradient = ctxDept.getContext('2d').createLinearGradient(0, 0, 0, 400);
-                  gradient.addColorStop(0, '#2563EB'); gradient.addColorStop(1, '#60A5FA');
                   chartsInstance.push(new Chart(ctxDept, {
                     type: 'bar',
-                    data: { labels: Object.keys(dp), datasets: [{ label: 'Tareas Asignadas', data: Object.values(dp), backgroundColor: gradient, borderRadius: 6, borderSkipped: false, barPercentage: 0.6 }] },
-                    options: { maintainAspectRatio: false, scales: { y: { beginAtZero: true, grid: { color: '#F1F5F9', drawBorder: false }, ticks: { font: { weight: 'bold' } } }, x: { grid: { display: false, drawBorder: false }, ticks: { font: { weight: '600' } } } }, plugins: { legend: { display: false }, tooltip: { backgroundColor: '#0F172A', padding: 12, cornerRadius: 8 } }, animation: { duration: 1500, easing: 'easeOutQuart' } }
+                    data: { labels: Object.keys(dp), datasets: [{ label: 'Tareas', data: Object.values(dp), backgroundColor: '#2563EB', borderRadius: 6 }] },
+                    options: { maintainAspectRatio: false }
                   }));
               }
           });
