@@ -60,6 +60,10 @@
     .monday-select { appearance: none; width: 100%; height: 100%; border: none; color: white; font-weight: 800; text-align: center; cursor: pointer; outline: none; transition: 0.2s; }
     .monday-select:hover { opacity: 0.9; }
 
+    /* Estilo del botón eliminar (lapicito) */
+    .btn-eliminar { background: transparent; border: none; cursor: pointer; font-size: 1.1rem; padding: 5px; transition: transform 0.2s, opacity 0.2s; opacity: 0.6; }
+    .btn-eliminar:hover { transform: scale(1.2); opacity: 1; }
+
     .dashboard-view { display: none; width: 100%; flex-direction: column; gap: 3rem; }
     .charts-grid-hotel { display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; }
     .chart-card { background: white; padding: 2rem; border-radius: 16px; border: 1px solid var(--border); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.08); transition: 0.3s; }
@@ -293,7 +297,10 @@
 
                 tbodyHtml += `
                   <tr class="${claseCompletada}">
-                    <td style="background: #F8FAFC;"></td>
+                    <!-- Aquí agregué el lapicito de eliminar -->
+                    <td style="background: #F8FAFC;">
+                      <button class="btn-eliminar" onclick="eliminarActividad('${d.id}')" title="Eliminar Actividad">✏️</button>
+                    </td>
                     <td class="cell-task" style="${d.estatus === 'Listo' ? 'border-left-color: #10B981;' : ''}">
                       <div class="task-title">${d.tarea}</div>
                       <div class="task-desc" title="${d.descripcion}">${d.descripcion}</div>
@@ -331,7 +338,7 @@
                   <table class="monday-table">
                     <thead>
                       <tr>
-                        <th style="width:40px; background: white;"></th>
+                        <th style="width:45px; background: white;"></th>
                         <th>Requerimiento y Detalles</th>
                         <th style="width:180px;">Asignado A</th>
                         <th style="width:140px;">Estatus</th>
@@ -350,6 +357,42 @@
       document.getElementById('kpi-activas').innerText = countActivas;
       document.getElementById('kpi-vencidas').innerText = countVencidas;
       document.getElementById('kpi-listas').innerText = countListas;
+    }
+
+    // Nueva función para eliminar la actividad con contraseña
+    async function eliminarActividad(id) {
+      const password = prompt("Ingrese la contraseña de administrador para eliminar:");
+      
+      if (password === null) return; // Si le da cancelar al aviso
+      
+      if (password !== "2215") {
+        alert("Contraseña incorrecta ❌. No tienes permisos para eliminar.");
+        return;
+      }
+      
+      if(!confirm("¿Estás seguro de que quieres eliminar esta actividad permanentemente?")) {
+        return;
+      }
+
+      mostrarCarga(true, "ELIMINANDO...");
+      try {
+        const response = await fetch(API_URL, { 
+          method: 'POST', 
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
+          body: JSON.stringify({accion: "eliminar", id: id}) 
+        });
+        
+        const result = await response.json();
+        if(!result.exito) {
+           alert("Google Script rechazó los datos: " + result.error);
+        }
+      } catch(error) {
+        // Ignoramos el error CORS silenciosamente, igual que al guardar
+        console.warn("Fallo de red al eliminar evadido.");
+      }
+      
+      // Actualizamos la tabla
+      setTimeout(iniciarCarga, 1500);
     }
 
     async function guardarDatos(e) {
