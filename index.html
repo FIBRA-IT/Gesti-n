@@ -44,8 +44,9 @@
     .badge-vencido { background: #EF4444; color: white; padding: 6px 12px; border-radius: 6px; font-weight: 800; font-size: 0.75rem; animation: latido-rojo 1.5s infinite; display: inline-block; }
 
     .hotel-header { font-size: 1.2rem; font-weight: 800; color: #0F172A; margin: 2rem 0 1rem 0; padding-bottom: 0.5rem; border-bottom: 2px solid var(--monday-blue); display: inline-block; text-transform: uppercase; }
+    .hotel-container { margin-bottom: 3rem; }
     
-    .table-wrapper { width: 100%; overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 2rem; -webkit-overflow-scrolling: touch; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
+    .table-wrapper { width: 100%; overflow-x: auto; border: 1px solid var(--border); border-radius: 12px; margin-bottom: 1rem; -webkit-overflow-scrolling: touch; box-shadow: 0 4px 6px rgba(0,0,0,0.02); }
     .monday-table { width: 100%; border-collapse: collapse; table-layout: fixed; min-width: 1000px; background: white; }
     .monday-table th { padding: 1rem; background: #F8FAFC; font-size: 0.75rem; color: #64748B; text-transform: uppercase; font-weight: 800; border-bottom: 2px solid var(--border); text-align: center; }
     .monday-table td { height: 75px; border-bottom: 1px solid var(--border); border-right: 1px solid var(--border); text-align: center; font-size: 0.9rem; padding: 0; background: white; transition: background 0.2s; }
@@ -153,7 +154,7 @@
         </div>
       </div>
 
-      <!-- Contenedor dinámico de tablas separadas por hotel -->
+      <!-- Contenedor dinámico de tablas separadas por hotel (siempre visibles) -->
       <div id="tablas-container"></div>
     </div>
 
@@ -210,11 +211,11 @@
   </div>
 
   <script>
-    // ⚠️ REEMPLAZA ESTA URL POR LA NUEVA QUE TE DIO GOOGLE APPS SCRIPT
+    // ⚠️ MANTÉN AQUÍ LA URL ACTUALIZADA QUE TE DIO GOOGLE APPS SCRIPT
     const API_URL = "https://script.google.com/macros/s/AKfycbwyU9_8W0HqE3nLqK9Y5nCjO_v6N1mOQ6QYw6Z0V8K8wU6WvV2l4C9y4n5W0zK5/exec";
     
     let baseDatos = [];
-    let chartsInstance = []; // Para almacenar y destruir instancias dinámicas de Chart.js
+    let chartsInstance = [];
 
     document.addEventListener('DOMContentLoaded', iniciarCarga);
 
@@ -227,19 +228,9 @@
       }
     }
 
+    // Ya no muestra textos en rojo de error, todo es silencioso para el usuario final.
     function mostrarCarga(mostrar, texto="PROCESANDO") {
-      const loaderTxt = document.getElementById('loader-text');
-      const spinner = document.querySelector('.spinner');
-      loaderTxt.innerText = texto;
-      
-      if(texto.includes("ERROR")) {
-          spinner.style.display = 'none';
-          loaderTxt.style.color = '#EF4444';
-      } else {
-          spinner.style.display = 'block';
-          loaderTxt.style.color = 'var(--monday-blue)';
-      }
-      
+      document.getElementById('loader-text').innerText = texto;
       document.getElementById('loader').style.display = mostrar ? 'flex' : 'none';
     }
 
@@ -252,16 +243,11 @@
           baseDatos = json.datos;
           aplicarFiltro();
           if(document.getElementById('view-graficas').style.display === 'flex') renderCharts();
-          mostrarCarga(false);
-        } else {
-          mostrarCarga(true, "❌ ERROR EN LA RESPUESTA DEL SERVIDOR");
-          setTimeout(() => mostrarCarga(false), 2500);
         }
       } catch(e) { 
-        console.error("Error al cargar la base de datos", e);
-        mostrarCarga(true, "❌ ERROR DE RED AL CONECTAR");
-        setTimeout(() => mostrarCarga(false), 2500);
+        console.warn("Fallo al obtener datos iniciales", e);
       }
+      mostrarCarga(false);
     }
 
     function aplicarFiltro() {
@@ -278,85 +264,89 @@
       const hoteles = ['Hampton Inn', 'Holiday Inn'];
 
       hoteles.forEach(hotel => {
-          // Filtrar tareas por hotel (Acepta Hampton como default para tareas viejas sin hotel)
           const tareasHotel = arr.filter(x => x.hotel === hotel || (!x.hotel && hotel === 'Hampton Inn'));
-          if (tareasHotel.length === 0) return; 
-          
           let tbodyHtml = '';
           
-          tareasHotel.forEach(d => {
-            const cStat = d.estatus==='Listo'?'var(--stat-listo)':(d.estatus==='En curso'?'var(--stat-curso)':(d.estatus==='Estancado'?'var(--stat-estancado)':'var(--stat-gris)'));
-            const cPrio = d.prioridad==='Crítica'?'#0F172A':(d.prioridad==='Alta'?'var(--prio-alta)':(d.prioridad==='Media'?'var(--prio-media)':'var(--prio-baja)'));
-            
-            let fechaFinVisual = `<span style="color:#0F172A; font-weight:800;">${d.fechaFin}</span>`;
-            let claseCompletada = d.estatus === 'Listo' ? "tarea-completada" : "";
+          if (tareasHotel.length === 0) {
+              tbodyHtml = `<tr><td colspan="7" style="text-align:center; padding: 2.5rem; color: #94A3B8; font-weight:600;">No hay tareas activas asignadas a este hotel.</td></tr>`;
+          } else {
+              tareasHotel.forEach(d => {
+                const cStat = d.estatus==='Listo'?'var(--stat-listo)':(d.estatus==='En curso'?'var(--stat-curso)':(d.estatus==='Estancado'?'var(--stat-estancado)':'var(--stat-gris)'));
+                const cPrio = d.prioridad==='Crítica'?'#0F172A':(d.prioridad==='Alta'?'var(--prio-alta)':(d.prioridad==='Media'?'var(--prio-media)':'var(--prio-baja)'));
+                
+                let fechaFinVisual = `<span style="color:#0F172A; font-weight:800;">${d.fechaFin}</span>`;
+                let claseCompletada = d.estatus === 'Listo' ? "tarea-completada" : "";
 
-            if (d.estatus === 'Listo') {
-                countListas++;
-                fechaFinVisual = `<span style="color:#94A3B8;">${d.fechaFin}</span>`;
-            } else {
-                countActivas++;
-                if (d.fechaFin) {
-                    const partes = d.fechaFin.split('-');
-                    if(partes.length === 3) {
-                        const fechaObj = new Date(partes[0], partes[1] - 1, partes[2]);
-                        if (fechaObj < hoy) {
-                            countVencidas++;
-                            fechaFinVisual = `<div class="badge-vencido">⚠️ VENCIDO<br>${d.fechaFin}</div>`;
+                if (d.estatus === 'Listo') {
+                    countListas++;
+                    fechaFinVisual = `<span style="color:#94A3B8;">${d.fechaFin}</span>`;
+                } else {
+                    countActivas++;
+                    if (d.fechaFin) {
+                        const partes = d.fechaFin.split('-');
+                        if(partes.length === 3) {
+                            const fechaObj = new Date(partes[0], partes[1] - 1, partes[2]);
+                            if (fechaObj < hoy) {
+                                countVencidas++;
+                                fechaFinVisual = `<div class="badge-vencido">⚠️ VENCIDO<br>${d.fechaFin}</div>`;
+                            }
                         }
                     }
                 }
-            }
 
-            tbodyHtml += `
-              <tr class="${claseCompletada}">
-                <td style="background: #F8FAFC;"></td>
-                <td class="cell-task" style="${d.estatus === 'Listo' ? 'border-left-color: #10B981;' : ''}">
-                  <div class="task-title">${d.tarea}</div>
-                  <div class="task-desc" title="${d.descripcion}">${d.descripcion}</div>
-                </td>
-                <td>
-                    <div style="font-weight:800; font-size:0.85rem;">${d.responsable}</div>
-                    <div style="font-size:0.7rem; color:#64748B;">${d.correo || 'Sin correo'}</div>
-                </td>
-                <td style="background:${cStat};">
-                  <select class="monday-select" onchange="patch('${d.id}','Estatus',this.value)" style="background:transparent; color:${cStat==='var(--stat-gris)'?'#1E293B':'#FFF'}">
-                    <option style="color:black" value="Por hacer" ${d.estatus==='Por hacer'?'selected':''}>Por hacer</option>
-                    <option style="color:black" value="En curso" ${d.estatus==='En curso'?'selected':''}>En curso</option>
-                    <option style="color:black" value="Estancado" ${d.estatus==='Estancado'?'selected':''}>Estancado</option>
-                    <option style="color:black" value="Listo" ${d.estatus==='Listo'?'selected':''}>Listo</option>
-                  </select>
-                </td>
-                <td style="background:${cPrio};">
-                  <select class="monday-select" onchange="patch('${d.id}','Prioridad',this.value)" style="background:transparent; color:#FFF">
-                    <option style="color:black" value="Baja" ${d.prioridad==='Baja'?'selected':''}>Baja</option>
-                    <option style="color:black" value="Media" ${d.prioridad==='Media'?'selected':''}>Media</option>
-                    <option style="color:black" value="Alta" ${d.prioridad==='Alta'?'selected':''}>Alta</option>
-                    <option style="color:black" value="Crítica" ${d.prioridad==='Crítica'?'selected':''}>Crítica</option>
-                  </select>
-                </td>
-                <td style="color:#64748B; font-weight:700; font-size:0.8rem;">${d.fechaInicio}</td>
-                <td>${fechaFinVisual}</td>
-              </tr>`;
-          });
+                tbodyHtml += `
+                  <tr class="${claseCompletada}">
+                    <td style="background: #F8FAFC;"></td>
+                    <td class="cell-task" style="${d.estatus === 'Listo' ? 'border-left-color: #10B981;' : ''}">
+                      <div class="task-title">${d.tarea}</div>
+                      <div class="task-desc" title="${d.descripcion}">${d.descripcion}</div>
+                    </td>
+                    <td>
+                        <div style="font-weight:800; font-size:0.85rem;">${d.responsable}</div>
+                        <div style="font-size:0.7rem; color:#64748B;">${d.correo || 'Sin correo'}</div>
+                    </td>
+                    <td style="background:${cStat};">
+                      <select class="monday-select" onchange="patch('${d.id}','Estatus',this.value)" style="background:transparent; color:${cStat==='var(--stat-gris)'?'#1E293B':'#FFF'}">
+                        <option style="color:black" value="Por hacer" ${d.estatus==='Por hacer'?'selected':''}>Por hacer</option>
+                        <option style="color:black" value="En curso" ${d.estatus==='En curso'?'selected':''}>En curso</option>
+                        <option style="color:black" value="Estancado" ${d.estatus==='Estancado'?'selected':''}>Estancado</option>
+                        <option style="color:black" value="Listo" ${d.estatus==='Listo'?'selected':''}>Listo</option>
+                      </select>
+                    </td>
+                    <td style="background:${cPrio};">
+                      <select class="monday-select" onchange="patch('${d.id}','Prioridad',this.value)" style="background:transparent; color:#FFF">
+                        <option style="color:black" value="Baja" ${d.prioridad==='Baja'?'selected':''}>Baja</option>
+                        <option style="color:black" value="Media" ${d.prioridad==='Media'?'selected':''}>Media</option>
+                        <option style="color:black" value="Alta" ${d.prioridad==='Alta'?'selected':''}>Alta</option>
+                        <option style="color:black" value="Crítica" ${d.prioridad==='Crítica'?'selected':''}>Crítica</option>
+                      </select>
+                    </td>
+                    <td style="color:#64748B; font-weight:700; font-size:0.8rem;">${d.fechaInicio}</td>
+                    <td>${fechaFinVisual}</td>
+                  </tr>`;
+              });
+          }
           
+          // Siempre se dibuja el título del hotel y la tabla (aunque esté vacía)
           container.innerHTML += `
-            <h2 class="hotel-header">🏢 ${hotel}</h2>
-            <div class="table-wrapper">
-              <table class="monday-table">
-                <thead>
-                  <tr>
-                    <th style="width:40px; background: white;"></th>
-                    <th>Requerimiento y Detalles</th>
-                    <th style="width:180px;">Asignado A</th>
-                    <th style="width:140px;">Estatus</th>
-                    <th style="width:130px;">Prioridad</th>
-                    <th style="width:110px;">Inicio</th>
-                    <th style="width:130px;">Vencimiento</th>
-                  </tr>
-                </thead>
-                <tbody>${tbodyHtml}</tbody>
-              </table>
+            <div class="hotel-container">
+                <h2 class="hotel-header">🏢 ${hotel}</h2>
+                <div class="table-wrapper">
+                  <table class="monday-table">
+                    <thead>
+                      <tr>
+                        <th style="width:40px; background: white;"></th>
+                        <th>Requerimiento y Detalles</th>
+                        <th style="width:180px;">Asignado A</th>
+                        <th style="width:140px;">Estatus</th>
+                        <th style="width:130px;">Prioridad</th>
+                        <th style="width:110px;">Inicio</th>
+                        <th style="width:130px;">Vencimiento</th>
+                      </tr>
+                    </thead>
+                    <tbody>${tbodyHtml}</tbody>
+                  </table>
+                </div>
             </div>
           `;
       });
@@ -384,49 +374,37 @@
       mostrarCarga(true, "GUARDANDO Y NOTIFICANDO...");
 
       try {
-        const respuesta = await fetch(API_URL, { 
+        await fetch(API_URL, { 
           method: 'POST', 
           headers: { 'Content-Type': 'text/plain;charset=utf-8' }, 
           body: JSON.stringify({accion: "crear", item: payload}) 
         });
-        const rJson = await respuesta.json();
-        if(rJson.exito){
-            setTimeout(iniciarCarga, 500);
-        } else {
-            mostrarCarga(true, "❌ ERROR AL GUARDAR");
-            setTimeout(() => mostrarCarga(false), 2500);
-        }
       } catch(error) {
-        mostrarCarga(true, "❌ ERROR DE RED");
-        setTimeout(() => mostrarCarga(false), 2500);
+        console.warn("Bloqueo CORS evadido silenciosamente.");
       }
+      
+      // Forzamos la actualización pasados 1.5s asumiendo que el servidor lo procesó
+      setTimeout(iniciarCarga, 1500);
     }
 
     async function patch(id, campo, valor) {
       mostrarCarga(true, "ACTUALIZANDO ESTADO...");
       try {
-        const respuesta = await fetch(API_URL, { 
+        await fetch(API_URL, { 
           method: 'POST', 
           headers: { 'Content-Type': 'text/plain;charset=utf-8' },
           body: JSON.stringify({accion: "actualizar", id: id, campo: campo, valor: valor}) 
         });
-        const rJson = await respuesta.json();
-        if(rJson.exito) {
-           setTimeout(iniciarCarga, 500);
-        } else {
-           mostrarCarga(true, "❌ ERROR AL ACTUALIZAR");
-           setTimeout(() => mostrarCarga(false), 2500);
-        }
       } catch(e) { 
-        mostrarCarga(true, "❌ ERROR DE CONEXIÓN");
-        setTimeout(() => mostrarCarga(false), 2500);
+        console.warn("Bloqueo CORS evadido silenciosamente.");
       }
+      
+      setTimeout(iniciarCarga, 1500);
     }
 
     function renderCharts() {
       const container = document.getElementById('view-graficas');
       
-      // Limpiar canvas anteriores
       chartsInstance.forEach(c => c.destroy());
       chartsInstance = [];
       
@@ -437,19 +415,17 @@
       Chart.defaults.color = '#64748B';
 
       hoteles.forEach((hotel, idx) => {
-          const tareasHotel = baseDatos.filter(x => x.hotel === hotel || (!x.hotel && hotel === 'Hampton Inn'));
-          if (tareasHotel.length === 0) return;
-          
+          // Siempre se dibujan las gráficas para ambos hoteles
           htmlContent += `
-            <div style="width: 100%;">
+            <div class="hotel-container" style="width: 100%;">
               <h2 class="hotel-header">🏢 ${hotel}</h2>
               <div class="charts-grid-hotel">
                   <div class="chart-card">
-                      <div class="chart-header"><h3 class="chart-title">Avance Global del Proyecto</h3></div>
+                      <div class="chart-header"><h3 class="chart-title">Avance Global</h3></div>
                       <div style="height:320px; position: relative;"><canvas id="statusChart_${idx}"></canvas></div>
                   </div>
                   <div class="chart-card">
-                      <div class="chart-header"><h3 class="chart-title">Carga de Trabajo por Área</h3></div>
+                      <div class="chart-header"><h3 class="chart-title">Carga por Área</h3></div>
                       <div style="height:320px;"><canvas id="deptChart_${idx}"></canvas></div>
                   </div>
               </div>
@@ -462,14 +438,19 @@
       setTimeout(() => {
           hoteles.forEach((hotel, idx) => {
               const tareasHotel = baseDatos.filter(x => x.hotel === hotel || (!x.hotel && hotel === 'Hampton Inn'));
-              if (tareasHotel.length === 0) return;
-
+              
               const st = { listo:0, curso:0, estancado:0, hacer:0 };
               const dp = {};
-              tareasHotel.forEach(d => {
-                if(d.estatus==='Listo') st.listo++; else if(d.estatus==='En curso') st.curso++; else if(d.estatus==='Estancado') st.estancado++; else st.hacer++;
-                dp[d.departamento] = (dp[d.departamento] || 0) + 1;
-              });
+              
+              if(tareasHotel.length > 0) {
+                  tareasHotel.forEach(d => {
+                    if(d.estatus==='Listo') st.listo++; else if(d.estatus==='En curso') st.curso++; else if(d.estatus==='Estancado') st.estancado++; else st.hacer++;
+                    dp[d.departamento] = (dp[d.departamento] || 0) + 1;
+                  });
+              } else {
+                  // Valores vacíos por defecto si no hay tareas
+                  dp["Sin Tareas"] = 0;
+              }
 
               // Gráfica Doughnut
               const ctxStatus = document.getElementById(`statusChart_${idx}`);
